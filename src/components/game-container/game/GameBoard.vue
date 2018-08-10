@@ -28,13 +28,13 @@
       <red-piece v-for="(redPiece, index) in redPieces"
 				:key=redPiece.pos
 				:transformRed="transformRed(index)"
-				@redSelected="selectRed($event)">
+				@redSelected="selectPiece($event, 'red')">
       </red-piece>
 
       <blue-piece v-for="(bluePiece, index) in bluePieces"
 				:key=bluePiece.pos
 				:transformBlue="transformBlue(index)"
-				@blueSelected="selectBlue($event)">
+				@blueSelected="selectPiece($event, 'blue')">
       </blue-piece>
     </svg>
   </div>
@@ -86,7 +86,7 @@ export default {
 			return(`translate(${x},${y})`);
 		},
 
-		selectRed(pos) {
+		selectPiece(pos, color) {
 			let setSelectedTile = this.setSelectedTile;
 			let gameBoardTiles = this.gameBoardTiles;
 			let getSelectedTile = this.getSelectedTile;
@@ -97,68 +97,81 @@ export default {
 			let selectedPiece = this.selectedPiece;
 			let setSelectedPiece = this.setSelectedPiece;
 			let redPieces = this.redPieces;
+			let selectedPieceXY = this.selectedPieceXY;
+			let setSelectedPieceXY = this.setSelectedPieceXY;
 			allowedMoves.length = 0;
+			occupiedRed.length = 0;
+			occupiedBlue.length = 0;
+
+			console.log(pos)
+			console.log(color)
+
+
+			selectedPieceXY = [pos[0],pos[1]]
+			console.log("SELECTED PIECE XY " + selectedPieceXY);
+
 			if(this.turn === 'red' && this.piecesAreSelectable === true) {
-				this.selectedPieceXY = ([pos[0],pos[1]])
-				for (let piece in redPieces) {
-					if (redPieces[piece]['x'] === pos[0] && redPieces[piece]['y'] === pos[1]) {
-						setSelectedPiece(redPieces[piece]);
-					}
-				}
-				occupiedRed.length = 0;
-				console.log("SELECTED PIECEXY: " + this.selectedPieceXY)
+
 				for (let tile in gameBoardTiles) {
 					if(gameBoardTiles[tile]['occupied'] === 'red') {
 						occupiedRed.push(gameBoardTiles[tile]['pos'])
-						console.log("Occupied Red " + occupiedRed);
 					} else if (gameBoardTiles[tile]['occupied'] === 'blue') {
 						occupiedBlue.push(gameBoardTiles[tile]['pos']);
-						console.log("Occupied Blue " + occupiedRed)
-					}
-					if (gameBoardTiles[tile]['x'] === this.selectedPieceXY[0] && gameBoardTiles[tile]['y'] === this.selectedPieceXY[1]){
+					}	if (gameBoardTiles[tile]['x'] === selectedPieceXY[0] && gameBoardTiles[tile]['y'] === selectedPieceXY[1]){
 						setSelectedTile(gameBoardTiles[tile]);
+					}
+				}				
+				for (let piece in redPieces) {
+					if (redPieces[piece]['x'] === pos[0] && redPieces[piece]['y'] === pos[1]) {
+						setSelectedPiece(redPieces[piece]);
+						setSelectedPieceXY([pos[0],pos[1]]);
 					}
 				}
 				let selectedTile = getSelectedTile();
-				console.log("SELECTED TILE " + JSON.stringify(getSelectedTile()))
-				let testString = `tile${selectedTile.validMoves[0]}`;
-				console.log(testString)
+				console.log(selectedTile)
 				validMoves = selectedTile.validMoves;
-				console.log("VALID MOVES " + validMoves)
-				console.log("dropPiece OLDTILE " + JSON.stringify(selectedTile))
-				console.log(`valid moves ${validMoves}`)
-
 				validMoves.forEach(function(t) {
-
 					if (t > selectedTile.pos
-						&& !occupiedRed.includes(t)) {
+						&& !occupiedRed.includes(t)
+						&& t !== false) {
 							allowedMoves.push(`tile${t}`);
 					}
+					console.log("ALLOWED MOVES RED " + allowedMoves)
 				});
-
-
-			console.log("ALLOWED MOVES " + allowedMoves);
 			}
 
+			else if(this.turn === 'blue' && this.piecesAreSelectable === true) {
 
-		},
-
-		selectBlue(pos) {
-			let selectedTile = this.selectedTile;
-			let gameBoardTiles = this.gameBoardTiles;
-			if(this.turn === 'blue' && this.piecesAreSelectable === true) {
-				this.selectedPieceXY = ([pos[0],pos[1]])
-				console.log("SELECTED PIECEXY: " + this.selectedPieceXY)
 				for (let tile in gameBoardTiles) {
-					if (gameBoardTiles[tile]['x'] === this.selectedPieceXY[0] && gameBoardTiles[tile]['y'] === this.selectedPieceXY[1])
-					selectedTile = gameBoardTiles[tile]
-					
+					if(gameBoardTiles[tile]['occupied'] === 'blue') {
+						occupiedBlue.push(gameBoardTiles[tile]['pos'])
+					} else if (gameBoardTiles[tile]['occupied'] === 'blue') {
+						occupiedBlue.push(gameBoardTiles[tile]['pos']);
+					}	if (gameBoardTiles[tile]['x'] === selectedPieceXY[0] && gameBoardTiles[tile]['y'] === selectedPieceXY[1]){
+						setSelectedTile(gameBoardTiles[tile]);
+					}
+				}				
+				for (let piece in bluePieces) {
+					if (bluePieces[piece]['x'] === pos[0] && bluePieces[piece]['y'] === pos[1]) {
+						setSelectedPiece(bluePieces[piece]);
+						setSelectedPieceXY([pos[0],pos[1]]);
+					}
 				}
-				console.log("SELECTED TILE " + JSON.stringify(selectedTile))
+				let selectedTile = getSelectedTile();
+				console.log(selectedTile)
+				validMoves = selectedTile.validMoves;
+				validMoves.forEach(function(t) {
+					if (t < selectedTile.pos
+						&& !occupiedBlue.includes(t)
+						&& t !== false) {
+							allowedMoves.push(`tile${t}`);
+					}
+					console.log("ALLOWED MOVES BLUE " + allowedMoves)
+				});
 			}
 		},
 
-		dropPiece(newPosition) {
+		dropPiece(newPosition, color) {
 			let redPieces = this.redPieces;
 			let bluePieces = this.bluePieces;
 			let selectedPiece = this.getSelectedPiece();
@@ -178,7 +191,7 @@ export default {
 					if(gameBoardTiles[tile]['x'] === newPosition[0]
 						&& gameBoardTiles[tile]['y'] === newPosition[1]) {
 							newTile = gameBoardTiles[tile]
-							newTile.occupied = 'red';
+							newTile.occupied = 'blue';
 							selectedPiece.pos = newTile.pos;
 							selectedPiece.x = newTile.x;
 							selectedPiece.y = newTile.y;
@@ -186,13 +199,21 @@ export default {
 							gameBoardTiles[`tile${oldTile.pos}`]['occupied'] = 'empty';
 					}
 				});
+				this.selectedPieceXY = [];
 				console.log("NEW TILE: " + JSON.stringify(newTile));
 				console.log("RED PIECES: " + JSON.stringify(redPieces));
 				console.log("OLDTILE: " + JSON.stringify(oldTile))
+				this.changeTurn();
+				console.log(this.turn);
 			
+		},
 
-
-
+		changeTurn() {
+			if(this.turn === 'red') {
+				this.turn = 'blue';
+			} else if(this.turn === 'blue') {
+				this.turn = 'red';
+			}
 		},
 
 		getSelectedTile() {
@@ -207,9 +228,11 @@ export default {
 		setSelectedPiece(piece) {
 			this.selectedPiece = piece
 		},
-
 		getAllowedMoves() {
 			return this.allowedMoves;
+		},
+		setSelectedPieceXY(pieceXY) {
+			this.selectedPieceXY = pieceXY;
 		}
 	}
 }
