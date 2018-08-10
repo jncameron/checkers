@@ -38,6 +38,7 @@ export default {
             this.posXY = [this.posX, this.posY];
             this.$emit('redSelected', this.posXY);
 
+
         }
     }
  

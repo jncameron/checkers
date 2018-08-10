@@ -28,11 +28,11 @@ export default {
     methods: {
         selectBlue() {
             
-            this.position = this.transformWhite;
+            this.position = this.transformBlue;
             this.posX = this.position.split('(').pop().split(',').shift() - 30;
             this.posY = this.position.split(',').pop().split(')').shift() - 30;
             this.posXY = [this.posX, this.posY];
-            this.$emit('whiteSelected', this.posXY);
+            this.$emit('blueSelected', this.posXY);
 
 
         }
