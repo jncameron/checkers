@@ -15,7 +15,7 @@
 
 
 export default {
-  props: ['x','y' ],
+  props: {x:{type: Number}, y:{type: Number}},
   data() {
     return {
 

@@ -15,16 +15,21 @@
           <stop offset="100%" stop-color="#4072a0" />
         </linearGradient>
       </defs>
-      <tile v-for="(tile, index) in gameBoardTiles"
+      <board-tile v-for="(tile, index) in gameBoardTiles"
+				:key="index"
 			  v-bind:x="gameBoardTiles[(index)]['x']"
       	v-bind:y="gameBoardTiles[(index)]['y']">
 
-      </tile>
+      </board-tile>
 
-      <red-piece>
+      <red-piece v-for="(redPiece, index) in redPieces"
+				:key=redPiece.pos
+				:transformRed="transformRed(index)">
       </red-piece>
 
-      <blue-piece>
+      <blue-piece v-for="(bluePiece, index) in bluePieces"
+				:key=bluePiece.pos
+				:transformBlue="transformBlue(index)">>
       </blue-piece>
     </svg>
   </div>
@@ -52,9 +57,21 @@ export default {
 			}
 	},
 	components: {
-			'tile': Tile,
+			'board-tile': Tile,
 			'red-piece': RedPiece,
 			'blue-piece': BluePiece
+	},
+	methods: {
+		transformRed(i){
+			let x = redPieces[i]['x'] + 30;
+			let y = redPieces[i]['y'] + 30;
+			return(`translate(${x},${y})`);
+		},
+		transformBlue(i){
+			let x = bluePieces[i]['x'] + 30;
+			let y = bluePieces[i]['y'] + 30;
+			return(`translate(${x},${y})`);
+		}
 	}
 }
 </script>
