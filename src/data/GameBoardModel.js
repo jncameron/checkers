@@ -1,0 +1,37 @@
+
+let gameBoardTiles = {
+    tile1: { pos: 1, x: 100, y: 0, occupied: 'red', validMoves: [false,false,5,6], validJumps:[false,false,false,10]},
+    tile2: { pos: 2, x: 300, y: 0, occupied: 'red', validMoves: [false,false,6,7], validJumps:[false,false,9,11]},
+    tile3: { pos: 3, x: 500, y: 0, occupied: 'red', validMoves: [false,false,7,8], validJumps:[false,false,10,12]},
+    tile4: { pos: 4, x: 700, y: 0, occupied: 'red', validMoves: [false,false,8,false], validJumps:[false,false,11,false]},
+    tile5: { pos: 5, x: 0, y: 100, occupied: 'red', validMoves: [false,1,false,9], validJumps:[false,false,false,14]},
+    tile6: { pos: 6, x: 200, y: 100, occupied: 'red', validMoves: [1,2,9,10], validJumps:[false,false,13,15]},
+    tile7: { pos: 7, x: 400, y: 100, occupied: 'red', validMoves: [2,3,10,11], validJumps:[false,false,14,16]},
+    tile8: { pos: 8, x: 600, y: 100, occupied: 'red', validMoves: [3,4,11,12], validJumps:[false,false,15,false]},
+    tile9: { pos: 9, x: 100, y: 200, occupied: 'red', validMoves: [5,6,13,14], validJumps:[false,2,false,18]},
+    tile10: { pos: 10, x: 300, y: 200, occupied: 'red', validMoves: [6,7,14,15], validJumps:[1,3,17,19]},
+    tile11: { pos: 11, x: 500, y: 200, occupied: 'red', validMoves: [7,8,15,16], validJumps:[2,4,18,20]},
+    tile12: { pos: 12, x: 700, y: 200, occupied: 'red', validMoves: [8,false,16,false], validJumps:[3,false,19,false]},
+    tile13: { pos: 13, x: 0, y: 300, occupied: 'empty', validMoves: [false,9,false,17], validJumps:[false,6,false,22]},
+    tile14: { pos: 14, x: 200, y: 300, occupied: 'empty', validMoves: [9,10,17,18], validJumps:[5,7,21,23]},
+    tile15: { pos: 15, x: 400, y: 300, occupied: 'empty', validMoves: [10,11,18,19], validJumps:[6,8,22,24]},
+    tile16: { pos: 16, x: 600, y: 300, occupied: 'empty', validMoves: [11,12,19,20], validJumps:[7,false,23,false]},
+    tile17: { pos: 17, x: 100, y: 400, occupied: 'empty', validMoves: [13,14,21,22], validJumps:[false,10,false,26]},
+    tile18: { pos: 18, x: 300, y: 400, occupied: 'empty', validMoves: [14,15,22,23], validJumps:[9,11,25,27]},
+    tile19: { pos: 19, x: 500, y: 400, occupied: 'empty', validMoves: [15,16,23,24], validJumps:[10,12,26,28]},
+    tile20: { pos: 20, x: 700, y: 400, occupied: 'empty', validMoves: [16,false,24,false], validJumps:[11,false,27,false]},
+    tile21: { pos: 21, x: 0, y: 500, occupied: 'blue', validMoves: [false,17,false,25], validJumps:[false,14,false,30]},
+    tile22: { pos: 22, x: 200, y: 500, occupied: 'blue', validMoves: [17,18,25,26], validJumps:[13,15,29,31]},
+    tile23: { pos: 23, x: 400, y: 500, occupied: 'blue', validMoves: [18,19,26,27], validJumps:[14,16,30,32]},
+    tile24: { pos: 24, x: 600, y: 500, occupied: 'blue', validMoves: [19,20,27,28], validJumps:[15,false,31,false]},
+    tile25: { pos: 25, x: 100, y: 600, occupied: 'blue', validMoves: [21,22,29,30], validJumps:[false,18,false,false]},
+    tile26: { pos: 26, x: 300, y: 600, occupied: 'blue', validMoves: [22,23,30,31], validJumps:[17,19,false,false]},
+    tile27: { pos: 27, x: 500, y: 600, occupied: 'blue', validMoves: [23,24,31,32], validJumps:[18,20,false,false]},
+    tile28: { pos: 28, x: 700, y: 600, occupied: 'blue', validMoves: [24,false,32,false], validJumps:[19,false,false,false]},
+    tile29: { pos: 29, x: 0, y: 700, occupied: 'blue', validMoves: [false,25,false,false], validJumps:[false,22,false,false]},
+    tile30: { pos: 30, x: 200, y: 700, occupied: 'blue', validMoves: [25,26,false,false], validJumps:[21,23,false,false]},
+    tile31: { pos: 31, x: 400, y: 700, occupied: 'blue', validMoves: [26,27,false,false], validJumps:[22,24,false,false]},
+    tile32: { pos: 32, x: 600, y: 700, occupied: 'blue', validMoves: [27,28,false,false], validJumps:[23,false,false,false]}
+};
+
+  export default gameBoardTiles;

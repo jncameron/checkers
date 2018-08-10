@@ -1,28 +1,33 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+
+  <div id="app" style="padding-left: 0px;padding-right: 0px;margin:auto;">
+    <app-header class="container-fluid"></app-header>
+    <game-container></game-container>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+import Header from './components/header/Header.vue';
+import GameContainer from './components/game-container/GameContainer.vue';
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    'app-header': Header,
+    'game-container': GameContainer,
   }
 }
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin:auto;
+
 }
 </style>
