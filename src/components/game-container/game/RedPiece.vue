@@ -3,8 +3,10 @@
     <g id="black-link" :transform="transformRed" stroke="#000000" stroke-width="3">
         <g id="black">
             <ellipse id="Oval" fill="#000000" cx="19.934334" cy="20.5428287" rx="35" ry="30"></ellipse>
-            <ellipse v-on:click="selectRed()" id="Oval" fill="url(#redGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>
-            <!-- <ellipse v-if="crowned" v-on:click="selectRed()" id="Oval" stroke="#FFAB00" stroke-width="9" fill="#B71C1C" cx="20" cy="16" rx="18" ry="18"></ellipse> -->
+            <ellipse id="Oval" fill="url(#redGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>
+            <ellipse v-if="turn === 'red'" v-on:click="selectRed()" id="Oval" fill="url(#redGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>
+           
+		    <!-- <ellipse v-if="crowned" v-on:click="selectRed()" id="Oval" stroke="#FFAB00" stroke-width="9" fill="#B71C1C" cx="20" cy="16" rx="18" ry="18"></ellipse> -->
             <!-- <image v-if="crowned" v-on:click="selectRed()" class="expandOpen" x="-6" y="-10" width="53" height="53"  xlink:href="../../../assets/gold-crown-red.svg" /> -->
         </g>
     </g>
@@ -17,7 +19,8 @@
 
 export default {
     props: {
-        transformRed: {type: String},
+		transformRed: {type: String},
+		turn: {type: String}
 
     },
 

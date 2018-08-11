@@ -3,10 +3,12 @@
     <g id="black-link" :transform="transformBlue" stroke="#000000" stroke-width="3">
         <g id="black">
             <ellipse class="slide-in" id="Oval" fill="#000000" cx="19.934334" cy="20.5428287" rx="35" ry="30"></ellipse>
-            <ellipse v-on:click="selectBlue()" id="Oval" fill="url(#blueGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>
-            <!-- <ellipse v-if="crowned" v-on:click="selectWhite()" id="Oval" stroke="#FFAB00" stroke-width="12" fill="#FFAB00" cx="20" cy="16" rx="12" ry="12"></ellipse> -->
+            <ellipse id="Oval" fill="url(#blueGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>
+            <ellipse v-if="turn === 'blue'" v-on:click="selectBlue()" id="Oval" fill="url(#blueGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>           
+		    <!-- <ellipse v-if="crowned" v-on:click="selectWhite()" id="Oval" stroke="#FFAB00" stroke-width="12" fill="#FFAB00" cx="20" cy="16" rx="12" ry="12"></ellipse> -->
             <!-- <image v-if="crowned" v-on:click="selectWhite()" class="expandOpen" x="-6" y="-10" width="53" height="53" xlink:href="../../assets/gold-crown.svg" /> -->
-        </g>
+        
+		</g>
     </g>
 
 
@@ -15,7 +17,8 @@
 <script>
 export default {
     props: {
-        transformBlue: {type: String}
+		transformBlue: {type: String},
+		turn: {type: String}
     },
         data() {
         return {

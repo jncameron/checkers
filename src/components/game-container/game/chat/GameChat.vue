@@ -1,3 +1,3 @@
 <template>
-    <p>GameChat</p>
+    <p>ChattyChat</p>
 </template>
