@@ -5,10 +5,10 @@
             <ellipse id="Oval" fill="#000000" cx="19.934334" cy="20.5428287" rx="35" ry="30"></ellipse>
             <ellipse id="Oval" fill="url(#redGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>
             <ellipse v-if="turn === 'red'" v-on:click="selectRed()" id="Oval" fill="url(#redGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>
-           
-		    <!-- <ellipse v-if="crowned" v-on:click="selectRed()" id="Oval" stroke="#FFAB00" stroke-width="9" fill="#B71C1C" cx="20" cy="16" rx="18" ry="18"></ellipse> -->
-            <!-- <image v-if="crowned" v-on:click="selectRed()" class="expandOpen" x="-6" y="-10" width="53" height="53"  xlink:href="../../../assets/gold-crown-red.svg" /> -->
-        </g>
+           	<image v-if="crownedRed && turn==='red'" v-on:click="selectRed()" class="expandOpen" x="-6" y="-10" width="53" height="53"  xlink:href="../../../assets/gold-crown-red.svg" />
+			<image v-else-if="crownedRed" class="expandOpen" x="-6" y="-10" width="53" height="53" xlink:href="../../../assets/gold-crown-red.svg" />
+        
+		</g>
     </g>
 
 
@@ -20,7 +20,8 @@
 export default {
     props: {
 		transformRed: {type: String},
-		turn: {type: String}
+		turn: {type: String},
+		crownedRed: {type: Boolean}
 
     },
 
@@ -63,39 +64,4 @@ export default {
 	visibility: visible !important;	
 }
 
-@keyframes expandOpen {
-	0% {
-		transform: scale(1.4);		
-	}
-	50% {
-		transform: scale(0.95);
-	}	
-	80% {
-		transform: scale(1.15);
-	}
-	90% {
-		transform: scale(0.98);
-	}	
-	100% {
-		transform: scale(1);
-	}			
-}
-
-@-webkit-keyframes expandOpen {
-	0% {
-		-webkit-transform: scale(1.4);		
-	}
-	50% {
-		-webkit-transform: scale(0.95);
-	}	
-	80% {
-		-webkit-transform: scale(1.15);
-	}
-	90% {
-		-webkit-transform: scale(0.98);
-	}	
-	100% {
-		-webkit-transform: scale(1);
-	}					
-}
 </style>

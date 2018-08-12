@@ -5,9 +5,8 @@
             <ellipse class="slide-in" id="Oval" fill="#000000" cx="19.934334" cy="20.5428287" rx="35" ry="30"></ellipse>
             <ellipse id="Oval" fill="url(#blueGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>
             <ellipse v-if="turn === 'blue'" v-on:click="selectBlue()" id="Oval" fill="url(#blueGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>           
-		    <!-- <ellipse v-if="crowned" v-on:click="selectWhite()" id="Oval" stroke="#FFAB00" stroke-width="12" fill="#FFAB00" cx="20" cy="16" rx="12" ry="12"></ellipse> -->
-            <!-- <image v-if="crowned" v-on:click="selectWhite()" class="expandOpen" x="-6" y="-10" width="53" height="53" xlink:href="../../assets/gold-crown.svg" /> -->
-        
+			<image v-if="crownedBlue && turn==='blue'" v-on:click="selectBlue()" class="expandOpen" x="-6" y="-10" width="53" height="53" xlink:href="../../../assets/gold-crown.svg" />
+			<image v-else-if="crownedBlue" class="expandOpen" x="-6" y="-10" width="53" height="53" xlink:href="../../../assets/gold-crown.svg" />
 		</g>
     </g>
 
@@ -18,7 +17,8 @@
 export default {
     props: {
 		transformBlue: {type: String},
-		turn: {type: String}
+		turn: {type: String},
+		crownedBlue: {type: Boolean}
     },
         data() {
         return {
@@ -58,43 +58,5 @@ export default {
 
 	visibility: visible !important;	
 }
-
-@keyframes expandOpen {
-	0% {
-		transform: scale(1.4);		
-	}
-	50% {
-		transform: scale(0.95);
-	}	
-	80% {
-		transform: scale(1.15);
-	}
-	90% {
-		transform: scale(0.98);
-	}	
-	100% {
-		transform: scale(1);
-	}			
-}
-
-@-webkit-keyframes expandOpen {
-	0% {
-		-webkit-transform: scale(1.4);		
-	}
-	50% {
-		-webkit-transform: scale(0.95);
-	}	
-	80% {
-		-webkit-transform: scale(1.15);
-	}
-	90% {
-		-webkit-transform: scale(0.98);
-	}	
-	100% {
-		-webkit-transform: scale(1);
-	}					
-}
-
-
 
 </style>
