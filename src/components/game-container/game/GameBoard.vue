@@ -1,6 +1,11 @@
 <template>
     <div>
-
+	<game-finished v-if="gameStatus === 'OVER'" :winner="winner" @close="showModal = false">
+      <!--
+        you can use custom content here to overwrite
+        default content
+      -->
+    </game-finished>
    
     <svg viewBox="0 0 800 800"
       xmlns="http://www.w3.org/2000/svg"
@@ -50,12 +55,17 @@
 import redPieces from '../../../data/RedPlayerModel.js'
 import bluePieces from '../../../data/BluePlayerModel.js'
 import gameBoardTiles from '../../../data/GameBoardModel.js'
-
+import GameFinished from './GameFinished.vue';
 import Tile from './Tile.vue';
 import RedPiece from './RedPiece.vue';
 import BluePiece from './BluePiece.vue';
 
 export default {
+	props: {
+		gameStatus: {type: String},
+		draw: {type: Boolean},
+		winner: {type: String}
+	},
 	data() {
 			return {
 				redPieces: redPieces,
@@ -77,13 +87,13 @@ export default {
 				canBeJumped: [],
 				jumpsAvailable: false,
 				hasJumped: false,
-
 			}
 	},
 	components: {
 			'board-tile': Tile,
 			'red-piece': RedPiece,
-			'blue-piece': BluePiece
+			'blue-piece': BluePiece,
+			'game-finished': GameFinished,
 	},
 	methods: {
 		transformRed(i){
@@ -150,15 +160,11 @@ export default {
 			selectedPieceXY = [pos[0],pos[1]]
 
 
-
-
 				for (let tile in gameBoardTiles) {
 					
 					if(gameBoardTiles[tile]['occupied'] === 'red' ) {
-						// `${color}Occupied.push(gameBoardTiles[tile]['pos'])`
 						redOccupied.push(gameBoardTiles[tile]['pos'])
 					} else if (gameBoardTiles[tile]['occupied'] === 'blue') {
-						//`${opponentColor}Occupied.push(gameBoardTiles[tile]['pos'])`;
 						blueOccupied.push(gameBoardTiles[tile]['pos'])
 					}	if (gameBoardTiles[tile]['x'] === selectedPieceXY[0] && gameBoardTiles[tile]['y'] === selectedPieceXY[1]){
 						setSelectedTile(gameBoardTiles[tile]);
@@ -296,6 +302,7 @@ export default {
 			let getHasJumped = this.getHasJumped;
 
 			let crown = this.crown;
+			
 
 
 
@@ -337,6 +344,9 @@ export default {
 
 											if (opponentPieces[piece]['pos'] === validMoves[index]) {
 												delete opponentPieces[piece]
+												if(color === 'red') {
+													
+												}
 											}
 											
 										}
@@ -360,6 +370,12 @@ export default {
 
 					}
 				});
+				if(color === 'red') {
+					this.$emit('bluePiecesRemaining', Object.keys(this.bluePieces))
+				}
+				else if(color === 'blue') {
+					this.$emit('redPiecesRemaining', Object.keys(this.redPieces))
+				}
 			}
 
 			if (this.jumpsAvailable === false && hasJumped === false){
