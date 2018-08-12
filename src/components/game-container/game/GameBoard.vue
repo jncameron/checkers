@@ -86,6 +86,7 @@ export default {
 				blueOccupied: [],
 				canBeJumped: [],
 				jumpsAvailable: false,
+				movesAvailable: true,
 				hasJumped: false,
 			}
 	},
@@ -134,12 +135,16 @@ export default {
 			let opponentPieces = {};
 			let canBeJumped = [];
 			let jumpsAvailable = this.jumpsAvailable;
+			let movesAvailable = this.movesAvailable;
 			let checkAvailableJumps = this.checkAvailableJumps;
+			let checkAvailableMoves = this.checkAvailableMoves;
 			let getJumpsAvailable = this.getJumpsAvailable;
 			let changeTurn = this.changeTurn;
-
-			let selectedPiece = {};
-			selectedPiece.crown = false;
+			let setCanBeJumped = this.setCanBeJumped;
+			let selectedPiece = this.selectedPiece;
+			let getGameBoardTiles = this.getGameBoardTiles;
+			console.log()
+			// selectedPiece.crown = false;
 			validMoveXY.length = 0;
 			validJumpXY.length = 0;
 			selectedPieceXY.length = 0;		
@@ -178,7 +183,10 @@ export default {
 					}
 				}
 
+
+
 				// hasJumped = false;
+				checkAvailableMoves();
 				checkAvailableJumps();
 				let selectedTile = getSelectedTile();
 				jumpsAvailable = this.getJumpsAvailable();
@@ -189,10 +197,17 @@ export default {
 				validMoves = selectedTile.validMoves;
 				validJumps = selectedTile.validJumps;
 
-			
+				console.log("VALID JUMPS (DROP PIECE )" + validJumps)
+				console.log("VALID MOVES (DROP PIECE )" + validMoves)
+				console.log("SELECTEDTILE " + selectedTile.pos)
+				console.log("color " + color)
+				console.log("GAMEBOARDTILES " + JSON.stringify(gameBoardTiles))
+
+				//gameBoardTiles = getGameBoardTiles();
 
 				if(jumpsAvailable === true) {
 					console.log("JUMPS AVAILABLE")
+					
 					validJumps.forEach(function(t,i) {
 
 						if((t > selectedTile.pos || selectedPiece.crown === true)
@@ -204,9 +219,9 @@ export default {
 
 							allowedJumps.push(`tile${t}`)
 							canBeJumped.push(validMoves[i])
-
+							console.log("CANBEJUMPED RED (DROPPIECE) " + canBeJumped)
 						}
-						else if((t < selectedTile.pos || selectedPiece.crown === true)
+						if((t < selectedTile.pos || selectedPiece.crown === true)
 							&& !redOccupied.includes(t)
 							&& !blueOccupied.includes(t)
 							&& t !== false
@@ -216,10 +231,9 @@ export default {
 							allowedJumps.push(`tile${t}`)
 							
 							canBeJumped.push(validMoves[i])
-
-
+							console.log("CANBEJUMPED BLUE (DROPPIECE) " + canBeJumped)
 						}
-						
+						setCanBeJumped(canBeJumped)
 
 					});
 				}
@@ -268,8 +282,8 @@ export default {
 		},
 
 		dropPiece(newPosition) {
-			let pieces = [];
-			let opponentPieces = [];
+			let pieces = {};
+			let opponentPieces = {};
 			let selectedPiece = this.selectedPiece;
 			let getSelectedPiece = this.getSelectedPiece;
 			let setSelectedPieceXY = this.setSelectedPieceXY;
@@ -301,7 +315,7 @@ export default {
 			let setHasJumped = this.setHasJumped;
 			let getHasJumped = this.getHasJumped;
 
-			let crown = this.crown;
+			let crownPiece = this.crownPiece;
 			
 
 
@@ -316,6 +330,7 @@ export default {
 
 
 			selectedPiece = getSelectedPiece();
+			console.log("SELECTED PIECE (DROPPIECE) " + JSON.stringify(selectedPiece))
 
 			if (allowedJumps.length > 0) {
 				allowedJumps.forEach(function(tile) {
@@ -329,12 +344,17 @@ export default {
 							selectedPiece.pos = newTile.pos;
 							selectedPiece.x = newTile.x;
 							selectedPiece.y = newTile.y;
+							setSelectedPiece(selectedPiece);
+							console.log("UPDATED SELECTEDPIECE (DROPPIECE) " + JSON.stringify(selectedPiece))
+							// selectedPiece.crown = false;
 							
 							oldTile.occupied = 'empty';
 
 							gameBoardTiles[`tile${oldTile.pos}`]['occupied'] = 'empty';
+							
 							for(let piece in opponentPieces) {
-
+								console.log("CANBEJUMPED " + canBeJumped)
+								
 								
 								if (canBeJumped.includes(opponentPieces[piece]['pos'])) {
 
@@ -343,16 +363,25 @@ export default {
 											let moveIndex = validMoves[index]
 
 											if (opponentPieces[piece]['pos'] === validMoves[index]) {
+												
+												let position = opponentPieces[piece]['pos'] 
 												delete opponentPieces[piece]
+												gameBoardTiles[`tile${position}`]['occupied'] = 'empty';
+												
+
 												if(color === 'red') {
+													// console.log(gameBoardTiles[`tile${position}`])
 													
 												}
 											}
 											
 										}
 									});
-									crown(selectedPiece);
-									gameBoardTiles[`tile${canBeJumped[0]}`]['occupied'] = 'empty';
+									console.log("OPPONENT PIECES " + JSON.stringify(opponentPieces[piece]))
+									crownPiece(selectedPiece);
+
+									//PROBLEMS HERE
+									//gameBoardTiles[`tile${canBeJumped[0]}`]['occupied'] = 'empty';
 									validMoveXY.length = 0;
 									validJumpXY.length = 0;
 									selectedPiece = {};
@@ -367,6 +396,7 @@ export default {
 									selectPiece([newTile.x,newTile.y],color, opponentColor, hasJumped)
 								}
 							}
+							console.log("OPPONENT PIECES " + JSON.stringify(opponentPieces))
 
 					}
 				});
@@ -389,7 +419,7 @@ export default {
 							selectedPiece.pos = newTile.pos;
 							selectedPiece.x = newTile.x;
 							selectedPiece.y = newTile.y;
-							crown(selectedPiece);
+							crownPiece(selectedPiece);
 							oldTile.occupied = 'empty';
 							gameBoardTiles[`tile${oldTile.pos}`]['occupied'] = 'empty';
 							validMoveXY.length = 0;
@@ -423,7 +453,7 @@ export default {
       		return(this.bluePieces[i]['crown'])
 		},
 		
-		crown(piece) {
+		crownPiece(piece) {
 			console.log("PIECE CROWN " + piece['crown'])
 			console.log("PIECE POS " + piece['pos'])
 
@@ -450,12 +480,9 @@ export default {
 			let selectedPiece = this.selectedPiece;
 			this.jumpsAvailable = false;
 			for (let tile in gameBoardTiles) {
-
 			selectedPiece = this.getSelectedPiece();
 				let validJumps = gameBoardTiles[tile].validJumps;
 				let validMoves = gameBoardTiles[tile].validMoves;
-				
-				
 				validJumps.forEach(function(t,i) {
 					let tileToBeJumped = `tile${validMoves[i]}`
 					if(color === 'red') {
@@ -471,7 +498,6 @@ export default {
 								canJump = true;
 							} 
 					}
-
 					if (color === 'blue') {
 						let gameTileJumped = gameBoardTiles[tileToBeJumped]
 					 if ((t < gameBoardTiles[tile].pos || selectedPiece.crown === true)
@@ -484,12 +510,70 @@ export default {
 							canJump = true;
 						}
 					}
-					
 				});
 				this.jumpsAvailable = canJump;
 			}
 
 		},
+
+		checkAvailableMoves() {
+			let color = this.turn
+			let redOccupied = this.redOccupied;
+			let blueOccupied = this.blueOccupied;
+			let canMove = false;
+			let selectedPiece = this.selectedPiece;
+			this.movesAvailable = false;
+			for (let tile in gameBoardTiles) {
+			selectedPiece = this.getSelectedPiece();
+				let validMoves = gameBoardTiles[tile].validMoves;
+				validMoves.forEach(function(t,i) {
+					let tileToBeJumped = `tile${validMoves[i]}`
+					if(color === 'red') {
+
+						let gameTileJumped = gameBoardTiles[tileToBeJumped]
+					
+						if((t > gameBoardTiles[tile].pos || selectedPiece.crown === true)
+							&& !redOccupied.includes(t)
+							&& !blueOccupied.includes(t)
+							&& t !== false) {
+								canMove = true;
+							} 
+					}
+					else if (color === 'blue') {
+						let gameTileJumped = gameBoardTiles[tileToBeJumped]
+
+						if((t < gameBoardTiles[tile].pos || selectedPiece.crown === true)
+							&& !redOccupied.includes(t)
+							&& !blueOccupied.includes(t)
+							&& t !== false) {
+								canMove = true;
+						} 
+					} else {
+						canMove = false;f
+					}
+					
+				});
+				this.movesAvailable = canMove;
+			}
+
+		},
+
+		getGameBoardTiles() {
+			return this.gameBoardTiles
+		},
+
+		getBluePieces() {
+			return this.bluePieces;
+		},
+
+		getRedPieces() {
+			return this.redPieces;
+		},
+
+		setCanBeJumped(jumpsPossible) {
+			this.canBeJumped = jumpsPossible
+		},
+
 		getJumpsAvailable() {
 			return this.jumpsAvailable;
 		},
