@@ -88,6 +88,7 @@ export default {
 				jumpsAvailable: false,
 				movesAvailable: true,
 				hasJumped: false,
+				justCrowned: false,
 			}
 	},
 	components: {
@@ -143,6 +144,7 @@ export default {
 			let setCanBeJumped = this.setCanBeJumped;
 			let selectedPiece = this.selectedPiece;
 			let getGameBoardTiles = this.getGameBoardTiles;
+			
 			console.log()
 			// selectedPiece.crown = false;
 			validMoveXY.length = 0;
@@ -316,6 +318,10 @@ export default {
 			let getHasJumped = this.getHasJumped;
 
 			let crownPiece = this.crownPiece;
+			let justCrowned = this.justCrowned;
+			let getJustCrowned = this.getJustCrowned;
+			let setJustCrowned = this.setJustCrowned;
+
 			
 
 
@@ -390,10 +396,22 @@ export default {
 									allowedJumps.length = 0;
 									allowedMoves.length = 0;
 									canBeJumped.length = 0;
-									setHasJumped(true);
-									getHasJumped();
-									
-									selectPiece([newTile.x,newTile.y],color, opponentColor, hasJumped)
+									justCrowned = getJustCrowned();
+
+									if(justCrowned === false) {
+										setHasJumped(true);
+										getHasJumped();
+										selectPiece([newTile.x,newTile.y],color, opponentColor, hasJumped)
+									} else {
+										setJustCrowned(false);
+										changeTurn();
+										allowedJumps.length = 0;
+										allowedMoves.length = 0;
+										canBeJumped.length = 0;
+
+									}
+
+
 								}
 							}
 							console.log("OPPONENT PIECES " + JSON.stringify(opponentPieces))
@@ -456,18 +474,25 @@ export default {
 		crownPiece(piece) {
 			console.log("PIECE CROWN " + piece['crown'])
 			console.log("PIECE POS " + piece['pos'])
+			let justCrowned = false;
 
 			if (piece['crown'] === false && this.turn === 'red') {
 				if (piece['pos'] === 29 || piece['pos'] === 30 || piece['pos'] === 31 || piece['pos'] === 32) {
 					console.log("CROWNING PIECE " + piece['pos'])
 					piece['crown'] = true;
+					justCrowned = true;				
 				}
 			}
 			else if (piece['crown'] === false && this.turn === 'blue') {
 				if (piece['pos'] === 1 || piece['pos'] === 2 || piece['pos'] === 3 || piece['pos'] === 4) {
 					console.log("CROWNING PIECE " + piece['pos'])
 					piece['crown'] = true;
-				}
+					justCrowned = true;
+				}	
+			}
+			if (justCrowned === true) {
+				this.setJustCrowned(justCrowned);
+				console.log("JUST CROWNED A PIECE")
 			}
 
 		},
@@ -576,6 +601,14 @@ export default {
 
 		getJumpsAvailable() {
 			return this.jumpsAvailable;
+		},
+
+		getJustCrowned() {
+			return this.justCrowned
+		},
+
+		setJustCrowned(crownStatus) {
+			this.justCrowned = crownStatus;
 		},
 
 		getSelectedTile() {
