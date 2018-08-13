@@ -3,13 +3,13 @@
     <div class="container-fluid">
         <div class="navbar-header">
         <img class=" nav navbar-brand"  src="./checkers-icon.svg">
-        <h1 class="navbar-brand" style="color:#FFF">CHECKERS</h1>
+        <h1 class="navbar-brand" style="color:#FFF;font-size:32px">Checkers</h1>
         </div> 
 
         <div class="nav navbar navbar-right"  style="margin-bottom:0;margin-top:10px;">
         <ul class="nav navbar-nav" >
             <li class="nav-item-active"><a class="nav-link" href="#">PLAY</a></li>
-            <li class="nav-item" style="padding-left:20px"><a class="nav-link" href="#">PROFILE</a></li>
+            <li class="nav-item" style="padding-left:20px;"><a class="nav-link" style="color:#d3d3d3" href="#">PROFILE</a></li>
         </ul>
         </div>
     </div>
@@ -20,7 +20,7 @@
 nav {
     font-family: 'Audiowide', cursive;
     font-weight: bold;
-    background-color: #B71C1C;
+    background-color: dimgray;
     color: #FFF;
 }
 

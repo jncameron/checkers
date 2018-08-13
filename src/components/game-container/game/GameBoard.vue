@@ -145,7 +145,6 @@ export default {
 			let selectedPiece = this.selectedPiece;
 			let getGameBoardTiles = this.getGameBoardTiles;
 			
-			console.log()
 			// selectedPiece.crown = false;
 			validMoveXY.length = 0;
 			validJumpXY.length = 0;
@@ -199,16 +198,7 @@ export default {
 				validMoves = selectedTile.validMoves;
 				validJumps = selectedTile.validJumps;
 
-				console.log("VALID JUMPS (DROP PIECE )" + validJumps)
-				console.log("VALID MOVES (DROP PIECE )" + validMoves)
-				console.log("SELECTEDTILE " + selectedTile.pos)
-				console.log("color " + color)
-				console.log("GAMEBOARDTILES " + JSON.stringify(gameBoardTiles))
-
-				//gameBoardTiles = getGameBoardTiles();
-
 				if(jumpsAvailable === true) {
-					console.log("JUMPS AVAILABLE")
 					
 					validJumps.forEach(function(t,i) {
 
@@ -221,7 +211,6 @@ export default {
 
 							allowedJumps.push(`tile${t}`)
 							canBeJumped.push(validMoves[i])
-							console.log("CANBEJUMPED RED (DROPPIECE) " + canBeJumped)
 						}
 						if((t < selectedTile.pos || selectedPiece.crown === true)
 							&& !redOccupied.includes(t)
@@ -233,7 +222,6 @@ export default {
 							allowedJumps.push(`tile${t}`)
 							
 							canBeJumped.push(validMoves[i])
-							console.log("CANBEJUMPED BLUE (DROPPIECE) " + canBeJumped)
 						}
 						setCanBeJumped(canBeJumped)
 
@@ -243,7 +231,6 @@ export default {
 				//IF PLAYER HASN'T JUMPED, CHECK FOR MOVES
 
 				else if(hasJumped === false && jumpsAvailable === false) {
-					console.log("JUMPS NOT AVAILABLE AND HASN'T JUMPED")
 					validMoves.forEach(function(t) {
 						if ((t > selectedTile.pos || selectedPiece.crown === true)
 							&& !redOccupied.includes(t)
@@ -263,7 +250,6 @@ export default {
 					});
 
 				} else if (hasJumped === true && jumpsAvailable === false){
-					console.log("JUMPS NOT AVAILABLE AND HAS JUMPED")
 					changeTurn();
 					setSelectedPieceXY([])
 					this.setHasJumped(false)
@@ -336,7 +322,6 @@ export default {
 
 
 			selectedPiece = getSelectedPiece();
-			console.log("SELECTED PIECE (DROPPIECE) " + JSON.stringify(selectedPiece))
 
 			if (allowedJumps.length > 0) {
 				allowedJumps.forEach(function(tile) {
@@ -351,17 +336,12 @@ export default {
 							selectedPiece.x = newTile.x;
 							selectedPiece.y = newTile.y;
 							setSelectedPiece(selectedPiece);
-							console.log("UPDATED SELECTEDPIECE (DROPPIECE) " + JSON.stringify(selectedPiece))
-							// selectedPiece.crown = false;
 							
 							oldTile.occupied = 'empty';
 
 							gameBoardTiles[`tile${oldTile.pos}`]['occupied'] = 'empty';
 							
-							for(let piece in opponentPieces) {
-								console.log("CANBEJUMPED " + canBeJumped)
-								
-								
+							for(let piece in opponentPieces) {	
 								if (canBeJumped.includes(opponentPieces[piece]['pos'])) {
 
 									validJumps.forEach(function (jump, index) {
@@ -376,18 +356,13 @@ export default {
 												
 
 												if(color === 'red') {
-													// console.log(gameBoardTiles[`tile${position}`])
 													
 												}
 											}
 											
 										}
 									});
-									console.log("OPPONENT PIECES " + JSON.stringify(opponentPieces[piece]))
 									crownPiece(selectedPiece);
-
-									//PROBLEMS HERE
-									//gameBoardTiles[`tile${canBeJumped[0]}`]['occupied'] = 'empty';
 									validMoveXY.length = 0;
 									validJumpXY.length = 0;
 									selectedPiece = {};
@@ -408,14 +383,9 @@ export default {
 										allowedJumps.length = 0;
 										allowedMoves.length = 0;
 										canBeJumped.length = 0;
-
 									}
-
-
 								}
 							}
-							console.log("OPPONENT PIECES " + JSON.stringify(opponentPieces))
-
 					}
 				});
 				if(color === 'red') {
@@ -461,6 +431,7 @@ export default {
 			} else if(this.turn === 'blue') {
 				this.turn = 'red';
 			}
+			this.$emit('turn',this.turn);
 		},
 
 		redPieceCrowned(i) {
@@ -472,27 +443,22 @@ export default {
 		},
 		
 		crownPiece(piece) {
-			console.log("PIECE CROWN " + piece['crown'])
-			console.log("PIECE POS " + piece['pos'])
 			let justCrowned = false;
 
 			if (piece['crown'] === false && this.turn === 'red') {
 				if (piece['pos'] === 29 || piece['pos'] === 30 || piece['pos'] === 31 || piece['pos'] === 32) {
-					console.log("CROWNING PIECE " + piece['pos'])
 					piece['crown'] = true;
 					justCrowned = true;				
 				}
 			}
 			else if (piece['crown'] === false && this.turn === 'blue') {
 				if (piece['pos'] === 1 || piece['pos'] === 2 || piece['pos'] === 3 || piece['pos'] === 4) {
-					console.log("CROWNING PIECE " + piece['pos'])
 					piece['crown'] = true;
 					justCrowned = true;
 				}	
 			}
 			if (justCrowned === true) {
 				this.setJustCrowned(justCrowned);
-				console.log("JUST CROWNED A PIECE")
 			}
 
 		},
@@ -582,11 +548,9 @@ export default {
 			}
 
 		},
-
 		getGameBoardTiles() {
 			return this.gameBoardTiles
 		},
-
 		getBluePieces() {
 			return this.bluePieces;
 		},
@@ -649,7 +613,6 @@ export default {
 		setHasJumped(has) {
 			this.hasJumped = has;
 		},
-
 	}
 }
 </script>

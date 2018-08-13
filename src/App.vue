@@ -13,6 +13,7 @@ import GameContainer from './components/game-container/GameContainer.vue';
 
 export default {
   name: 'app',
+
   components: {
     'app-header': Header,
     'game-container': GameContainer,
@@ -22,7 +23,7 @@ export default {
 
 <style scoped>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Audiowide', cursive;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
