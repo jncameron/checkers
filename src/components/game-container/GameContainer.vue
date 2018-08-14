@@ -68,6 +68,7 @@ export default {
 				this.gameStatus = 'OVER'
 				this.winner = this.challengerName;
 			}
+			this.fetchPlayer();
 		},
 		redPiecesRemaining(pieces) {
 			this.redPieces = pieces;
@@ -90,17 +91,23 @@ export default {
 		},
 		whoseTurn(t) {
 			this.turn = t;
-			this.fetchData();
+			this.fetchPlayer();
 			this.sendMove();
 		},
 		fetchData() {
-			this.$http.get('http://localhost:3000/api/posts')
+			this.$http.get('http://192.168.222.128:3000/api/receive')
+				.then(response => {
+					return response.json();	
+				}).then(data => console.log("DATA: " + JSON.stringify(data)));
+		},
+		fetchPlayer() {
+			this.$http.get('http://192.168.222.128:3000/profile')
 				.then(response => {
 					return response.json();	
 				}).then(data => console.log("DATA: " + JSON.stringify(data)));
 		},
 		sendMove() {
-			this.$http.post('http://localhost:3000/api/posts', this.turn)
+			this.$http.post('http://192.168.222.128:3000/api/send', {title: "John", content: this.turn})
 					.then(response => {
 						console.log(response);
 					}, error => {

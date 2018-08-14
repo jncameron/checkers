@@ -1,0 +1,13 @@
+<svg width="30px" height="30px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs></defs>
+  <g id="Playing" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+      <g id="Desktop-HD" transform="translate(-239.000000, -15.000000)">
+          <g id="icon" transform="translate(264.000000, 40.000000) rotate(-19.000000) translate(-264.000000, -40.000000) translate(239.000000, 15.000000)">
+              <circle id="Oval-3" fill="#FFF" cx="25" cy="25" r="25"></circle>
+              <rect id="Rectangle-5" stroke="dimgray" fill="#d3d3d3" x="10" y="10" width="30" height="30"></rect>
+              <rect id="Rectangle-6" stroke="" fill="#4072a0" x="25" y="25" width="15" height="14.5"></rect>
+              <rect id="Rectangle-6" stroke="" fill="#b71c1c" x="10" y="10.5" width="15" height="14.5"></rect>
+          </g>
+      </g>
+  </g>
+</svg>
