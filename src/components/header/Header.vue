@@ -8,8 +8,10 @@
 
         <div class="nav navbar navbar-right"  style="margin-bottom:0;margin-top:10px;">
         <ul class="nav navbar-nav" >
-            <li class="nav-item-active"><a class="nav-link" href="#">PLAY</a></li>
-            <li class="nav-item" style="padding-left:20px;"><a class="nav-link" style="color:#d3d3d3" href="#">PROFILE</a></li>
+            <router-link to="/game" tag="li" active-class="active"  ><a class="nav-link" style="color:d3d3d3">PLAY</a></router-link>
+            <!-- <li class="nav-item-active"><a class="nav-link" href="#">PLAY</a></li> -->
+            <router-link to="/profile" tag="li" active-class="active" ><a class="nav-link" style="color:d3d3d3">PROFILE</a></router-link>
+            <!-- <li class="nav-item" style="padding-left:20px;"><a class="nav-link" style="color:#d3d3d3" href="#">PROFILE</a></li> -->
         </ul>
         </div>
     </div>
@@ -39,12 +41,18 @@ img {
     margin-top: 15px;
 }
 
-.navbar-default .navbar-nav  {
-    color: #B71C1C;
+.navbar-default .navbar-nav>li>a {
+    color: #d3d3d3;
 }
 
-.nav-item-active .nav-link {
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover
+
+.active .nav-link {
     color: #FFF;
+    background-color: #777;
 }
+
+
+
 
 </style>

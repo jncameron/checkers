@@ -10,7 +10,7 @@
 				:challengerName="challengerName" 
 				:message="message" 
 				:info="info"
-				style="height:630px;width:300px;border: inset #2d353c 10px;border-radius:10px"></game-score-board>
+				style="max-height:630px;max-width:300px;border: inset #2d353c 10px;border-radius:10px"></game-score-board>
 		<div class="col-md-1 blank-col"></div>
 			<game-board class="col-md-5 el"
 				:gameStatus="gameStatus"

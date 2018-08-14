@@ -2,7 +2,9 @@ const path = require("path");
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+
 const profileRoutes = require('./routes/profile');
+const userRoutes = require('./routes/user');
 
 
 const Message = require('./models/message');
@@ -22,7 +24,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use("/", express.static(path.join(__dirname, "dist")));
 
-app.use('/profile', profileRoutes);
 
 app.use((req,res,next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -33,6 +34,24 @@ app.use((req,res,next) => {
         "Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS"
     );
     next();
+});
+
+app.use('/profile', profileRoutes);
+app.use("/user", userRoutes);
+
+app.use((req, res, next) => {
+	const error = new Error("Not found");
+	error.status = 404;
+	next(error);
+  });
+
+app.use((error, req, res, next) => {
+    res.status(error.status || 500);
+    res.json({
+        error: {
+            message: error.message
+        }
+    });
 });
 
 app.post("/api/send", (req,res,next) => {

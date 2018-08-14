@@ -2,7 +2,8 @@
 
   <div id="app" style="padding-left: 0px;padding-right: 0px;margin:auto;">
     <app-header class="container-fluid"></app-header>
-    <game-container></game-container>
+    <router-view></router-view>
+
   </div>
 </template>
 
@@ -16,7 +17,7 @@ export default {
 
   components: {
     'app-header': Header,
-    'game-container': GameContainer,
+    GameContainer,
   }
 }
 </script>
