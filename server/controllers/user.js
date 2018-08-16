@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
 exports.user_signup = (req, res, next) => {
+  console.log("USER CONTROLLER")
+  console.log(req.body)
   User.find({ email: req.body.email })
     .exec()
     .then(user => {
@@ -22,8 +24,11 @@ exports.user_signup = (req, res, next) => {
             const user = new User({
               _id: new mongoose.Types.ObjectId(),
               email: req.body.email,
+              name: req.body.name,
+              avatar: req.body.avatar,
               password: hash
             });
+            console.log(hash)
             user
               .save()
               .then(result => {
@@ -48,31 +53,33 @@ exports.user_login = (req, res, next) => {
   User.find({ email: req.body.email })
     .exec()
     .then(user => {
+      let id = user._id
       if (user.length < 1) {
         return res.status(401).json({
-          message: "Auth failed"
+          message: "Auth failed, muchacho"
         });
       }
       bcrypt.compare(req.body.password, user[0].password, (err, result) => {
         if (err) {
           return res.status(401).json({
-            message: "Auth failed"
+            message: "Auth failed, hombre"
           });
         }
         if (result) {
           const token = jwt.sign(
             {
-              email: user[0].email,
-              userId: user[0]._id
+              email: user.email,
+              userId: user._id,
             },
-            process.env.JWT_KEY,
+            'secret_this_should_be_longer',
             {
               expiresIn: "1h"
             }
           );
           return res.status(200).json({
-            message: "Auth successful",
-            token: token
+            user: user[0],
+            token: token,
+            
           });
         }
         res.status(401).json({

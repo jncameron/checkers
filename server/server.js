@@ -1,6 +1,7 @@
 const app = require("./app");
 const debug = require("debug")("node-vue");
 const http = require("http");
+const socket = require("socket.io");
 
 const normalizePort = val => {
   var port = parseInt(val, 10);
@@ -50,3 +51,11 @@ const server = http.createServer(app);
 server.on("error", onError);
 server.on("listening", onListening);
 server.listen(port);
+const io = socket(server);
+io.on("connection", (socket) => {
+  console.log('made socket connection', socket.id);
+  socket.on('chat', (data) => {
+    io.sockets.emit('chat', data);
+  })
+
+});

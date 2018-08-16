@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img src="../../../assets/avatars/man.svg" alt="" height="70px" width="70px">
+        <img src="" alt="" height="70px" width="70px">
     </div>
     
 </template>
@@ -8,7 +8,9 @@
 <script>
 export default {
 
-    props: ['name'],
+    props: {
+        challenger: {type: Object},
+    },
 
     data() {
         return {

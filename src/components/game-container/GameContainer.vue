@@ -1,32 +1,28 @@
 <template>
-  <div class="container-fluid" >
-		<div class="col-sm-12" style="margin-top:60px;">
-			<div class="col-lg-1 blank-col el"></div>
-			<game-score-board class="col-md-2 el"
-				:turn="turn"
-				:bluePlayerCaptures="bluePlayerCaptures"
-				:redPlayerCaptures="redPlayerCaptures"
-				:player1Name="player1Name" 
-				:challengerName="challengerName" 
-				:message="message" 
-				:info="info"
-				style="max-height:630px;max-width:300px;border: inset #2d353c 10px;border-radius:10px"></game-score-board>
-		<div class="col-md-1 blank-col"></div>
-			<game-board class="col-md-5 el"
-				:gameStatus="gameStatus"
-				:winner="winner"
-				:draw="draw"
-				@turn="whoseTurn($event)"
-				@redPiecesRemaining="redPiecesRemaining($event)"
-				@bluePiecesRemaining="bluePiecesRemaining($event)"
-				style="padding:0px 0px;height:630px;width:630px;border: inset #2d353c 15px"></game-board>
-		<div class="col-lg-1 blank-col"></div>
-			<game-chat class="col-md-2" style="height:630px;width:300px;border: inset #2d353c 10px;border-radius:10px"></game-chat>
+	<div class="game" style="margin-left:auto;margin-right:auto;margin-top:100px;width: 1800px;">
+		<div class="col-md-1 blank-col el"></div>
+		<game-score-board class="col-md-2 el"
+			:turn="turn"
+			:bluePlayerCaptures="bluePlayerCaptures"
+			:redPlayerCaptures="redPlayerCaptures"
+			:user="user"
+			:challenger="challenger" 
+			:message="message" 
+			:info="info"
+			style="height:630px;width:300px;border: inset #2d353c 10px;border-radius:10px"></game-score-board>
+	<div class="col-md-1 blank-col"></div>
+		<game-board class="col-md-5 el"
+			:gameStatus="gameStatus"
+			:winner="winner"
+			:draw="draw"
+			@turn="whoseTurn($event)"
+			@redPiecesRemaining="redPiecesRemaining($event)"
+			@bluePiecesRemaining="bluePiecesRemaining($event)"
+			style="padding:0px 0px;height:630px;width:630px;border: inset #2d353c 15px"></game-board>
+	<div class="col-md-1 blank-col"></div>
+		<game-chat :user="user" :challenger="challenger" class="col-md-2" style="height:630px;width:300px;border: inset #2d353c 10px;border-radius:10px"></game-chat>
 
-		</div>
-
-    </div>   
-
+	</div>
 </template>
 
 <script>
@@ -36,10 +32,14 @@ import GameChat from "./game/chat/GameChat.vue";
 import redPieces from '../../data/RedPlayerModel';
 
 export default {
-  components: {
-    "game-board": GameBoard,
-    "game-score-board": GameScoreBoard,
-    "game-chat": GameChat
+	props: {
+		user: {type: Object},
+		challenger: {type: Object},
+	},
+  	components: {
+    	"game-board": GameBoard,
+    	"game-score-board": GameScoreBoard,
+    	"game-chat": GameChat
 	},
 	data() {
 		return {
@@ -54,8 +54,6 @@ export default {
 			info: "",
 			message: "",
 			gameStatus: "",
-			player1Name: "Steve",
-			challengerName: "Bill",
       		posts: {} ,
     	};
   	},
@@ -63,10 +61,10 @@ export default {
 		checkWinner() {
 			if (this.redPieces.length === 0) {
 				this.gameStatus = 'OVER'
-				this.winner = this.player1Name;
+				this.winner = this.user.name;
 			} else if (this.bluePieces.length === 0) {
 				this.gameStatus = 'OVER'
-				this.winner = this.challengerName;
+				this.winner = this.challenger.name;
 			}
 			this.fetchPlayer();
 		},
@@ -120,6 +118,9 @@ export default {
 
 <style scoped>
 
+	#game{
+		
+	}
 
 	@media (min-width: 600px) {
 		.blank-col {

@@ -1,11 +1,11 @@
 <template>
     <div id="container">
         <div style="height:40px;padding-top:7px;background-color:#7f0000;color:#FFF">
-            <h3 style="margin:0 0 0 0">{{ challengerName }}</h3>
+            <h3 style="margin:0 0 0 0">{{ challenger.name }}</h3>
         </div>
         <div id="box">
             <div id="chal">
-                <challenger :name='challengerName' style="height:80px;"></challenger>
+                <challenger :challenger="challenger" style="height:80px;"></challenger>
                 <div id="challengerCaptures">
                 <svg x="0" y="0" height="80" width="155">
                     <challenger-captures v-for="(piece,index) in bluePlayerCaptures"
@@ -29,14 +29,14 @@
                         </player-one-captures>
                     </svg>
                 </div>
-                            <player-one :name='player1Name' style="height:80px;">
+                            <player-one :user="user" style="height:80px;">
             </player-one>
             </div>
 
 
         </div>
         <div style="height:40px;padding-top:5px;background-color:#34537c;color:#FFF">
-            <h3 style="margin:0 0 0 0" :turn='turn'> {{ player1Name }}</h3>
+            <h3 style="margin:0 0 0 0" :turn='turn'> {{ user.name }}</h3>
         </div>
     </div>
 
@@ -51,15 +51,15 @@ import bluePieces from "../../../data/BluePlayerModel";
 import redPieces from "../../../data/RedPlayerModel";
 
 export default {
-  props: [
-    "turn",
-    "bluePlayerCaptures",
-    "redPlayerCaptures",
-    "message",
-    "info",
-    "player1Name",
-    "challengerName"
-  ],
+  props: {
+    turn: String,
+    bluePlayerCaptures: Array,
+    redPlayerCaptures: Array,
+    message: String,
+    info: String,
+    user: Object,
+    challenger: Object,
+  },
   data() {
     return {
       bluePieces: bluePieces,
@@ -79,9 +79,9 @@ export default {
   methods: {
     turnMessage(t) {
       if (t === "blue") {
-        return this.player1Name + "'s Turn";
+        return this.user.name + "'s Turn";
       } else {
-        return this.challengerName + "'s Turn";
+        return this.challenger.name + "'s Turn";
       }
     },
     transformPiece(i) {

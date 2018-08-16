@@ -8,12 +8,17 @@
 </template>
 
 <script>
+
+
 export default {
 
-    props: ['name'],
+    props: {
+      user: {type: Object}  
+    },
     
     data() {
         return {
+            avatar: "/user-5.svg",
         }
     }
     

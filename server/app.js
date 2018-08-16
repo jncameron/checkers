@@ -36,7 +36,7 @@ app.use((req,res,next) => {
     next();
 });
 
-app.use('/profile', profileRoutes);
+// app.use('/profile', profileRoutes);
 app.use("/user", userRoutes);
 
 app.use((req, res, next) => {
@@ -52,6 +52,7 @@ app.use((error, req, res, next) => {
             message: error.message
         }
     });
+    console.log(res.json())
 });
 
 app.post("/api/send", (req,res,next) => {

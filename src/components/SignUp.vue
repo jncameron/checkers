@@ -1,131 +1,176 @@
 <template>
-    <div>
-    <transition name="modal">
-    <div class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
 
-          <div class="modal-header">
-            <slot name="header">
-              Welcome to Checkers
-            </slot>
-          </div>
+    <div class="col-md-12">
+        <div class=col-md-2></div>
+        <div class="col-md-8" style="margin-left:5px" id="container">
+            <div id="box">
+				<div class="col-md-6" id="register-box">
+					<div class="col-md-1"></div>
+					<form class="col-md-10">
+						<h1>Register</h1>
+						<div class="form-group">
+							<label for="reg-name" style="margin-top:30px;">Name</label>
+							<input id="reg-name" type="text" class="form-control" style="margin-bottom:10px;">
+							<label for="reg-email">Email</label>
+							<input id="reg-email" type="email" class="form-control" style="margin-bottom:10px;">
+							<label for="reg-password">Password</label>
+							<input id="reg-password" type="password" class="form-control" style="margin-bottom:25px;">
+						</div>
+						<button @click="addUser" class="reg-button">Register</button>
+					</form>
+					<div class="col-md-1"></div>
+				</div>
+				<div class="col-md-6" id="login-box">
+					<div class="col-md-1"></div>
+					<form action="" class="col-md-10">
+						<h1>Log In</h1>
+						<label for="email" style="margin-top:65px;">Email</label>
+						<input id="login-email" type="email" class="form-control" style="margin-bottom:10px;">
+						<label for="password">Password</label>
+						<input id="login-password" type="password" class="form-control" style="margin-bottom:25px;">
+						<button @click="validateUser" class="login-button">Log In</button>
+					</form>
+					<div class="col-md-1"></div>
+				</div>
+				
+            </div>
 
-          <div class="modal-body">
-            <slot name="body">
-              Sign Up or Sign In
-            </slot>
-          </div>
-
-          <div class="modal-footer">
-            <slot name="footer">
-              
-              <button class="btn btn-success">
-                 <router-link to="/profile">Sign Up</router-link>
-              </button>
-              <button class="btn btn-info">
-                <router-link to="/game">Sign In</router-link>
-              </button>
-            </slot>
-          </div>
         </div>
-      </div>
+    	<div class="col-md-2"></div>
     </div>
-  </transition>
-    </div>
+
+
 </template>
 
 <script>
 export default {
-
-  data() {
-    return {
-      
+	props: {
+		user: {type: Object}
+	},
+    data() {
+        return {
+        }
+    },
+    methods: {
+		addUser() {
+			this.user.name= document.getElementById('reg-name').value;
+			this.user.email= document.getElementById('reg-email').value;
+			this.user.password= document.getElementById('reg-password').value;
+			//console.log("signUp: " + signUpName, signUpEmail, signUpPassword);
+			this.$http.post('http://localhost:3000/user/signup', this.user)
+				.then(response => {
+					console.log(response)
+				}, error => {
+					console.log(error)
+				});
+		}, 
+		validateUser() {
+			let user = this.user;
+			let validUser = {};
+			validUser.email= document.getElementById('login-email').value;
+			validUser.password= document.getElementById('login-password').value;
+			//console.log("signUp: " + signUpName, signUpEmail, signUpPassword);
+			this.$http.post('http://localhost:3000/user/login', validUser)
+				.then(response => {
+					this.updateUser(response.body.user);
+					this.navigateToGame();
+				}, error => {
+					console.log(error)
+				});
+		}, 
+		updateUser(update) {
+			this.user.name = update.name;
+			this.user.email = update.email;
+			this.user.avatar = update.avatar;
+			console.log(update);
+		},
+		navigateToGame() {
+			this.$router.push('/game');
+		},
+		navigateToProfile() {
+			this.$router.push('/profile');
+		}
     }
-  }
 }
 </script>
 
 
 <style scoped>
-.modal-mask {
-  position: absolute;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, .5);
-  display: table;
-  transition: opacity .3s ease;
+
+#container {
+	background-image: url("../assets/background-board.svg");
+	background-size: cover;
+	height: 1000px;
 }
 
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
+#box {
+	color:#FFF;
+	align-self: center;
+	margin-top: 20%;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+	height: 40%;
+	opacity: 1;
+	background-color: #FFF;
+	border: dimgray solid 3px;
+
 }
 
-.modal-container {
-  width: 370px;
-  margin: 0px auto;
-  padding: 10px 10px;
-  background-color: rgba(204,204,204,0.8);
-  border-radius: 2px;
-  border: 2px solid black;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-  transition: all .3s ease;
-  font-family: sans-serif
-  
+#register-box {
+	color:#FFF;
+	height: 100%;
+	background-color:#f44336;
+
+}
+#login-box {
+	height: 100%;
+	background-color:#72a0d1;
+
 }
 
-.modal-header {
-  margin: 0, 0;
-  font-family: 'Audiowide', cursive;
-  font-size: 48px;
-  color: #B71C1C;
-}
 
-.modal-body {
-  margin: 0 0;
-  font-family: 'Permanent Marker';
-  font-size: 32px;
-}
-
-.modal-footer {
-  margin: 0 0;
-  font-family: 'Permanent Marker';
-  font-size: 32px;
-  align-items: center;
-}
-
-.btn {
-    background-color: #B71C1C;
-    font-family: 'Permanent Marker';
+.reg-button {
+	color:#FFF;
+    background: #B71C1C;
+	border: 2px solid #7f0000;
+	border-radius: 6px;
+    font-family: 'Audiowide';
     font-size: 18px;
+	width: 80%;
 }
 
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
-.modal-enter {
-  opacity: 0;
+.reg-button:hover {
+	background-color: #7f0000;
+	color: #FFF;
+}
+.reg-button:focus{
+    outline: none;
+}
+.login-button {
+	color:#FFF;
+    background: #4072a0;
+	border: 2px solid #34537c;
+	border-radius: 6px;
+    font-family: 'Audiowide';
+    font-size: 18px;
+	width: 80%;
 }
 
-.modal-leave-active {
-  opacity: 0;
+.login-button:hover {
+	background-color: #34537c;
+	color: #FFF;
+}
+.login-button:focus{
+    outline: none;
 }
 
-.modal-enter .modal-container,
-.modal-leave-active .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
-}
 
 </style>
+
+
+
+
+
+
 
