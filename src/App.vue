@@ -1,7 +1,7 @@
 <template>
 
   <div id="app" style="margin-left:auto;margin-right:auto;">
-    <app-header></app-header>
+    <app-header style="z-index:9998"></app-header>
     <!-- <h1>NAME</h1>
     <input id="name" type="text" />
 	  <h1 class="user">{{ user.name }} </h1> -->

@@ -1,5 +1,6 @@
 <template>
 	<div class="game" style="margin-left:auto;margin-right:auto;margin-top:100px;width: 1800px;">
+		<choose-game></choose-game>
 		<div class="col-md-1 blank-col el"></div>
 		<game-score-board class="col-md-2 el"
 			:turn="turn"
@@ -29,6 +30,7 @@
 import GameBoard from "./game/GameBoard.vue";
 import GameScoreBoard from "./game/GameScoreBoard.vue";
 import GameChat from "./game/chat/GameChat.vue";
+import ChooseGame from './game/ChooseGame.vue';
 import redPieces from '../../data/RedPlayerModel';
 
 export default {
@@ -39,7 +41,8 @@ export default {
   	components: {
     	"game-board": GameBoard,
     	"game-score-board": GameScoreBoard,
-    	"game-chat": GameChat
+		"game-chat": GameChat,
+		"choose-game": ChooseGame
 	},
 	data() {
 		return {
@@ -119,7 +122,8 @@ export default {
 <style scoped>
 
 	#game{
-		
+		transform: translate(-50%, -50%);
+		position: absolute;
 	}
 
 	@media (min-width: 600px) {

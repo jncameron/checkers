@@ -24,6 +24,7 @@ nav {
     font-weight: bold;
     background-color: dimgray;
     color: #FFF;
+    z-index: 9998;
 }
 
 h1 {
