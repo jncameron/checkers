@@ -44,13 +44,15 @@
 
 <script>
 export default {
-	props: {
-		user: {type: Object}
+	props: { 
+		user: {type: Object},
+		onlineUsers: {type: Array},
 	},
     data() {
         return {
+
         }
-    },
+	},
     methods: {
 		addUser() {
 			this.user.name= document.getElementById('reg-name').value;
@@ -60,6 +62,9 @@ export default {
 			this.$http.post('http://localhost:3000/user/signup', this.user)
 				.then(response => {
 					console.log(response)
+					const token = response.data.token
+      				localStorage.setItem('user-token', token) // store the token in localstorage
+					this.navigateToChooseGame();
 				}, error => {
 					console.log(error)
 				});
@@ -72,20 +77,38 @@ export default {
 			//console.log("signUp: " + signUpName, signUpEmail, signUpPassword);
 			this.$http.post('http://localhost:3000/user/login', validUser)
 				.then(response => {
+					console.log(response)
 					this.updateUser(response.body.user);
-					this.navigateToGame();
-				}, error => {
-					console.log(error)
-				});
+					this.navigateToChooseGame();
+					const token = response.data.token
+      				localStorage.setItem('user-token', token) // store the token in localstorage
+    				})
+  				.catch(err => {
+    				localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
+  			});
 		}, 
 		updateUser(update) {
+			console.log(this.user);
+			console.log(JSON.stringify(update.name))
 			this.user.name = update.name;
 			this.user.email = update.email;
 			this.user.avatar = update.avatar;
-			console.log(update);
+
+			this.onlineUsers.forEach(element => {
+				if(element.email === update.email) {
+					return
+				} else {
+					socket.emit('login', {
+						name: this.user.name,
+						email: this.user.email,
+						avatar: this.user.avatar,
+					});
+					console.log("Emitting User to Sockets: " + JSON.stringify(this.user))
+				}
+			});
 		},
-		navigateToGame() {
-			this.$router.push('/game');
+		navigateToChooseGame() {
+			this.$router.push('/choose-game');
 		},
 		navigateToProfile() {
 			this.$router.push('/profile');

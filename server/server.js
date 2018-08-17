@@ -52,10 +52,16 @@ server.on("error", onError);
 server.on("listening", onListening);
 server.listen(port);
 const io = socket(server);
+let onlineUsers = [];
 io.on("connection", (socket) => {
   console.log('made socket connection', socket.id);
   socket.on('chat', (data) => {
     io.sockets.emit('chat', data);
+  });
+  socket.on('login', (data) => {
+    onlineUsers.push(data)
+    io.sockets.emit('login', onlineUsers);
+    console.log("online users " + onlineUsers);
   })
 
 });

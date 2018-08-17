@@ -4,26 +4,16 @@
 			<div class="modal-mask">
 				<div class="modal-wrapper">
 					<div class="modal-container">
-						<div class="col-md-6" style="margin: 0 0;">
-							<div class="col-md-12 computer" >
-								<h2>VS Computer</h2>
-							</div>
-							<div class="col-md-12 two-local" style="margin: 0 0;">
-								<h2>Two Players on this computer</h2>
+						<div class="col-md-12 select-player" style="margin: 0 0;">
+							<h1>Challenger Online Player</h1>
+							<div class="players">
+								<div :v-for="(user, index) in getOnlineUsers" class="player">Player {{ user }}</div>
 							</div>
 						</div>
-						<div class="col-md-6" style="margin: 0 0;" >
-							<div class="col-md-12 two-online" @click="playOnline" style="margin: 0 0;">
-								<h2>Find Player Online</h2>
-								<div v-if="connectOnline === true" class=choose-player>
-									<div v-for="user in onlineUsers">
-										<p>{{ user }}</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-md-12 send-link" style="margin: 0 0;">
-								<h2>Send a challenge link</h2>
-							</div>
+						<div class="col-md-12 send-link" style="margin: 0 0;" >
+							<h1>Or send a link to a friend</h1>
+							<button>Generate Link</button>
+							<div>Link goes here</div>
 						</div>
 					</div>
 				</div>
@@ -41,19 +31,20 @@ export default {
   },
   data() {
     return {
-      connectOnline: false,
+      
     }
   },
 	methods: {
 		playOnline() {
 			console.log("PLAY ONLINE: " + JSON.stringify(this.onlineUsers))
-			console.log(Array.isArray(this.onlineUsers));
-			console.log("This User: " + JSON.stringify(this.user));
-			this.connectOnline = true;
-
-			// this.$router.push('/players-online');
+			console.log(Array.isArray(this.onlineUsers))
+			this.challenger = this.onlineUsers[0]
+			console.log("PLAY ONLINE: " + JSON.stringify(this.challenger))
 		},
-	}
+		getOnlineUsers() {
+			return this.onlineUsers
+		}
+	},
 }
 </script>
 
@@ -95,11 +86,15 @@ export default {
 	padding: 0 0;
 }
 
-.col-md-12 {
+.select-player {
 	color: #FFF;
-	transform: translate(-50,-50);
-	padding-top: 40%;
-	padding-bottom: 40%;
+	background-color: #B71C1C;
+	height: 50%;
+}
+.send-link {
+	background-color: #4072a0;
+	color: #FFF;
+	height: 50%
 }
 
 .col-md-12:hover {
@@ -109,38 +104,7 @@ export default {
 .col-md-12:active {
 	opacity: 0.5;
 }
-.computer {
-	background-color: #B71C1C;
-	height: 50%;
-	margin: 0 0;
-	border: #000 solid 3px;
-}
-.two-local {
-	background-color: dimgray;
-	height: 50%;
-	margin: 0 0;
-	border: #000 solid 3px;
 
-}
-.two-online {
-	background-color: dimgrey;
-	height: 50%;
-	margin: 0 0;
-	border: #000 solid 3px;
-}
-.choose-player {
-	width: 100%;
-	height: 100%;
-	background-color: #000;
-}
-.send-link {
-	
-	background-color: #4072a0;
-	height: 50%;
-	margin: 0 0;
-	border: #000 solid 3px;
-
-}
 
 
 

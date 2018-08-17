@@ -30,13 +30,11 @@ import NewMessage from './NewMessage.vue';
 
 export default {
     props: {
-        challenger: {type: String},
+        challenger: {type: Object},
         user: {type: Object}
     },
     data(){
         return {
-            userName: "Bill",
-            challenger: "Steve",
             usrMsg: [],
             usrMsgs: [],
         }
@@ -49,7 +47,6 @@ export default {
         scrollToEnd() {
             let allMessages = this.$el.querySelector("#all-messages");
             allMessages.scrollTop = allMessages.scrollHeight;
-            console.log(allMessages.scrollHeight);
         },
         listenForMessages() {
             let usrMsgs = this.usrMsgs;
