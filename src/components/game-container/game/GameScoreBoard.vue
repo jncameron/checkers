@@ -1,17 +1,17 @@
 <template>
     <div id="container">
         <div style="height:40px;padding-top:7px;background-color:#7f0000;color:#FFF">
-            <h3 style="margin:0 0 0 0">{{ challenger.name }}</h3>
+            <h3 style="margin:0 0 0 0">{{ player2.name }}</h3>
         </div>
         <div id="box">
             <div id="chal">
-                <challenger :challenger="challenger" style="height:80px;"></challenger>
-                <div id="challengerCaptures">
+                <player-two :player-two="player-two" style="height:80px;"></player-two>
+                <div id="player-two-captures">
                 <svg x="0" y="0" height="80" width="155">
-                    <challenger-captures v-for="(piece,index) in bluePlayerCaptures"
+                    <player-two-captures v-for="(piece,index) in bluePlayerCaptures"
                     :transform='transformPiece(index)'>
 
-                    </challenger-captures>
+                    </player-two-captures>
                 </svg>
                 </div>
             </div>
@@ -21,19 +21,16 @@
                 <p><strong> {{ info }}</strong></p>
             </div>
             <div id="player">
-                <div id="playerCaptures">
+                <div id="player-one-captures">
                     <svg x="0" y="0" height="80" width="155">
                         <player-one-captures v-for="(piece,index) in redPlayerCaptures"
                         :transform='transformPiece(index)'>
-
                         </player-one-captures>
                     </svg>
                 </div>
-                            <player-one :user="user" style="height:80px;">
+              <player-one :player-one="player-one" style="height:80px;">
             </player-one>
             </div>
-
-
         </div>
         <div style="height:40px;padding-top:5px;background-color:#34537c;color:#FFF">
             <h3 style="margin:0 0 0 0" :turn='turn'> {{ user.name }}</h3>
@@ -44,8 +41,8 @@
 
 <script>
 import Player1 from "../players/Player1.vue";
-import Challenger from "../players/Challenger.vue";
-import ChallengerCaptures from "../players/ChallengerCaptures";
+import Player2 from "../players/Player2.vue";
+import Player2Captures from "../players/Player2Captures";
 import Player1Captures from "../players/Player1Captures";
 import bluePieces from "../../../data/BluePlayerModel";
 import redPieces from "../../../data/RedPlayerModel";
@@ -58,7 +55,9 @@ export default {
     message: String,
     info: String,
     user: Object,
-    challenger: Object,
+    player1: Object,
+    player2: Object,
+
   },
   data() {
     return {
@@ -71,17 +70,17 @@ export default {
     };
   },
   components: {
-    Challenger,
+    "player-two": Player2,
     "player-one": Player1,
-    "challenger-captures": ChallengerCaptures,
+    "player-two-captures": Player2Captures,
     "player-one-captures": Player1Captures
   },
   methods: {
     turnMessage(t) {
       if (t === "blue") {
-        return this.user.name + "'s Turn";
+        return this.player1.name + "'s Turn";
       } else {
-        return this.challenger.name + "'s Turn";
+        return this.player2.name + "'s Turn";
       }
     },
     transformPiece(i) {
@@ -104,7 +103,7 @@ p {
   background-color: #d3d3d3;
 }
 
-#challengerCaptures {
+#player-two-captures {
   height: 95px;
   background-color: rgba(211,211,211,0.2);
   margin: 15px 0;
@@ -118,7 +117,7 @@ p {
   background-color: #b71c1c;
 }
 
-#playerCaptures {
+#player-one-captures {
   height: 95px;
   background-color: rgba(211,211,211,0.2);
   margin: 15px 0px;

@@ -5,8 +5,8 @@
         </div>
         <div id="all-messages" style="height:440px;overflow:hidden;">
             <div v-for="usrMsg in usrMsgs">
-                <challenger-message v-if="usrMsg[1] !== user.name" :usrMsg="usrMsg[0]"></challenger-message>
-                <user-message v-if="usrMsg[1] === user.name " :usrMsg="usrMsg[0]"></user-message>  
+                <player-two-message v-if="usrMsg[1] !== user.name" :usrMsg="usrMsg[0]"></player-two-message>
+                <player-one-message v-if="usrMsg[1] === user.name " :usrMsg="usrMsg[0]"></player-one-message>  
             </div>
    
         </div>
@@ -24,13 +24,14 @@
 </template>
 
 <script>
-import ChallengerMessage from './ChallengerMessage.vue';
-import UserMessage from './UserMessage.vue';
+import Player1Message from './Player1Message.vue';
+import Player2Message from './Player2Message.vue';
 import NewMessage from './NewMessage.vue';
 
 export default {
     props: {
-        challenger: {type: Object},
+        player1: {type: Object},
+        player2: {type: Object},
         user: {type: Object}
     },
     data(){
@@ -40,8 +41,8 @@ export default {
         }
     },
     components: {
-        'challenger-message': ChallengerMessage,
-        'user-message': UserMessage,
+        'player-two-message': Player2Message,
+        'player-one-message': Player1Message,
         'new-message': NewMessage
     }, methods: {
         scrollToEnd() {

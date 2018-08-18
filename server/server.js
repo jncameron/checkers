@@ -59,9 +59,17 @@ io.on("connection", (socket) => {
     io.sockets.emit('chat', data);
   });
   socket.on('login', (data) => {
-    onlineUsers.push(data)
-    io.sockets.emit('login', onlineUsers);
-    console.log("online users " + onlineUsers);
-  })
+    let unique = true;
+    onlineUsers.forEach(function(user) {
+      if(user['email'] === data['email']) {
+        unique = false;
+      }
+    })
+    if (unique) {
+      onlineUsers.push(data)
+      io.sockets.emit('login', onlineUsers);
+      console.log("online users " + onlineUsers);
+    }
+  });
 
 });

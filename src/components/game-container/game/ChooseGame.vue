@@ -1,4 +1,5 @@
 <template>
+import onlineUsers from '../../../data/OnlineUsers';
 	<div>
 		<transition name="modal">
 			<div class="modal-mask">
@@ -16,9 +17,27 @@
 							<div class="col-md-12 two-online" @click="playOnline" style="margin: 0 0;">
 								<h2>Find Player Online</h2>
 								<div v-if="connectOnline === true" class=choose-player>
-									<div v-for="user in onlineUsers">
-										<p>{{ user }}</p>
+									<div v-for="(user,index) in onlineUsers" style="height: 20px">
+										<div class="col-md-6">
+											<h4 :id="'name'+ index">{{ user.name }}</h4>
+										</div>
+										<div class="col-md-2">
+											<img :id="'src'+ index" src="../../../assets/avatars/user-20.svg" alt="">
+										</div>
+										<div class="col-md-2">
+											<button @click="createGame(index)" :id="'button'+index" class="btn.primary">PLAY</button>
+										</div>
 									</div>
+									<!-- <div v-if="gameCreated">
+										<h4></h4>
+										<router-link
+											tag="button"
+											:to="{ name: 'newGame', 
+												params: { newgame: $route.params.newgame}, 
+												query: { player1: 'first', player2: 'second' }}"
+											>
+										go to game </router-link> -->
+									<!-- </div> -->
 								</div>
 							</div>
 							<div class="col-md-12 send-link" style="margin: 0 0;">
@@ -33,15 +52,22 @@
 </template>
 
 <script>
+
+
 export default {
   props: {
 		user: {type: Object},
-		challenger: {type: Object},
-		onlineUsers: {type: Array}
+		player1: {type: Object},
+		player2: {type: Object},
+		onlineUsers: {type: Array},
+		redPieces: {type: Object},
+		bluePieces: {type: Object},
+		newGame: {type: Object}
   },
   data() {
     return {
-      connectOnline: false,
+	  connectOnline: false,
+	  gameCreated: false,
     }
   },
 	methods: {
@@ -53,7 +79,46 @@ export default {
 
 			// this.$router.push('/players-online');
 		},
-	}
+
+		updateOnlineUsers(userList) {
+			this.onlineUsers.length = 0;
+				this.onlineUsers.push(userList);
+				console.log("Online Users " + JSON.stringify(this.onlineUsers));
+			
+		},
+		createGame(button) {
+			this.player1.name = this.user.name;
+			this.player1.avatar = this.user.avatar;
+			this.player1.email = this.user.email;
+			this.player1.pieces = this.redPieces;
+
+			this.player2.name = this.onlineUsers[button]['name'];
+			this.player2.avatar = this.onlineUsers[button]['avatar'];
+			this.player2.email = this.onlineUsers[button]['email'];
+			this.player2.pieces = this.bluePieces;
+
+			this.newGame.player1 = this.player1;
+			this.newGame.player2 = this.player2;
+			console.log(this.newGame)
+
+			let gameId = "";
+
+			this.$http.post('http://192.168.1.7:3000/newgame/', this.newGame)
+				.then(response => {
+					gameId = response.body.id
+					this.newGame.id = gameId;
+					console.log(this.newGame);
+					this.$router.push({path: '/game/' + gameId, params: { gameId: this.$route.params.gameId }})
+				}, error => {
+					console.log(error);
+			});
+
+			
+
+			this.gameCreated = true;
+		}
+
+	},
 }
 </script>
 
@@ -131,7 +196,8 @@ export default {
 .choose-player {
 	width: 100%;
 	height: 100%;
-	background-color: #000;
+	background-color: #FFF;
+	color:#4072a0;
 }
 .send-link {
 	

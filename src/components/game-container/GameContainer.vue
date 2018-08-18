@@ -6,12 +6,14 @@
 			:bluePlayerCaptures="bluePlayerCaptures"
 			:redPlayerCaptures="redPlayerCaptures"
 			:user="user"
-			:challenger="challenger" 
+			:player2="player2"
+			:player1="player1"
 			:message="message" 
 			:info="info"
 			style="height:630px;width:300px;border: inset #2d353c 10px;border-radius:10px"></game-score-board>
 	<div class="col-md-1 blank-col"></div>
 		<game-board class="col-md-5 el"
+			:newGame="newGame"
 			:gameStatus="gameStatus"
 			:winner="winner"
 			:draw="draw"
@@ -20,7 +22,7 @@
 			@bluePiecesRemaining="bluePiecesRemaining($event)"
 			style="padding:0px 0px;height:630px;width:630px;border: inset #2d353c 15px"></game-board>
 	<div class="col-md-1 blank-col"></div>
-		<game-chat :user="user" :challenger="challenger" class="col-md-2" style="height:630px;width:300px;border: inset #2d353c 10px;border-radius:10px"></game-chat>
+		<game-chat :user="user" :player2="player2" class="col-md-2" style="height:630px;width:300px;border: inset #2d353c 10px;border-radius:10px"></game-chat>
 
 	</div>
 </template>
@@ -30,21 +32,26 @@ import GameBoard from "./game/GameBoard.vue";
 import GameScoreBoard from "./game/GameScoreBoard.vue";
 import GameChat from "./game/chat/GameChat.vue";
 import ChooseGame from './game/ChooseGame.vue';
-import PlayersOnline from './game/PlayersOnline.vue';
 import redPieces from '../../data/RedPlayerModel';
+import user from '../../data/UserModel';
+import player1 from '../../data/Player1Model';
+import player2 from '../../data/Player2Model';
+
 
 export default {
 	props: {
-		user: {type: Object},
-		challenger: {type: Object},
-		onlineUsers: {type: Object}
+		// user: {type: Object},
+		// player1: {type: Object},
+		// player2: {type: Object},
+		onlineUsers: {type: Object},
+		newGame: {type: Object}
 	},
   	components: {
     	"game-board": GameBoard,
     	"game-score-board": GameScoreBoard,
 		"game-chat": GameChat,
 		"choose-game": ChooseGame,
-		"players-online": PlayersOnline
+
 	},
 	data() {
 		return {
@@ -55,6 +62,9 @@ export default {
 			bluePieces: ['blue1','blue2','blue3','blue4','blue5','blue6','blue7','blue8','blue9','blue10','blue11','blue12'],
 			redPlayerCaptures: [],
 			bluePlayerCaptures: [],
+			player1: player1,
+			player2: player2,
+			user: user,
 			turn: "",
 			info: "",
 			message: "",
@@ -66,12 +76,12 @@ export default {
 		checkWinner() {
 			if (this.redPieces.length === 0) {
 				this.gameStatus = 'OVER'
-				this.winner = this.user.name;
+				this.winner = this.player1.name;
 			} else if (this.bluePieces.length === 0) {
 				this.gameStatus = 'OVER'
-				this.winner = this.challenger.name;
+				this.winner = this.player2.name;
 			}
-			this.fetchPlayer();
+
 		},
 		redPiecesRemaining(pieces) {
 			this.redPieces = pieces;
@@ -94,29 +104,21 @@ export default {
 		},
 		whoseTurn(t) {
 			this.turn = t;
-			this.fetchPlayer();
-			this.sendMove();
+
 		},
-		fetchData() {
-			this.$http.get('http://localhost:3000/user/signup')
+		// fetchData() {
+		// 	this.$http.get('http://192.168.1.7:3000/user/signup')
+		// 		.then(response => {
+		// 			return response.json();	
+		// 		}).then(data => console.log("DATA: " + JSON.stringify(data)));
+		// },
+
+		fetchCurrentBoard() {
+			this.$http.get('http://192.168.1.7:3000/newgame/update')
 				.then(response => {
 					return response.json();	
 				}).then(data => console.log("DATA: " + JSON.stringify(data)));
 		},
-		fetchPlayer() {
-			this.$http.get('http://localhost:3000/profile')
-				.then(response => {
-					return response.json();	
-				}).then(data => console.log("DATA: " + JSON.stringify(data)));
-		},
-		sendMove() {
-			this.$http.post('http://localhost:3000/user/signup', {title: "John", content: this.turn})
-					.then(response => {
-						console.log(response);
-					}, error => {
-						console.log(error);
-					});
-		}
 	}
 };
 </script>

@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
 	props: { 
 		user: {type: Object},
@@ -53,13 +54,14 @@ export default {
 
         }
 	},
+
     methods: {
 		addUser() {
 			this.user.name= document.getElementById('reg-name').value;
 			this.user.email= document.getElementById('reg-email').value;
 			this.user.password= document.getElementById('reg-password').value;
 			//console.log("signUp: " + signUpName, signUpEmail, signUpPassword);
-			this.$http.post('http://localhost:3000/user/signup', this.user)
+			axios.post('http://192.168.1.7:3000/user/signup', this.user)
 				.then(response => {
 					console.log(response)
 					const token = response.data.token
@@ -69,43 +71,40 @@ export default {
 					console.log(error)
 				});
 		}, 
+
 		validateUser() {
 			let user = this.user;
 			let validUser = {};
 			validUser.email= document.getElementById('login-email').value;
 			validUser.password= document.getElementById('login-password').value;
 			//console.log("signUp: " + signUpName, signUpEmail, signUpPassword);
-			this.$http.post('http://localhost:3000/user/login', validUser)
+			axios.post('http://192.168.1.7:3000/user/login', validUser)
 				.then(response => {
 					console.log(response)
-					this.updateUser(response.body.user);
-					this.navigateToChooseGame();
 					const token = response.data.token
-      				localStorage.setItem('user-token', token) // store the token in localstorage
+					localStorage.setItem('user-token', token) // store the token in localstorage
+					this.updateUser(response.data.user);
+					localStorage.setItem('name', this.user.name);
+					localStorage.setItem('email', this.user.email);
+					localStorage.setItem('avatar', this.user.avatar);
+					this.navigateToChooseGame();
     				})
   				.catch(err => {
     				localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
   			});
-		}, 
+		},  
 		updateUser(update) {
 			console.log(this.user);
 			console.log(JSON.stringify(update.name))
 			this.user.name = update.name;
 			this.user.email = update.email;
 			this.user.avatar = update.avatar;
-
-			this.onlineUsers.forEach(element => {
-				if(element.email === update.email) {
-					return
-				} else {
-					socket.emit('login', {
-						name: this.user.name,
-						email: this.user.email,
-						avatar: this.user.avatar,
-					});
-					console.log("Emitting User to Sockets: " + JSON.stringify(this.user))
-				}
+			socket.emit('login', {
+				name: this.user.name,
+				email: this.user.email,
+				avatar: this.user.avatar,
 			});
+			console.log("Emitting User to Sockets: " + JSON.stringify(this.user))
 		},
 		navigateToChooseGame() {
 			this.$router.push('/choose-game');

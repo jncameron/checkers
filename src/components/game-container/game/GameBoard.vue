@@ -59,15 +59,19 @@ import GameFinished from './GameFinished.vue';
 import Tile from './Tile.vue';
 import RedPiece from './RedPiece.vue';
 import BluePiece from './BluePiece.vue';
+import newGame from '../../../data/NewGameModel.js'
+
 
 export default {
 	props: {
 		gameStatus: {type: String},
 		draw: {type: Boolean},
-		winner: {type: String}
+		winner: {type: String},
+
 	},
 	data() {
 			return {
+				newGame: newGame,
 				redPieces: redPieces,
 				bluePieces: bluePieces,
 				gameBoardTiles: gameBoardTiles,
@@ -144,6 +148,7 @@ export default {
 			let setCanBeJumped = this.setCanBeJumped;
 			let selectedPiece = this.selectedPiece;
 			let getGameBoardTiles = this.getGameBoardTiles;
+			
 			
 			// selectedPiece.crown = false;
 			validMoveXY.length = 0;
@@ -307,6 +312,8 @@ export default {
 			let justCrowned = this.justCrowned;
 			let getJustCrowned = this.getJustCrowned;
 			let setJustCrowned = this.setJustCrowned;
+			let postMove = this.postMove;
+			let gameId = this.newGame.id;
 
 			
 
@@ -331,7 +338,8 @@ export default {
 
 							newTile = gameBoardTiles[tile]
 							newTile.occupied = color;
-
+							let oldAndNewPositions = [oldTile.pos, newTile.pos]
+							postMove(gameId, oldAndNewPositions);
 							selectedPiece.pos = newTile.pos;
 							selectedPiece.x = newTile.x;
 							selectedPiece.y = newTile.y;
@@ -520,9 +528,7 @@ export default {
 				validMoves.forEach(function(t,i) {
 					let tileToBeJumped = `tile${validMoves[i]}`
 					if(color === 'red') {
-
 						let gameTileJumped = gameBoardTiles[tileToBeJumped]
-					
 						if((t > gameBoardTiles[tile].pos || selectedPiece.crown === true)
 							&& !redOccupied.includes(t)
 							&& !blueOccupied.includes(t)
@@ -548,6 +554,18 @@ export default {
 			}
 
 		},
+		
+		postMove(gameId, oldAndNew) {
+			this.$http.post('http://192.168.1.7:3000/newgame/moves', {
+			gameId: gameId, 
+			move: oldAndNew, })
+			.then(response => {
+				console.log(response);
+			}, error => {
+				console.log(error);
+			});
+		},
+
 		getGameBoardTiles() {
 			return this.gameBoardTiles
 		},

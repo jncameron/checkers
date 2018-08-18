@@ -6,7 +6,7 @@
     <input id="name" type="text" />
 	  <h1 class="user">{{ user.name }} </h1> -->
     <!-- <button class="btn" v-on:click="enterName()">submit</button> -->
-    <router-view :user="user" :onlineUsers="onlineUsers"></router-view>
+    <router-view></router-view>
 
   </div>
 </template>
@@ -16,16 +16,18 @@
 import Header from './components/header/Header.vue';
 import GameContainer from './components/game-container/GameContainer.vue';
 import ChooseGame from './components/game-container/game/ChooseGame.vue';
-import PlayersOnline from './components/game-container/game/PlayersOnline.vue';
 import user from './data/UserModel';
-import challenger from './data/ChallengerModel';
+import player1 from './data/Player1Model';
+import player2 from './data/Player2Model';
+import onlineUsers from './data/OnlineUsers';
+import newGame from './data/NewGameModel';
 
 export default {
   name: 'app',
   data() {
     return {
 			user: user,
-			onlineUsers: []
+			onlineUsers: onlineUsers
     }
   },
   
@@ -39,7 +41,7 @@ export default {
     enterName() {
         this.user.name = document.getElementById('name').value
         console.log(this.user)
-		},
+    },
 		listenForUsers() {
 			let updateOnlineUsers = this.updateOnlineUsers;
 			socket.on('login', function(data) {
@@ -48,7 +50,11 @@ export default {
 			});
 		},
 		updateOnlineUsers(userList) {
-			this.onlineUsers = userList;
+      this.onlineUsers.length = 0;
+      userList.forEach(user => {
+        this.onlineUsers.push(user);
+      });
+			
 			console.log("Online Users " + JSON.stringify(this.onlineUsers));
 		}
 	},

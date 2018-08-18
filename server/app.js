@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 const profileRoutes = require('./routes/profile');
 const userRoutes = require('./routes/user');
+const newGameRoutes = require('./routes/newGame');
 
 
 const Message = require('./models/message');
@@ -36,8 +37,9 @@ app.use((req,res,next) => {
     next();
 });
 
-// app.use('/profile', profileRoutes);
+app.use('/profile', profileRoutes);
 app.use("/user", userRoutes);
+app.use("/newgame", newGameRoutes);
 
 app.use((req, res, next) => {
 	const error = new Error("Not found");
