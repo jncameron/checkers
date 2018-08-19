@@ -9,7 +9,7 @@ import onlineUsers from '../../../data/OnlineUsers';
 							<div class="col-md-12 computer" >
 								<h2>VS Computer</h2>
 							</div>
-							<div class="col-md-12 two-local" style="margin: 0 0;">
+							<div class="col-md-12 two-local" @click="createLocalGame()" style="margin: 0 0;">
 								<h2>Two Players on this computer</h2>
 							</div>
 						</div>
@@ -86,6 +86,19 @@ export default {
 				console.log("Online Users " + JSON.stringify(this.onlineUsers));
 			
 		},
+		createLocalGame() {
+			this.player1.name = this.user.name;
+			this.player1.avatar = this.user.avatar;
+			this.player1.email = this.user.email;
+			this.player1.pieces = this.redPieces;
+
+			this.player2.name = 'Player 2';
+			this.player2.avatar = '../../../assets/avatars/user-15.svg'
+			this.player2.pieces = this.bluePieces;
+			let gameId = "local";
+			this.$router.push({path: '/game/' + gameId, params: { gameId: this.$route.params.gameId }})
+			
+		},
 		createGame(button) {
 			this.player1.name = this.user.name;
 			this.player1.avatar = this.user.avatar;
@@ -112,6 +125,7 @@ export default {
 				}, error => {
 					console.log(error);
 			});
+
 
 			
 

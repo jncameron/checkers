@@ -89,12 +89,17 @@ export default {
 				redOccupied: [],
 				blueOccupied: [],
 				canBeJumped: [],
+				pieceName: "",
+				gameId: "",
 				jumpsAvailable: false,
 				movesAvailable: true,
 				hasJumped: false,
 				justCrowned: false,
 			}
 	},
+    mounted: function() {
+        this.listenForBoard();
+    },
 	components: {
 			'board-tile': Tile,
 			'red-piece': RedPiece,
@@ -102,6 +107,11 @@ export default {
 			'game-finished': GameFinished,
 	},
 	methods: {
+		listenForBoard() {	
+			socket.on('game', function(data) {
+                console.log("GAME DATA: " + JSON.stringify(data));
+			});
+		},
 		transformRed(i){
 			let x = redPieces[i]['x'] + 30;
 			let y = redPieces[i]['y'] + 30;
@@ -148,6 +158,8 @@ export default {
 			let setCanBeJumped = this.setCanBeJumped;
 			let selectedPiece = this.selectedPiece;
 			let getGameBoardTiles = this.getGameBoardTiles;
+			let pieceName = this.pieceName;
+			let setPieceName = this.setPieceName;
 			
 			
 			// selectedPiece.crown = false;
@@ -183,6 +195,8 @@ export default {
 				}			
 				for (let piece in pieces) {
 					if (pieces[piece]['x'] === pos[0] && pieces[piece]['y'] === pos[1]) {
+						
+						setPieceName(piece);
 						setSelectedPiece(pieces[piece]);
 						setSelectedPieceXY([pos[0],pos[1]]);
 						selectedPiece = getSelectedPiece();
@@ -314,6 +328,8 @@ export default {
 			let setJustCrowned = this.setJustCrowned;
 			let postMove = this.postMove;
 			let gameId = this.newGame.id;
+			let pieceName = this.pieceName;
+			let getPieceName = this.getPieceName;
 
 			
 
@@ -338,8 +354,12 @@ export default {
 
 							newTile = gameBoardTiles[tile]
 							newTile.occupied = color;
-							let oldAndNewPositions = [oldTile.pos, newTile.pos]
-							postMove(gameId, oldAndNewPositions);
+							pieceName = getPieceName()
+							console.log("PIECE NAME: " + pieceName)
+							let oldAndNewPositions = [pieceName, oldTile.pos, newTile.pos, newTile.x, newTile.y]
+
+							
+
 							selectedPiece.pos = newTile.pos;
 							selectedPiece.x = newTile.x;
 							selectedPiece.y = newTile.y;
@@ -359,7 +379,10 @@ export default {
 											if (opponentPieces[piece]['pos'] === validMoves[index]) {
 												
 												let position = opponentPieces[piece]['pos'] 
+												oldAndNewPositions.push(piece)
+												postMove(gameId, oldAndNewPositions);
 												delete opponentPieces[piece]
+												
 												gameBoardTiles[`tile${position}`]['occupied'] = 'empty';
 												
 
@@ -412,6 +435,9 @@ export default {
 						
 							newTile = gameBoardTiles[tile]
 							newTile.occupied = color;
+		
+							let oldAndNewPositions = [pieceName, oldTile.pos, newTile.pos, newTile.x, newTile.y]
+							postMove(gameId, oldAndNewPositions);
 							selectedPiece.pos = newTile.pos;
 							selectedPiece.x = newTile.x;
 							selectedPiece.y = newTile.y;
@@ -554,13 +580,28 @@ export default {
 			}
 
 		},
-		
+
+		// getBoard() {
+		// 	let gameId = window.location.href.slice(30)
+		// 	this.$http.post('http://192.168.1.7:3000/newgame/board', {
+		// 		gameId: gameId	})
+		// 		.then(response => {
+		// 			this.player1 = response.body.game.player1;
+		// 			this.player2 = response.body.game.player2;
+		// 			this.redPieces = response.body.game.player1.pieces;
+		// 			this.bluePieces = response.body.game.player2.pieces;
+		// 		})
+		// },
 		postMove(gameId, oldAndNew) {
 			this.$http.post('http://192.168.1.7:3000/newgame/moves', {
 			gameId: gameId, 
 			move: oldAndNew, })
 			.then(response => {
-				console.log(response);
+				// this.redPieces = response.body.game.player1.pieces;
+				// this.bluePieces = response.body.game.player2.pieces;
+				console.log("ON SERVER PLAYER1 PEICES: " + JSON.stringify(response.body.game.player1.pieces));
+				console.log("ON CLIENT REDPIECES: " + JSON.stringify(this.redPieces));
+
 			}, error => {
 				console.log(error);
 			});
@@ -607,6 +648,15 @@ export default {
 			
 			this.selectedPiece = piece
 		},
+		getPieceName() {
+
+			return this.pieceName;
+		},
+		setPieceName(pieceName) {
+			
+			this.pieceName = pieceName;
+		},
+
 		getAllowedMoves() {
 			return this.allowedMoves;
 		},
