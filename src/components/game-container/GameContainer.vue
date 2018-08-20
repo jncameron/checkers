@@ -107,14 +107,14 @@ export default {
 
 		},
 		// fetchData() {
-		// 	this.$http.get('http://192.168.1.7:3000/user/signup')
+		// 	this.$http.get('http://localhost:3000/user/signup')
 		// 		.then(response => {
 		// 			return response.json();	
 		// 		}).then(data => console.log("DATA: " + JSON.stringify(data)));
 		// },
 
 		fetchCurrentBoard() {
-			this.$http.get('http://192.168.1.7:3000/newgame/update')
+			this.$http.get('http://localhost:3000/newgame/update')
 				.then(response => {
 					return response.json();	
 				}).then(data => console.log("DATA: " + JSON.stringify(data)));

@@ -52,22 +52,24 @@ router.post('/moves', (req,res,next) => {
     })
 });
 
-// router.post('/board', (req,res,next) => {
-//     NewGame.findByIdAndUpdate({_id: req.body.gameId})
-//         .exec()
-//         .then(game => {
-//             game.then(result => {
-//                 res.status(200).send({
-//                     game: game
-//                 }).catch(err => {
-//                     console.log(err);
-//                     res.status(500).json({
-//                         error: err
-//                     });
-//                 });
-//             })
-//         })
-// });
+router.post('/board', (req,res,next) => {
+    let gameToSend = {}
+    NewGame.findById({_id: req.body.id})
+        .exec()
+        .then(function(game) { 
+            game.save()
+            .then(result => {
+                res.status(200).send({
+                    game: game
+                });
+            }).catch(err => {
+                console.log(err);
+                res.status(500).json({
+                    error: err
+                })
+            })
+        });
+});
 
 router.get('/update', (req,res,next) => {
     res.status(200).send({

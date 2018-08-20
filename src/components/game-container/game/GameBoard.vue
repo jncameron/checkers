@@ -33,7 +33,7 @@
       </board-tile>
 
       <red-piece v-for="(redPiece, index) in redPieces"
-				:key=redPiece.pos
+				:key="index"
 				:transformRed="transformRed(index)"
 				:turn="turn"
 				:crownedRed="redPieceCrowned(index)"
@@ -41,7 +41,7 @@
       </red-piece>
 
       <blue-piece v-for="(bluePiece, index) in bluePieces"
-				:key=bluePiece.pos
+				:key="index"
 				:turn="turn"
 				:transformBlue="transformBlue(index)"
 				:crownedBlue="bluePieceCrowned(index)"
@@ -52,14 +52,16 @@
 </template>
 
 <script>
-import redPieces from '../../../data/RedPlayerModel.js'
-import bluePieces from '../../../data/BluePlayerModel.js'
+// import redPieces from '../../../data/RedPlayerModel.js'
+// import bluePieces from '../../../data/BluePlayerModel.js'
 import gameBoardTiles from '../../../data/GameBoardModel.js'
 import GameFinished from './GameFinished.vue';
 import Tile from './Tile.vue';
 import RedPiece from './RedPiece.vue';
 import BluePiece from './BluePiece.vue';
 import newGame from '../../../data/NewGameModel.js'
+import redPieces from '../../../data/RedPlayerModel.js';
+import bluePieces from '../../../data/BluePlayerModel.js';
 
 
 export default {
@@ -72,8 +74,10 @@ export default {
 	data() {
 			return {
 				newGame: newGame,
-				redPieces: redPieces,
-				bluePieces: bluePieces,
+				player1: {},
+				player2: {},
+				redPieces: {},
+				bluePieces: {},
 				gameBoardTiles: gameBoardTiles,
 				turn: 'red',
 				selectedPieceXY: [],
@@ -97,9 +101,27 @@ export default {
 				justCrowned: false,
 			}
 	},
-    mounted: function() {
-        this.listenForBoard();
-    },
+    beforeCreate: function() {
+		let id = window.location.href.slice(30)
+		if(id !== 'local') {
+			console.log("Getting initial Board, id: " + id)
+			this.$http.post('http://localhost:3000/newgame/board', {
+				id: id	})
+				.then(response => {
+					console.log(response);
+					this.player1 = response.body.game.player1;
+					this.player2 = response.body.game.player2;
+					this.redPieces = response.body.game.player1.pieces;
+					this.bluePieces = response.body.game.player2.pieces;
+				}, error => {
+				console.log(error);
+			});
+		}
+        
+	},
+	mounted: function() {
+		this.listenForBoardUpdates();
+	}, 
 	components: {
 			'board-tile': Tile,
 			'red-piece': RedPiece,
@@ -107,20 +129,15 @@ export default {
 			'game-finished': GameFinished,
 	},
 	methods: {
-		listenForBoard() {	
-			socket.on('game', function(data) {
-                console.log("GAME DATA: " + JSON.stringify(data));
-			});
-		},
 		transformRed(i){
-			let x = redPieces[i]['x'] + 30;
-			let y = redPieces[i]['y'] + 30;
+			let x = this.redPieces[i]['x'] + 30;
+			let y = this.redPieces[i]['y'] + 30;
 			return(`translate(${x},${y})`);
 		},
 		
 		transformBlue(i){
-			let x = bluePieces[i]['x'] + 30;
-			let y = bluePieces[i]['y'] + 30;
+			let x = this.bluePieces[i]['x'] + 30;
+			let y = this.bluePieces[i]['y'] + 30;
 			return(`translate(${x},${y})`);
 		},
 
@@ -337,10 +354,10 @@ export default {
 
 			if(color === 'red') {
 				opponentColor = 'blue';
-				opponentPieces = bluePieces;
+				opponentPieces = this.bluePieces;
 			} else if (color === 'blue') {
 				opponentColor = 'red';
-				opponentPieces = redPieces;
+				opponentPieces = this.redPieces;
 			}
 
 
@@ -380,11 +397,10 @@ export default {
 												
 												let position = opponentPieces[piece]['pos'] 
 												oldAndNewPositions.push(piece)
-												postMove(gameId, oldAndNewPositions);
-												delete opponentPieces[piece]
 												
 												gameBoardTiles[`tile${position}`]['occupied'] = 'empty';
-												
+												postMove(gameId, oldAndNewPositions);
+												delete opponentPieces[piece]
 
 												if(color === 'red') {
 													
@@ -437,7 +453,7 @@ export default {
 							newTile.occupied = color;
 		
 							let oldAndNewPositions = [pieceName, oldTile.pos, newTile.pos, newTile.x, newTile.y]
-							postMove(gameId, oldAndNewPositions);
+							
 							selectedPiece.pos = newTile.pos;
 							selectedPiece.x = newTile.x;
 							selectedPiece.y = newTile.y;
@@ -448,6 +464,7 @@ export default {
 							validJumpXY.length = 0;;
 							selectedPieceXY.length = 0;
 							changeTurn();
+							postMove(gameId, oldAndNewPositions);
 							allowedJumps.length = 0;
 							allowedMoves.length = 0;
 							canBeJumped.length = 0;
@@ -465,7 +482,7 @@ export default {
 			} else if(this.turn === 'blue') {
 				this.turn = 'red';
 			}
-			this.$emit('turn',this.turn);
+			// this.$emit('turn',this.turn);
 		},
 
 		redPieceCrowned(i) {
@@ -581,30 +598,48 @@ export default {
 
 		},
 
-		// getBoard() {
-		// 	let gameId = window.location.href.slice(30)
-		// 	this.$http.post('http://192.168.1.7:3000/newgame/board', {
-		// 		gameId: gameId	})
-		// 		.then(response => {
-		// 			this.player1 = response.body.game.player1;
-		// 			this.player2 = response.body.game.player2;
-		// 			this.redPieces = response.body.game.player1.pieces;
-		// 			this.bluePieces = response.body.game.player2.pieces;
-		// 		})
-		// },
+
 		postMove(gameId, oldAndNew) {
-			this.$http.post('http://192.168.1.7:3000/newgame/moves', {
+
+			gameId = window.location.href.slice(30)
+
+			this.$http.post('http://localhost:3000/newgame/moves', {
+
 			gameId: gameId, 
 			move: oldAndNew, })
 			.then(response => {
 				// this.redPieces = response.body.game.player1.pieces;
 				// this.bluePieces = response.body.game.player2.pieces;
 				console.log("ON SERVER PLAYER1 PEICES: " + JSON.stringify(response.body.game.player1.pieces));
-				console.log("ON CLIENT REDPIECES: " + JSON.stringify(this.redPieces));
+				console.log("ON SERVER PLAYER2 PEICES: " + JSON.stringify(response.body.game.player2.pieces));
+
 
 			}, error => {
 				console.log(error);
 			});
+			
+			let gameData = new Object();
+			gameData.player1 = new Object();
+			gameData.player2 = new Object();
+
+			gameData.tiles = this.gameBoardTiles
+			//WORK ON THIS
+			let turn = this.turn;
+			console.log("turn: "+turn)
+			gameData.turn = turn;
+			gameData.player1.pieces = this.redPieces;
+			gameData.player2.pieces = this.bluePieces;
+
+			if(turn === 'blue') {
+			gameData['player1']['pieces'][oldAndNew[0]] = {"pos": oldAndNew[2], "x": oldAndNew[3], "y": oldAndNew[4]}
+
+			} else if (turn === 'red') {
+			gameData['player2']['pieces'][oldAndNew[0]] = {"pos": oldAndNew[2], "x": oldAndNew[3], "y": oldAndNew[4]}
+			}
+
+
+			socket.emit('gamedata', gameData);
+			console.log("game data" + JSON.stringify(gameData))
 		},
 
 		getGameBoardTiles() {
@@ -681,6 +716,46 @@ export default {
 		setHasJumped(has) {
 			this.hasJumped = has;
 		},
+		listenForBoardUpdates() {
+			let redPieces = this.redPieces;
+			let bluePieces = this.bluePieces;
+			let setLoadedFalse = this.setLoadedFalse;
+			let setLoadedTrue = this.setLoadedTrue;
+			let setRedPieces = this.setRedPieces;
+			let setBluePieces = this.setBluePieces;
+			let setTurn = this.setTurn;
+			let setGameBoardTiles = this.setGameBoardTiles;
+
+            socket.on('gamedata', function(data) {
+				console.log("DATA: " + JSON.stringify(data));
+				this.player1 = data.player1;
+				this.player2 = data.player2;
+				setRedPieces(data.player1.pieces);
+				console.log("RED: "+ JSON.stringify(redPieces));
+				setBluePieces(data.player2.pieces);
+				setTurn(data.turn);
+				setGameBoardTiles(data.tiles)
+				
+			});
+		},
+		setTurn(t) {
+			this.turn = t;
+		},
+		setLoadedFalse() {
+			this.loaded = false
+		},
+		setLoadedTrue() {
+			this.loaded = true
+		},
+		setRedPieces(pieces) {
+			this.redPieces = pieces;
+		},
+		setBluePieces(pieces) {
+			this.bluePieces = pieces;
+		},
+		setGameBoardTiles(tiles) {
+			this.gameBoardTiles = tiles;
+		}
 	}
 }
 </script>

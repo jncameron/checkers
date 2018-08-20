@@ -6,7 +6,7 @@ import { store } from './store/store';
 import { routes } from './routes';
 import VueSocketio from 'vue-socket.io';
 
-Vue.use(VueSocketio,'http://192.168.1.7:3000')
+Vue.use(VueSocketio,'http://localhost:3000')
 
 Vue.use(VueResource);
 
@@ -18,7 +18,7 @@ const router = new VueRouter({
 
 Vue.config.productionTip = false
 
-new Vue({
+var vm = new Vue({
   http: {
     root: '/root',
     headers: {

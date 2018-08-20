@@ -61,7 +61,7 @@ export default {
 			this.user.email= document.getElementById('reg-email').value;
 			this.user.password= document.getElementById('reg-password').value;
 			//console.log("signUp: " + signUpName, signUpEmail, signUpPassword);
-			axios.post('http://192.168.1.7:3000/user/signup', this.user)
+			axios.post('http://localhost:3000/user/signup', this.user)
 				.then(response => {
 					console.log(response)
 					const token = response.data.token
@@ -78,7 +78,7 @@ export default {
 			validUser.email= document.getElementById('login-email').value;
 			validUser.password= document.getElementById('login-password').value;
 			//console.log("signUp: " + signUpName, signUpEmail, signUpPassword);
-			axios.post('http://192.168.1.7:3000/user/login', validUser)
+			axios.post('http://localhost:3000/user/login', validUser)
 				.then(response => {
 					console.log(response)
 					const token = response.data.token

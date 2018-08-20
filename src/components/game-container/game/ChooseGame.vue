@@ -116,7 +116,7 @@ export default {
 
 			let gameId = "";
 
-			this.$http.post('http://192.168.1.7:3000/newgame/', this.newGame)
+			this.$http.post('http://localhost:3000/newgame/', this.newGame)
 				.then(response => {
 					gameId = response.body.id
 					this.newGame.id = gameId;

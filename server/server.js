@@ -75,4 +75,11 @@ io.on("connection", (socket) => {
     }
   });
 
+    socket.on('gamedata', (data) => {
+        io.sockets.emit('gamedata', data);
+        console.log("EMITTING")
+
+    });
+
+
 });
