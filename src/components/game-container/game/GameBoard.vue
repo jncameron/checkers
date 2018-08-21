@@ -7,7 +7,7 @@
       -->
     </game-finished>
    
-    <svg viewBox="0 0 800 800"
+    <svg viewBox="0 0 800 800" 
       xmlns="http://www.w3.org/2000/svg"
       style="position:relative;">
       <defs> 
@@ -33,6 +33,7 @@
       </board-tile>
 
       <red-piece v-for="(redPiece, index) in redPieces"
+	  			v-if="redPiece.pos"
 				:key="index"
 				:transformRed="transformRed(index)"
 				:turn="turn"
@@ -41,6 +42,7 @@
       </red-piece>
 
       <blue-piece v-for="(bluePiece, index) in bluePieces"
+	  			v-if="bluePiece.pos"
 				:key="index"
 				:turn="turn"
 				:transformBlue="transformBlue(index)"
@@ -103,7 +105,6 @@ export default {
 	},
     beforeCreate: function() {
 		let id = window.location.href.slice(30)
-		if(id !== 'local') {
 			console.log("Getting initial Board, id: " + id)
 			this.$http.post('http://localhost:3000/newgame/board', {
 				id: id	})
@@ -111,13 +112,18 @@ export default {
 					console.log(response);
 					this.player1 = response.body.game.player1;
 					this.player2 = response.body.game.player2;
-					this.redPieces = response.body.game.player1.pieces;
-					this.bluePieces = response.body.game.player2.pieces;
+					if(this.player1.pieces.red1) {
+						this.redPieces = response.body.game.player1.pieces;
+						this.bluePieces = response.body.game.player2.pieces;
+					} else {
+						this.redPieces = response.body.game.player2.pieces;
+						this.bluePieces = response.body.game.player1.pieces;
+					}
+					this.turn = response.body.game.turn;
+					this.gameBoardTiles = response.body.game.tiles;
 				}, error => {
 				console.log(error);
 			});
-		}
-        
 	},
 	mounted: function() {
 		this.listenForBoardUpdates();
@@ -178,8 +184,6 @@ export default {
 			let pieceName = this.pieceName;
 			let setPieceName = this.setPieceName;
 			
-			
-			// selectedPiece.crown = false;
 			validMoveXY.length = 0;
 			validJumpXY.length = 0;
 			selectedPieceXY.length = 0;		
@@ -226,7 +230,7 @@ export default {
 				checkAvailableMoves();
 				checkAvailableJumps();
 				let selectedTile = getSelectedTile();
-				jumpsAvailable = this.getJumpsAvailable();
+				jumpsAvailable = getJumpsAvailable();
 				hasJumped = this.getHasJumped();
 
 				//CHECK FOR JUMPS
@@ -284,6 +288,8 @@ export default {
 								allowedMoves.push(`tile${t}`);
 						}
 					});
+
+				//IF PLAYER HAS JUMPED, AND THERE ARE NO MORE JUMPS
 
 				} else if (hasJumped === true && jumpsAvailable === false){
 					changeTurn();
@@ -347,6 +353,7 @@ export default {
 			let gameId = this.newGame.id;
 			let pieceName = this.pieceName;
 			let getPieceName = this.getPieceName;
+			let updateGameBoardTile = this.updateGameBoardTile;
 
 			
 
@@ -371,6 +378,7 @@ export default {
 
 							newTile = gameBoardTiles[tile]
 							newTile.occupied = color;
+							updateGameBoardTile(tile, color)
 							pieceName = getPieceName()
 							console.log("PIECE NAME: " + pieceName)
 							let oldAndNewPositions = [pieceName, oldTile.pos, newTile.pos, newTile.x, newTile.y]
@@ -384,7 +392,9 @@ export default {
 							
 							oldTile.occupied = 'empty';
 
-							gameBoardTiles[`tile${oldTile.pos}`]['occupied'] = 'empty';
+							updateGameBoardTile(`tile${oldTile.pos}`,'empty')
+
+							// gameBoardTiles[`tile${oldTile.pos}`]['occupied'] = 'empty';
 							
 							for(let piece in opponentPieces) {	
 								if (canBeJumped.includes(opponentPieces[piece]['pos'])) {
@@ -398,9 +408,10 @@ export default {
 												let position = opponentPieces[piece]['pos'] 
 												oldAndNewPositions.push(piece)
 												
-												gameBoardTiles[`tile${position}`]['occupied'] = 'empty';
-												postMove(gameId, oldAndNewPositions);
-												delete opponentPieces[piece]
+												// gameBoardTiles[`tile${position}`]['occupied'] = 'empty';
+												updateGameBoardTile(`tile${position}`,'empty')
+												
+												opponentPieces[piece] = "CAPTURED";
 
 												if(color === 'red') {
 													
@@ -419,18 +430,25 @@ export default {
 									allowedMoves.length = 0;
 									canBeJumped.length = 0;
 									justCrowned = getJustCrowned();
+									
 
 									if(justCrowned === false) {
 										setHasJumped(true);
 										getHasJumped();
+										postMove(gameId, oldAndNewPositions);
+										
 										selectPiece([newTile.x,newTile.y],color, opponentColor, hasJumped)
 									} else {
 										setJustCrowned(false);
 										changeTurn();
+										
 										allowedJumps.length = 0;
 										allowedMoves.length = 0;
 										canBeJumped.length = 0;
+										postMove(gameId, oldAndNewPositions);
 									}
+
+
 								}
 							}
 					}
@@ -450,7 +468,9 @@ export default {
 						&& gameBoardTiles[tile]['y'] === newPosition[1]) {
 						
 							newTile = gameBoardTiles[tile]
+							
 							newTile.occupied = color;
+							updateGameBoardTile(tile, color)
 		
 							let oldAndNewPositions = [pieceName, oldTile.pos, newTile.pos, newTile.x, newTile.y]
 							
@@ -459,7 +479,8 @@ export default {
 							selectedPiece.y = newTile.y;
 							crownPiece(selectedPiece);
 							oldTile.occupied = 'empty';
-							gameBoardTiles[`tile${oldTile.pos}`]['occupied'] = 'empty';
+							updateGameBoardTile(`tile${oldTile.pos}`,'empty')
+							// gameBoardTiles[`tile${oldTile.pos}`]['occupied'] = 'empty';
 							validMoveXY.length = 0;
 							validJumpXY.length = 0;;
 							selectedPieceXY.length = 0;
@@ -474,6 +495,10 @@ export default {
 			}
 			
 			
+		},
+
+		updateGameBoardTile(tile, occupied) {
+			this.gameBoardTiles[tile]['occupied'] = occupied;
 		},
 
 		changeTurn() {
@@ -602,6 +627,10 @@ export default {
 		postMove(gameId, oldAndNew) {
 
 			gameId = window.location.href.slice(30)
+			oldAndNew.splice(5, 0, this.gameBoardTiles, this.turn);
+	
+			
+			console.log("OLD AND NEW " + JSON.stringify(oldAndNew))
 
 			this.$http.post('http://localhost:3000/newgame/moves', {
 
@@ -612,34 +641,43 @@ export default {
 				// this.bluePieces = response.body.game.player2.pieces;
 				console.log("ON SERVER PLAYER1 PEICES: " + JSON.stringify(response.body.game.player1.pieces));
 				console.log("ON SERVER PLAYER2 PEICES: " + JSON.stringify(response.body.game.player2.pieces));
-
-
 			}, error => {
 				console.log(error);
-			});
-			
+			}).then(function() {
 			let gameData = new Object();
 			gameData.player1 = new Object();
 			gameData.player2 = new Object();
-
 			gameData.tiles = this.gameBoardTiles
 			//WORK ON THIS
 			let turn = this.turn;
 			console.log("turn: "+turn)
 			gameData.turn = turn;
-			gameData.player1.pieces = this.redPieces;
-			gameData.player2.pieces = this.bluePieces;
-
-			if(turn === 'blue') {
-			gameData['player1']['pieces'][oldAndNew[0]] = {"pos": oldAndNew[2], "x": oldAndNew[3], "y": oldAndNew[4]}
-
-			} else if (turn === 'red') {
-			gameData['player2']['pieces'][oldAndNew[0]] = {"pos": oldAndNew[2], "x": oldAndNew[3], "y": oldAndNew[4]}
+			if(this.player1.pieces.red1) {
+				gameData.player1.pieces = this.redPieces;
+				gameData.player2.pieces = this.bluePieces;
+				if(turn === 'blue') {
+					gameData['player1']['pieces'][oldAndNew[0]] = {"pos": oldAndNew[2], "x": oldAndNew[3], "y": oldAndNew[4]}
+				} else if (turn === 'red') {
+					gameData['player2']['pieces'][oldAndNew[0]] = {"pos": oldAndNew[2], "x": oldAndNew[3], "y": oldAndNew[4]}
+				}
+			} else {
+				gameData.player2.pieces = this.redPieces;
+				gameData.player1.pieces = this.bluePieces;
+					if(turn === 'blue') {
+					gameData['player2']['pieces'][oldAndNew[0]] = {"pos": oldAndNew[2], "x": oldAndNew[3], "y": oldAndNew[4]}
+				} else if (turn === 'red') {
+					gameData['player1']['pieces'][oldAndNew[0]] = {"pos": oldAndNew[2], "x": oldAndNew[3], "y": oldAndNew[4]}
+				}
 			}
+
+
 
 
 			socket.emit('gamedata', gameData);
 			console.log("game data" + JSON.stringify(gameData))
+			}
+
+			);
 		},
 
 		getGameBoardTiles() {
@@ -727,12 +765,18 @@ export default {
 			let setGameBoardTiles = this.setGameBoardTiles;
 
             socket.on('gamedata', function(data) {
-				console.log("DATA: " + JSON.stringify(data));
+
+
 				this.player1 = data.player1;
 				this.player2 = data.player2;
-				setRedPieces(data.player1.pieces);
-				console.log("RED: "+ JSON.stringify(redPieces));
-				setBluePieces(data.player2.pieces);
+				if(this.player1.pieces.red1) {
+					setRedPieces(data.player1.pieces);
+					setBluePieces(data.player2.pieces);
+				} else {
+					setRedPieces(data.player2.pieces);
+					setBluePieces(data.player1.pieces);
+				}
+				
 				setTurn(data.turn);
 				setGameBoardTiles(data.tiles)
 				

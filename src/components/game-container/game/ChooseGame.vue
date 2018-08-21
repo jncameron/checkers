@@ -1,5 +1,4 @@
 <template>
-import onlineUsers from '../../../data/OnlineUsers';
 	<div>
 		<transition name="modal">
 			<div class="modal-mask">
@@ -52,7 +51,7 @@ import onlineUsers from '../../../data/OnlineUsers';
 </template>
 
 <script>
-
+import gameBoardTiles from '../../../data/GameBoardModel'
 
 export default {
   props: {
@@ -62,7 +61,8 @@ export default {
 		onlineUsers: {type: Array},
 		redPieces: {type: Object},
 		bluePieces: {type: Object},
-		newGame: {type: Object}
+		newGame: {type: Object},
+		gameBoardTiles: gameBoardTiles
   },
   data() {
     return {
@@ -90,28 +90,63 @@ export default {
 			this.player1.name = this.user.name;
 			this.player1.avatar = this.user.avatar;
 			this.player1.email = this.user.email;
-			this.player1.pieces = this.redPieces;
-
+			if(Math.random <= 0.5) {
+				this.player1.pieces = this.redPieces;
+			} else {
+				this.player1.pieces = this.bluePieces;
+			}
+			
 			this.player2.name = 'Player 2';
 			this.player2.avatar = '../../../assets/avatars/user-15.svg'
-			this.player2.pieces = this.bluePieces;
-			let gameId = "local";
-			this.$router.push({path: '/game/' + gameId, params: { gameId: this.$route.params.gameId }})
+			if( this.player1.pieces === this.redPieces) {
+				this.player2.pieces = this.bluePieces;
+			} else {
+				this.player2.pieces = this.redPieces;
+			}
+
+			
+			this.newGame.player1 = this.player1;
+			this.newGame.player2 = this.player2;
+			this.newGame.turn = 'red';
+			this.newGame.tiles = gameBoardTiles;
+			console.log(this.newGame)
+
+			let gameId = "";
+
+			this.$http.post('http://localhost:3000/newgame/', this.newGame)
+				.then(response => {
+					gameId = response.body.id
+					this.newGame.id = gameId;
+					console.log(this.newGame);
+					this.$router.push({path: '/game/' + gameId, params: { gameId: this.$route.params.gameId }})
+				}, error => {
+					console.log(error);
+			});
 			
 		},
 		createGame(button) {
 			this.player1.name = this.user.name;
 			this.player1.avatar = this.user.avatar;
 			this.player1.email = this.user.email;
-			this.player1.pieces = this.redPieces;
+						if(Math.random <= 0.5) {
+				this.player1.pieces = this.redPieces;
+			} else {
+				this.player1.pieces = this.bluePieces;
+			}
 
 			this.player2.name = this.onlineUsers[button]['name'];
 			this.player2.avatar = this.onlineUsers[button]['avatar'];
 			this.player2.email = this.onlineUsers[button]['email'];
-			this.player2.pieces = this.bluePieces;
+			if( this.player1.pieces === this.redPieces) {
+				this.player2.pieces = this.bluePieces;
+			} else {
+				this.player2.pieces = this.redPieces;
+			}
 
 			this.newGame.player1 = this.player1;
 			this.newGame.player2 = this.player2;
+			this.newGame.turn = 'red';
+			this.newGame.tiles = gameBoardTiles;
 			console.log(this.newGame)
 
 			let gameId = "";
