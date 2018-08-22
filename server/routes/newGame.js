@@ -80,7 +80,6 @@ router.post('/moves', (req,res,next) => {
 });
 
 router.post('/board', (req,res,next) => {
-    let gameToSend = {}
     NewGame.findById({_id: req.body.id})
         .exec()
         .then(function(game) { 

@@ -1,6 +1,6 @@
 <template>
 
-    <g id="black-link" :transform="transformRed" stroke="#000000" stroke-width="3">
+    <g id="black-link" :transform="transform" stroke="#000000" stroke-width="3">
         <g id="black">
             <ellipse id="Oval" fill="#000000" cx="19.934334" cy="20.5428287" rx="35" ry="30"></ellipse>
             <ellipse id="Oval" fill="url(#redGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>
@@ -19,7 +19,7 @@
 
 export default {
     props: {
-		transformRed: {type: String},
+		transform: {type: String},
 		turn: {type: String},
 		crownedRed: {type: Boolean}
 
@@ -36,7 +36,7 @@ export default {
     methods: {
         selectRed() {
             
-            this.position = this.transformRed;
+            this.position = this.transform;
             this.posX = this.position.split('(').pop().split(',').shift() - 30;
             this.posY = this.position.split(',').pop().split(')').shift() - 30;
             this.posXY = [this.posX, this.posY];
