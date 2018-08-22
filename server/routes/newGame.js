@@ -7,39 +7,61 @@ const NewGame = require('../models/newGame');
 
 router.post('/moves', (req,res,next) => {
 
-    let pieceName = req.body.move[0];
-    let oldpos = req.body.move[1];
-    let newpos = req.body.move[2];
-    let newX = req.body.move[3];
-    let newY = req.body.move[4];
-    let tiles = req.body.move[5];
-    let turn = req.body.move[6];
+    let pieceName = req.body.postGame.pieceName;
+    let oldpos = req.body.postGame.oldpos;
+    let newpos = req.body.postGame.newpos;
+    let newX = req.body.postGame.newX;
+    let newY = req.body.postGame.newY;
+    let tiles = req.body.postGame.tiles;
+    let turn = req.body.postGame.turn;
     let captured = "";
-    if(req.body.move[7]) {
-        captured = req.body.move[7];
+    if(req.body.postGame.captured) {
+        captured = req.body.postGame.captured;
     }
     
-    console.log(JSON.stringify(NewGame))
-    console.log(JSON.stringify(req.body))
     console.log("ID: " + req.body.gameId)
     NewGame.findByIdAndUpdate({_id: req.body.gameId})
         .exec()
         .then(game => {
-            let player1Pieces = game.player1.pieces;
-            let player2Pieces = game.player2.pieces;
             console.log("GAME FOUND: " + game)
             game.moves.push(oldpos+"-"+newpos)
-            if(pieceName[0] === 'r') {
-                game.set({'player1.pieces': { [pieceName]: { "pos":newpos,"x":newX,"y":newY}}})
-                if(captured[0] === 'b') {
-                    game.set({'player2.pieces': { [captured]: "CAPTURED"}})
+
+            if(game.player1.color === 'red') {
+                if(pieceName[0] === 'r') {
+                    game.set({'player1.pieces': { [pieceName]: { "pos":newpos,"x":newX,"y":newY}}})
                 }
-            } else {
-                game.set({'player2.pieces': { [pieceName]: { "pos":newpos,"x":newX,"y":newY}}})
-                if(captured[0] === 'r') {
+                
+                if(pieceName[0] === 'b') {
+                    game.set({'player2.pieces': { [pieceName]: { "pos":newpos,"x":newX,"y":newY}}})
+                }
+
+                if (captured[0] === 'b') {
+                        game.set({'player2.pieces': { [captured]: "CAPTURED"}})
+                }
+
+                if (captured[0] === 'r') {
                     game.set({'player1.pieces': { [captured]: "CAPTURED"}})
                 }
             }
+                
+            else if(game.player1.color === 'blue') {
+                if(pieceName[0] === 'r') {
+                    game.set({'player2.pieces': { [pieceName]: { "pos":newpos,"x":newX,"y":newY}}})
+                }
+                
+                if(pieceName[0] === 'b') {
+                    game.set({'player1.pieces': { [pieceName]: { "pos":newpos,"x":newX,"y":newY}}})
+                }
+
+                if (captured[0] === 'b') {
+                        game.set({'player1.pieces': { [captured]: "CAPTURED"}})
+                }
+
+                if (captured[0] === 'r') {
+                    game.set({'player2.pieces': { [captured]: "CAPTURED"}})
+                }
+            }
+
 
             game.set({'tiles': tiles});
             game.set({'turn': turn});
@@ -49,7 +71,6 @@ router.post('/moves', (req,res,next) => {
                     game: game
                 });
             }).catch(err => {
-                console.log(err);
                 res.status(500).json({
                     error: err
                 })
@@ -69,7 +90,6 @@ router.post('/board', (req,res,next) => {
                     game: game
                 });
             }).catch(err => {
-                console.log(err);
                 res.status(500).json({
                     error: err
                 })

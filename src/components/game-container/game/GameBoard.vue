@@ -26,6 +26,7 @@
 			  	:x="gameBoardTiles[(index)]['x']"
       			:y="gameBoardTiles[(index)]['y']"
 				:turn="turn"
+				:occupied="tile.occupied"
 				:selectedPieceXY="selectedPieceXY"
 				:validMoveXY="validMoveXY"
 				:validJumpXY="validJumpXY"
@@ -54,8 +55,6 @@
 </template>
 
 <script>
-// import redPieces from '../../../data/RedPlayerModel.js'
-// import bluePieces from '../../../data/BluePlayerModel.js'
 import gameBoardTiles from '../../../data/GameBoardModel.js'
 import GameFinished from './GameFinished.vue';
 import Tile from './Tile.vue';
@@ -78,8 +77,6 @@ export default {
 				newGame: newGame,
 				player1: {},
 				player2: {},
-				redPieces: {},
-				bluePieces: {},
 				gameBoardTiles: gameBoardTiles,
 				turn: 'red',
 				selectedPieceXY: [],
@@ -101,6 +98,7 @@ export default {
 				movesAvailable: true,
 				hasJumped: false,
 				justCrowned: false,
+				message: "Good luck!",
 			}
 	},
     beforeCreate: function() {
@@ -112,10 +110,10 @@ export default {
 					console.log(response);
 					this.player1 = response.body.game.player1;
 					this.player2 = response.body.game.player2;
-					if(this.player1.pieces.red1) {
+					if(this.player1.color === 'red') {
 						this.redPieces = response.body.game.player1.pieces;
 						this.bluePieces = response.body.game.player2.pieces;
-					} else {
+					} else if (this.player1.color === 'blue'){
 						this.redPieces = response.body.game.player2.pieces;
 						this.bluePieces = response.body.game.player1.pieces;
 					}
@@ -199,10 +197,8 @@ export default {
 				opponentPieces = this.redPieces
 			}
 			canBeJumped = this.canBeJumped;
-			allowedMoves.length = 0;
 			blueOccupied.length = 0;
 			selectedPieceXY = [pos[0],pos[1]]
-
 
 				for (let tile in gameBoardTiles) {
 					
@@ -228,7 +224,7 @@ export default {
 
 				// hasJumped = false;
 				checkAvailableMoves();
-				checkAvailableJumps();
+				checkAvailableJumps(color);
 				let selectedTile = getSelectedTile();
 				jumpsAvailable = getJumpsAvailable();
 				hasJumped = this.getHasJumped();
@@ -291,11 +287,11 @@ export default {
 
 				//IF PLAYER HAS JUMPED, AND THERE ARE NO MORE JUMPS
 
-				} else if (hasJumped === true && jumpsAvailable === false){
+				} 
+				else if (jumpsAvailable === false && hasJumped === true){
 					changeTurn();
 					setSelectedPieceXY([])
 					this.setHasJumped(false)
-					
 				}
 				
 				for(let tileName in gameBoardTiles) {
@@ -317,19 +313,14 @@ export default {
 			let selectedPiece = this.selectedPiece;
 			let getSelectedPiece = this.getSelectedPiece;
 			let setSelectedPieceXY = this.setSelectedPieceXY;
-
 			let getSelectedTile = this.getSelectedTile;
 			let oldTile = this.getSelectedTile();
-
 			let newTile = {};
 			let canBeJumped = this.canBeJumped;
-
 			let validJumps = oldTile.validJumps;	
 			let validMoves = oldTile.validMoves;
-
 			let color = this.turn;
 			let opponentColor = "";
-
 			let validMoveXY = this.validMoveXY;
 			let validJumpXY = this.validJumpXY;
 			let selectedPieceXY = this.selectedPieceXY;
@@ -355,10 +346,6 @@ export default {
 			let getPieceName = this.getPieceName;
 			let updateGameBoardTile = this.updateGameBoardTile;
 
-			
-
-
-
 			if(color === 'red') {
 				opponentColor = 'blue';
 				opponentPieces = this.bluePieces;
@@ -367,23 +354,17 @@ export default {
 				opponentPieces = this.redPieces;
 			}
 
-
 			selectedPiece = getSelectedPiece();
-
 			if (allowedJumps.length > 0) {
 				allowedJumps.forEach(function(tile) {
 					if(gameBoardTiles[tile]['x'] === newPosition[0]
 						&& gameBoardTiles[tile]['y'] === newPosition[1]) {
-
-
 							newTile = gameBoardTiles[tile]
 							newTile.occupied = color;
 							updateGameBoardTile(tile, color)
 							pieceName = getPieceName()
 							console.log("PIECE NAME: " + pieceName)
 							let oldAndNewPositions = [pieceName, oldTile.pos, newTile.pos, newTile.x, newTile.y]
-
-							
 
 							selectedPiece.pos = newTile.pos;
 							selectedPiece.x = newTile.x;
@@ -393,12 +374,8 @@ export default {
 							oldTile.occupied = 'empty';
 
 							updateGameBoardTile(`tile${oldTile.pos}`,'empty')
-
-							// gameBoardTiles[`tile${oldTile.pos}`]['occupied'] = 'empty';
-							
 							for(let piece in opponentPieces) {	
 								if (canBeJumped.includes(opponentPieces[piece]['pos'])) {
-
 									validJumps.forEach(function (jump, index) {
 										if (jump === newTile.pos) {
 											let moveIndex = validMoves[index]
@@ -413,9 +390,6 @@ export default {
 												
 												opponentPieces[piece] = "CAPTURED";
 
-												if(color === 'red') {
-													
-												}
 											}
 											
 										}
@@ -426,42 +400,18 @@ export default {
 									selectedPiece = {};
 									selectedPieceXY.length = 0;
 									setSelectedPiece({});		
-									allowedJumps.length = 0;
-									allowedMoves.length = 0;
-									canBeJumped.length = 0;
-									justCrowned = getJustCrowned();
-									
-
-									if(justCrowned === false) {
-										setHasJumped(true);
-										getHasJumped();
-										postMove(gameId, oldAndNewPositions);
-										
-										selectPiece([newTile.x,newTile.y],color, opponentColor, hasJumped)
-									} else {
-										setJustCrowned(false);
-										changeTurn();
-										
-										allowedJumps.length = 0;
-										allowedMoves.length = 0;
-										canBeJumped.length = 0;
-										postMove(gameId, oldAndNewPositions);
-									}
-
-
+									justCrowned = getJustCrowned();								
+									setHasJumped(true);
+									getHasJumped();								
+									changeTurn();
+									postMove(gameId, oldAndNewPositions);
 								}
 							}
 					}
 				});
-				if(color === 'red') {
-					this.$emit('bluePiecesRemaining', Object.keys(this.bluePieces))
-				}
-				else if(color === 'blue') {
-					this.$emit('redPiecesRemaining', Object.keys(this.redPieces))
-				}
 			}
 
-			if (this.jumpsAvailable === false && hasJumped === false){
+			else if (jumpsAvailable === false && hasJumped === false){
 
 				allowedMoves.forEach(function(tile){
 					if(gameBoardTiles[tile]['x'] === newPosition[0]
@@ -486,9 +436,6 @@ export default {
 							selectedPieceXY.length = 0;
 							changeTurn();
 							postMove(gameId, oldAndNewPositions);
-							allowedJumps.length = 0;
-							allowedMoves.length = 0;
-							canBeJumped.length = 0;
 					}
 					
 				});
@@ -539,8 +486,8 @@ export default {
 
 		},
 
-		checkAvailableJumps() {
-			let color = this.turn
+		checkAvailableJumps(color) {
+
 			let redOccupied = this.redOccupied;
 			let blueOccupied = this.blueOccupied;
 			let canJump = false;
@@ -563,9 +510,10 @@ export default {
 							&& gameTileJumped['occupied'] === 'blue'
 							&& redOccupied.includes(gameBoardTiles[tile]['pos'])) {
 								canJump = true;
+								console.log()
 							} 
 					}
-					if (color === 'blue') {
+					else if (color === 'blue') {
 						let gameTileJumped = gameBoardTiles[tileToBeJumped]
 					 if ((t < gameBoardTiles[tile].pos || selectedPiece.crown === true)
 						&& !redOccupied.includes(t)
@@ -625,52 +573,63 @@ export default {
 
 
 		postMove(gameId, oldAndNew) {
-
 			gameId = window.location.href.slice(30)
-			oldAndNew.splice(5, 0, this.gameBoardTiles, this.turn);
-	
-			
-			console.log("OLD AND NEW " + JSON.stringify(oldAndNew))
-
+			let pieceName = oldAndNew[0];
+			let oldpos = oldAndNew[1];
+			let newpos = oldAndNew[2];
+			let newX = oldAndNew[3];
+			let newY = oldAndNew[4];
+			let tiles = this.gameBoardTiles;
+			let turn = this.turn;
+			let captured = "";
+			if(oldAndNew[5]) {
+				captured = oldAndNew[5];
+			}
+			let postGame = {pieceName, oldpos, newpos, newX, newY, tiles, turn, captured}
 			this.$http.post('http://localhost:3000/newgame/moves', {
 
 			gameId: gameId, 
-			move: oldAndNew, })
+			postGame: postGame})
 			.then(response => {
-				// this.redPieces = response.body.game.player1.pieces;
-				// this.bluePieces = response.body.game.player2.pieces;
-				console.log("ON SERVER PLAYER1 PEICES: " + JSON.stringify(response.body.game.player1.pieces));
-				console.log("ON SERVER PLAYER2 PEICES: " + JSON.stringify(response.body.game.player2.pieces));
+
 			}, error => {
 				console.log(error);
-			}).then(function() {
+			}).then(function() { 
+
+
+			//After posting to server/db, Send current board state to socket 'board'
+
 			let gameData = new Object();
 			gameData.player1 = new Object();
 			gameData.player2 = new Object();
 			gameData.tiles = this.gameBoardTiles
-			//WORK ON THIS
+
 			let turn = this.turn;
-			console.log("turn: "+turn)
+			console.log("turn: "+ turn)
 			gameData.turn = turn;
-			if(this.player1.pieces.red1) {
+
+			if(this.player1.color === 'red') {
 				gameData.player1.pieces = this.redPieces;
+				gameData.player1.color = 'red';
 				gameData.player2.pieces = this.bluePieces;
+				gameData.player2.color = 'blue';
+
 				if(turn === 'blue') {
-					gameData['player1']['pieces'][oldAndNew[0]] = {"pos": oldAndNew[2], "x": oldAndNew[3], "y": oldAndNew[4]}
+					gameData['player1']['pieces'][pieceName] = {"pos": newpos, "x": newX, "y": newY}
 				} else if (turn === 'red') {
-					gameData['player2']['pieces'][oldAndNew[0]] = {"pos": oldAndNew[2], "x": oldAndNew[3], "y": oldAndNew[4]}
+					gameData['player2']['pieces'][pieceName] = {"pos": newpos, "x": newX, "y": newY}
 				}
-			} else {
+			} else if (this.player1.color === 'blue') {
 				gameData.player2.pieces = this.redPieces;
+				gameData.player2.color = 'red';
 				gameData.player1.pieces = this.bluePieces;
+				gameData.player1.color = 'blue';
 					if(turn === 'blue') {
-					gameData['player2']['pieces'][oldAndNew[0]] = {"pos": oldAndNew[2], "x": oldAndNew[3], "y": oldAndNew[4]}
+					gameData['player2']['pieces'][pieceName] = {"pos": newpos, "x": newX, "y": newY}
 				} else if (turn === 'red') {
-					gameData['player1']['pieces'][oldAndNew[0]] = {"pos": oldAndNew[2], "x": oldAndNew[3], "y": oldAndNew[4]}
+					gameData['player1']['pieces'][pieceName] = {"pos": newpos, "x": newX, "y": newY}
 				}
 			}
-
-
 
 
 			socket.emit('gamedata', gameData);
@@ -757,8 +716,6 @@ export default {
 		listenForBoardUpdates() {
 			let redPieces = this.redPieces;
 			let bluePieces = this.bluePieces;
-			let setLoadedFalse = this.setLoadedFalse;
-			let setLoadedTrue = this.setLoadedTrue;
 			let setRedPieces = this.setRedPieces;
 			let setBluePieces = this.setBluePieces;
 			let setTurn = this.setTurn;
@@ -769,10 +726,12 @@ export default {
 
 				this.player1 = data.player1;
 				this.player2 = data.player2;
-				if(this.player1.pieces.red1) {
+				console.log("data Player 1: " + console.log(this.player1))
+				console.log("data Player 2: " + console.log(this.player2))
+				if(this.player1.color === 'red') {
 					setRedPieces(data.player1.pieces);
 					setBluePieces(data.player2.pieces);
-				} else {
+				} else if(this.player1.color === 'blue') {
 					setRedPieces(data.player2.pieces);
 					setBluePieces(data.player1.pieces);
 				}
@@ -784,12 +743,6 @@ export default {
 		},
 		setTurn(t) {
 			this.turn = t;
-		},
-		setLoadedFalse() {
-			this.loaded = false
-		},
-		setLoadedTrue() {
-			this.loaded = true
 		},
 		setRedPieces(pieces) {
 			this.redPieces = pieces;

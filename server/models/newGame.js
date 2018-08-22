@@ -1,21 +1,6 @@
 const mongoose = require('mongoose');
 
 
-// const player1Schema = mongoose.Schema({
-//     _id: mongoose.Schema.Types.ObjectId,
-//     name: String,
-//     email: String,
-//     avatar: String,
-//     pieces: Object
-// });
-
-// const player2Schema = mongoose.Schema({
-//     _id: mongoose.Schema.Types.ObjectId,
-//     name: String,
-//     email: String,
-//     avatar: String,
-//     pieces: Object
-// });
 
 const newGameSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,

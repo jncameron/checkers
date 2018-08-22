@@ -62,12 +62,13 @@ export default {
 		redPieces: {type: Object},
 		bluePieces: {type: Object},
 		newGame: {type: Object},
-		gameBoardTiles: gameBoardTiles
+		
   },
   data() {
     return {
 	  connectOnline: false,
 	  gameCreated: false,
+	  gameBoardTiles: gameBoardTiles
     }
   },
 	methods: {
@@ -128,21 +129,23 @@ export default {
 			this.player1.name = this.user.name;
 			this.player1.avatar = this.user.avatar;
 			this.player1.email = this.user.email;
-						if(Math.random <= 0.5) {
+			let assignColor = this.getRandom();
+			console.log("ASSIGNCOLOR: " + assignColor);
+			if(assignColor <= 0.5) {
 				this.player1.pieces = this.redPieces;
-			} else {
+				this.player1.color = 'red';
+				this.player2.pieces = this.bluePieces;
+				this.player2.color = 'blue';
+			} else if (assignColor > 0.5 ) {
 				this.player1.pieces = this.bluePieces;
+				this.player1.color = 'blue';
+				this.player2.pieces = this.redPieces;
+				this.player2.color = 'red';
 			}
 
 			this.player2.name = this.onlineUsers[button]['name'];
 			this.player2.avatar = this.onlineUsers[button]['avatar'];
 			this.player2.email = this.onlineUsers[button]['email'];
-			if( this.player1.pieces === this.redPieces) {
-				this.player2.pieces = this.bluePieces;
-			} else {
-				this.player2.pieces = this.redPieces;
-			}
-
 			this.newGame.player1 = this.player1;
 			this.newGame.player2 = this.player2;
 			this.newGame.turn = 'red';
@@ -160,11 +163,10 @@ export default {
 				}, error => {
 					console.log(error);
 			});
-
-
-			
-
 			this.gameCreated = true;
+		},
+		getRandom() {
+			return Math.random();
 		}
 
 	},

@@ -1,11 +1,11 @@
 <template>
     <div id="container">
         <div style="height:40px;padding-top:7px;background-color:#7f0000;color:#FFF">
-            <h3 v-if="player1.pieces.red1" style="margin:0 0 0 0">{{ player1.name }}</h3>
+            <h3 v-if="player1.redPieces" style="margin:0 0 0 0">{{ player1.name }}</h3>
             <h3 v-else style="margin:0 0 0 0">{{ player2.name }}</h3>
         </div>
         <div id="box">
-            <div v-if="player1.pieces.red1" id="play-red">
+            <div v-if="player1.redPieces" id="play-red">
                 <player-one :player-one="player-one" style="height:80px;padding-top:12px;"></player-one>
                 <div id="player-one-captures">
                 <svg x="0" y="0" height="80" width="155">
@@ -27,10 +27,10 @@
             </div>
 
             <div id="gameMessages">
-                <p > {{ message }} </p>
+                <p > {{ gameMessage }} </p>
                 <p><strong> {{ info }}</strong></p>
             </div>
-            <div v-if="player2.pieces.blue1" id="play-blue">
+            <div v-if="player2.bluePieces" id="play-blue">
                 <div id="player-two-captures">
                     <svg x="0" y="0" height="80" width="155">
                         <player-two-captures v-for="(piece,index) in redPlayerCaptures"
@@ -54,7 +54,7 @@
             </div>
         </div>
         <div style="height:40px;padding-top:5px;background-color:#34537c;color:#FFF">
-            <h3 v-if="player2.pieces.blue1" style="margin:0 0 0 0">{{ player2.name }}</h3>
+            <h3 v-if="player2.bluePieces" style="margin:0 0 0 0">{{ player2.name }}</h3>
             <h3 v-else style="margin:0 0 0 0">{{ player1.name }}</h3>
         </div>
     </div>
@@ -74,7 +74,6 @@ export default {
     turn: String,
     bluePlayerCaptures: Array,
     redPlayerCaptures: Array,
-    message: String,
     info: String,
     user: Object,
     player1: Object,
@@ -86,7 +85,7 @@ export default {
       bluePieces: bluePieces,
 
       redPieces: redPieces,
-
+      gameMessage: "Good Luck!",
       pieceX: [0, 24, 48, 72, 96, 120, 0, 24, 48, 72, 96, 120],
       pieceY: [0, 0, 0, 0, 0, 0, 40, 40, 40, 40, 40, 40]
     };
@@ -104,6 +103,9 @@ export default {
 				}, error => {
 				console.log(error);
 			});
+  },
+  	mounted: function() {
+		this.listenForGameMessages();
 	},
   components: {
     "player-two": Player2,
@@ -112,17 +114,23 @@ export default {
     "player-one-captures": Player1Captures
   },
   methods: {
-    turnMessage(t) {
-      if (t === "blue") {
-        return this.player1.name + "'s Turn";
-      } else {
-        return this.player2.name + "'s Turn";
-      }
+    
+    listenForGameMessages() {
+      let setGameMessage = this.setGameMessage;
+      
+      socket.on('gamedata', function(data) {
+        console.log("TURN "  + data.turn)
+        setGameMessage(data.turn);
+      });
     },
+
     transformPiece(i) {
       let x = this.pieceX[i];
       let y = this.pieceY[i];
       return `translate(${x},${y})`;
+    },
+    setGameMessage(message) {
+      this.gameMessage = message;
     }
   }
 };

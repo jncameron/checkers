@@ -54,7 +54,7 @@ app.use((error, req, res, next) => {
             message: error.message
         }
     });
-    console.log(res.json())
+     console.log(res)
 });
 
 app.post("/api/send", (req,res,next) => {

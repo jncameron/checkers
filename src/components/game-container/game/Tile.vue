@@ -5,6 +5,7 @@
     </defs>
     <g class="column">
         <rect v-on:click="dropPiece()" x=0 y=0 width="100" height="100" fill="dimgray" />
+        <text x="0" y="50" font-family="Verdana" font-size="25" fill="#000">{{occupied}}</text>
 
         <rect v-if="selectedPieceXY.length === 2
                     && selectedPieceXY[0] === x 
@@ -49,6 +50,7 @@ export default {
         validMoveXY: {type: Array},
         validJumpXY: {type: Array},
         turn: {type: String},
+        occupied: {type: String}
         },
 
   data() {
