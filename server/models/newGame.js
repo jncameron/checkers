@@ -8,7 +8,8 @@ const newGameSchema = mongoose.Schema({
     player1: Object,
     player2: Object,
     turn: String,
-    tiles: Object
+    tiles: Object,
+    winner: String,
 }); 
 
 module.exports = mongoose.model('NewGame', newGameSchema);

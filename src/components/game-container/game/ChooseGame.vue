@@ -131,6 +131,7 @@ export default {
 			this.newGame.turn = 'red';
 			this.newGame.tiles = gameBoardTiles;
 			console.log(this.newGame)
+			
 
 			let gameId = "";
 
@@ -144,6 +145,7 @@ export default {
 					console.log(error);
 			});
 			this.gameCreated = true;
+
 		},
 		getRandom() {
 			return Math.random();
@@ -173,7 +175,7 @@ export default {
 			this.newGame.turn = 'red';
 			this.newGame.tiles = gameBoardTiles;
 			console.log(this.newGame)
-
+			
 			let gameId = "";
 
 			this.$http.post('http://localhost:3000/newgame/', this.newGame)
@@ -181,11 +183,13 @@ export default {
 					gameId = response.body.id
 					this.newGame.id = gameId;
 					console.log(this.newGame);
+					socket.emit('challenge', this.newGame);
 					this.$router.push({path: '/game/' + gameId, params: { gameId: this.$route.params.gameId }})
 				}, error => {
 					console.log(error);
 			});
 			this.gameCreated = true;
+			
 		},
 		getRandom() {
 			return Math.random();

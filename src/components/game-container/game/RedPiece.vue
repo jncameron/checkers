@@ -1,6 +1,6 @@
 <template>
 
-    <g id="black-link" :transform="transform" stroke="#000000" stroke-width="3" v-on:click="selectRed()">
+    <g id="black-link" :transform="transform" stroke="#000000" stroke-width="3">
         <g id="black">
             <ellipse id="Oval" fill="#000000" cx="19.934334" cy="20.5428287" rx="35" ry="30"></ellipse>
             <ellipse id="Oval" fill="url(#redGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>
@@ -21,7 +21,9 @@ export default {
     props: {
 		transform: {type: String},
 		turn: {type: String},
-		crownedRed: {type: Boolean}
+        crownedRed: {type: Boolean},
+        user: {type: Object},
+        player: {type: Object},
 
     },
 
@@ -35,12 +37,14 @@ export default {
  
     methods: {
         selectRed() {
-            
-            this.position = this.transform;
-            this.posX = this.position.split('(').pop().split(',').shift() - 30;
-            this.posY = this.position.split(',').pop().split(')').shift() - 30;
-            this.posXY = [this.posX, this.posY];
-            this.$emit('redSelected', this.posXY);
+            if(this.player.name === this.user.name || this.player.name === 'Local Larry') {
+                this.position = this.transform;
+                this.posX = this.position.split('(').pop().split(',').shift() - 30;
+                this.posY = this.position.split(',').pop().split(')').shift() - 30;
+                this.posXY = [this.posX, this.posY];
+                this.$emit('redSelected', this.posXY);
+            }
+
 
 
         }

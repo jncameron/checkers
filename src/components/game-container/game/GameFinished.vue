@@ -19,14 +19,10 @@
 
           <div class="modal-footer">
             <slot name="footer">
-              
-              <button class="btn btn-success" @click="$emit('close')">
-                Rematch
-              </button>
-              <button class="btn btn-info" @click="$emit('close')">
+              <button class="btn btn-primary" @click="navigateToProfile()">
                 Game Stats
               </button>
-              <button class="btn btn-primary" @click="$emit('close')">
+              <button class="btn btn-primary" @click="navigateToChooseGame()">
                 Lobby
               </button>
             </slot>
@@ -47,6 +43,14 @@ export default {
     return {
       
     }
+  },
+  methods: {
+    navigateToProfile() {
+      this.$router.push({path: '/profile'})
+    },
+    navigateToLobby() {
+      this.$router.push({path: '/choose-game'})
+    },
   }
 }
 </script>
@@ -62,6 +66,7 @@ export default {
   background-color: rgba(0, 0, 0, .5);
   display: table;
   transition: opacity .3s ease;
+  z-index: 9998;
 }
 
 .modal-wrapper {

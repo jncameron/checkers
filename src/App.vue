@@ -18,12 +18,16 @@ import player2 from './data/Player2Model';
 import onlineUsers from './data/OnlineUsers';
 import newGame from './data/NewGameModel';
 
+const baseUrl = process.env.BASE_URL;
+
 export default {
   name: 'app',
   data() {
     return {
 			user: user,
-			onlineUsers: onlineUsers
+      onlineUsers: onlineUsers,
+      challengeUrl: "",
+      
     }
   },
   
@@ -39,8 +43,25 @@ export default {
 			socket.on('login', function(data) {
 				updateOnlineUsers(data);
 				
-			});
-		},
+      });
+    },
+    listenForChallenges() {
+      let user = this.user;
+      let $router = this.$router;
+      let $route = this.$route;
+      socket.on('challenge', function(data) {
+        this.challengeUrl = `${baseUrl}#/game/${data.id}`
+        console.log(this.challengeUrl)
+        let gameId = data.id
+        console.log(data.player1.name + " has challenged " + data.player2.name);
+        if(user.name === data.player2.name) {
+          $router.push({path: '/game/' + data.id, params: { gameId: $route.params.gameId }})
+        }
+        
+      });
+    },
+    
+
 		updateOnlineUsers(userList) {
       this.onlineUsers.length = 0;
       userList.forEach(user => {
@@ -55,6 +76,7 @@ export default {
 	},
     mounted: function() {
         this.listenForUsers();
+        this.listenForChallenges();
     },
 }
 </script>

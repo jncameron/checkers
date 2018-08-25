@@ -18,7 +18,9 @@ export default {
     props: {
 		transform: {type: String},
 		turn: {type: String},
-		crownedBlue: {type: Boolean}
+        crownedBlue: {type: Boolean},
+        user: {type: Object},
+        player: {type: Object},
     },
         data() {
         return {
@@ -30,12 +32,14 @@ export default {
  
     methods: {
         selectBlue() {
-            
-            this.position = this.transform;
-            this.posX = this.position.split('(').pop().split(',').shift() - 30;
-            this.posY = this.position.split(',').pop().split(')').shift() - 30;
-            this.posXY = [this.posX, this.posY];
-            this.$emit('blueSelected', this.posXY);
+            if(this.player.name === this.user.name || this.player.name === 'Local Larry') {
+                this.position = this.transform;
+                this.posX = this.position.split('(').pop().split(',').shift() - 30;
+                this.posY = this.position.split(',').pop().split(')').shift() - 30;
+                this.posXY = [this.posX, this.posY];
+                this.$emit('blueSelected', this.posXY);
+            }
+
 
 
         }

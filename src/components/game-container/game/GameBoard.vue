@@ -38,13 +38,16 @@
 					:key="index"
 					:transform="transform(redPiece, 'player1')"
 					:turn="turn"
-
+					:player="player1"
+					:user="user"
 					@redSelected="selectPiece($event, 'red', 'blue')">
 			</red-piece>
 		    <blue-piece v-for="(bluePiece, index) in player2.pieces"
 	  			v-if="bluePiece.pos"
 				:key="index"
 				:turn="turn"
+				:player="player2"
+				:user="user"
 				:transform="transform(bluePiece, 'player2')"
 				@blueSelected="selectPiece($event, 'blue', 'red')">
       		</blue-piece>
@@ -55,13 +58,16 @@
 					:key="index"
 					:transform="transform(redPiece, 'player2')"
 					:turn="turn"
-
+					:player="player2"
+					:user="user"
 					@redSelected="selectPiece($event, 'red', 'blue')">
 			</red-piece>
 		    <blue-piece v-for="(bluePiece, index) in player1.pieces"
 	  			v-if="bluePiece.pos"
 				:key="index"
 				:turn="turn"
+				:player="player1"
+				:user="user"
 				:transform="transform(bluePiece, 'player1')"
 				@blueSelected="selectPiece($event, 'blue', 'red')">
       		</blue-piece>
@@ -87,6 +93,7 @@ export default {
 		player2: {type: Object},
 		gameBoardTiles: {type: Object},
 		turn: {type: String},
+		user: {type: Object}
 	},
 	data() {
 			return {
@@ -436,7 +443,8 @@ export default {
 		// },
 
 		postMove(gameId, oldAndNew) {
-			gameId = window.location.href.slice(30)
+			let url = window.location.href;
+			gameId = url.split('game/').pop();
 			let pieceName = oldAndNew[0];
 			let oldpos = oldAndNew[1];
 			let newpos = oldAndNew[2];
@@ -461,7 +469,7 @@ export default {
 
 
 			//After posting to server/db, Send current board state to socket 'board'
-
+			socket.emit('gamedata', 'open');
 			let gameData = {};
 			gameData.player1 = this.player1;
 			gameData.player2 = this.player2;

@@ -24,7 +24,7 @@ router.post('/moves', (req,res,next) => {
     NewGame.findByIdAndUpdate({_id: req.body.gameId})
         .exec()
         .then(game => {
-            console.log("GAME FOUND: " + game)
+            console.log("GAME FOUND: ")
             game.moves.push(oldpos+"-"+newpos)
 
             if(game.player1.color === 'red') {
@@ -103,6 +103,25 @@ router.get('/update', (req,res,next) => {
     });
 });
 
+router.post('/winner', (req,res,next) => {
+    NewGame.findByIdAndUpdate({_id: req.body.id})
+    .exec()
+    .then(game => {
+        console.log("GAME FOUND: " + game)
+        game.set({'winner': req.body.winner});
+        game.save()
+        .then(result => {
+            res.status(200).send({
+                message: "WINNER SAVED"
+            });
+        }).catch(err => {
+            res.status(500).json({
+                error: err
+            })
+        })
+    })
+});
+
 router.post('/', (req,res,next) => {
 
 
@@ -111,10 +130,11 @@ router.post('/', (req,res,next) => {
         player1: req.body.player1,
         player2: req.body.player2,
         turn: req.body.turn,
-        tiles: req.body.tiles
+        tiles: req.body.tiles,
+        winner: ""
     });
     newGame.save().then(result => {
-        console.log(result);
+        console.log("stuff");
     });
     res.status(200).json({
         message: "New Game Created ",

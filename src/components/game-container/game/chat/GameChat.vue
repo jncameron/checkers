@@ -61,20 +61,27 @@ export default {
     }, methods: {
         scrollToEnd() {
             let allMessages = this.$el.querySelector("#all-messages");
+            console.log(allMessages.scrollTop);
             allMessages.scrollTop = allMessages.scrollHeight;
+            console.log(allMessages.scrollTop);
         },
         listenForMessages() {
             let usrMsgs = this.usrMsgs;
             let usrMsg = this.usrMsg;
             let scrollToEnd = this.scrollToEnd;
-            let room = window.location.href.slice(30)
+            let url = window.location.href;
+			let room = url.split('game/').pop();
 
             socket.on('chat', function(data) {
+
                 usrMsg = data.msg
                 let usr = data.usr
-                usrMsgs.push([usrMsg,usr])
-                scrollToEnd();
-                console.log("IN ROOM " + room + " DATA: " + usrMsg + usr);
+                if (usrMsg) {
+                    usrMsgs.push([usrMsg,usr])
+                    scrollToEnd();
+                    console.log("IN ROOM " + room + " DATA: " + usrMsg + usr);
+                }
+
             });
             
         },

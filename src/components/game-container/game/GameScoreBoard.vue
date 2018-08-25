@@ -18,7 +18,7 @@
             </div>
 
             <div v-else id="play-red">
-                <player-two :player2="player2" style="height:80px;"></player-two>
+                <player-two :player2="player2" style="height:80px;;padding-top:12px;"></player-two>
                 <div id="player-two-captures">
                 <svg x="0" y="0" height="80" width="155">
                     <player-two-captures v-for="(piece,index) in player2Captures"
@@ -33,6 +33,7 @@
                 <p > {{ gameMessage }} </p>
                 <p><strong> {{ info }}</strong></p>
             </div>
+
             <div v-if="player2.color === 'blue'" id="play-blue">
                 <div id="player-two-captures">
                     <svg x="0" y="0" height="80" width="155">
@@ -41,8 +42,8 @@
                         </player-two-captures>
                     </svg>
                 </div>
-              <player-one :player1="player1" style="height:80px;">
-            </player-one>
+              <player-two :player2="player2" style="height:80px;">
+            </player-two>
             </div>
             <div v-else id="play-blue">
                 <div id="player-one-captures">
@@ -56,6 +57,7 @@
             </player-one>
             </div>
         </div>
+
         <div style="height:40px;padding-top:5px;background-color:#34537c;color:#FFF">
             <h3 v-if="player2.color === 'blue'" style="margin:0 0 0 0">{{ player2.name }}</h3>
             <h3 v-else style="margin:0 0 0 0">{{ player1.name }}</h3>

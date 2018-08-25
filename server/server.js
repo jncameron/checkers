@@ -66,9 +66,13 @@ io.on("connection", (socket) => {
     socket.join(room)
     console.log("JOINING ROOM " + room)
     io.sockets.in(room).emit('chat', data)
-  })
+  });
 
-  
+  socket.on('challenge', (data) => {
+    console.log("challenge data " + JSON.stringify(data))
+    let challenger = data.player1;
+    io.sockets.emit('challenge',data)
+  });
 
   socket.on('login', (data) => {
     let unique = true;
@@ -87,10 +91,12 @@ io.on("connection", (socket) => {
 
     socket.on('gamedata', (data) => {
         socket.join(room)
-        let gameId = data._id
-        console.log("GAME ID" + JSON.stringify(data));
-        io.sockets.in(room).emit('gamedata', data);
-        console.log("EMITTING")
+        if(data !== 'open') {
+          console.log("GAME ID" + data._id );
+          io.sockets.in(room).emit('gamedata', data);
+          console.log("EMITTING")
+        }
+
 
     });
 

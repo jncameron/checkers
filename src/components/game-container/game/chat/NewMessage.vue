@@ -21,6 +21,16 @@ export default {
     props:{
         user: {type: Object}
     },
+    mounted: function() {
+            let open = "";
+            console.log(msg)
+
+            socket.emit('chat', {
+                usr: this.user.name,
+                open: "open chat."
+            });
+            document.getElementById('msg').value = "";
+    },
     methods: {
         clickSend() {
             let msg = document.getElementById('msg').value.replace("/n","");

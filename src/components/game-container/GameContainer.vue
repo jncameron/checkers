@@ -20,11 +20,14 @@
 			:draw="draw"
 			:player2="player2"
 			:player1="player1"
+			:user="user"
 			:gameBoardTiles="gameBoardTiles"
 			:turn="turn"
 			style="padding:0px 0px;height:630px;width:630px;border: inset #2d353c 15px"></game-board>
 	<div class="col-md-1 blank-col"></div>
-		<game-chat :player2="player2" 
+		<game-chat v-if="player1.name !== 'Local Larry'
+					&& player2.name !== 'Local Larry'"
+					:player2="player2" 
 					:player1="player1" 
 					:user="user"
 					:opponent="opponent"
@@ -73,11 +76,22 @@ export default {
 			turn: "",
 			info: "",
 			message: "",
-			gameStatus: "",
     	};
 	},
 	beforeCreate: function() {
-		let id = window.location.href.slice(30)
+		let url = window.location.href;
+		let room = url.split('game/').pop();
+		socket.emit('joinroom', room);
+		console.log("join Room " + room)
+	},
+	mounted: function() {
+		let url = window.location.href;
+		let id = url.split('game/').pop();
+		console.log("NEW ID " + id)
+		let room = url.split('game/').pop();
+		socket.emit('joinroom', room);
+		console.log("join Room " + room)
+
 			this.$http.post('http://localhost:3000/newgame/board', {
 				id: id	})
 				.then(response => {
@@ -86,29 +100,42 @@ export default {
 					this.player2 = response.body.game.player2;
 					this.gameBoardTiles = response.body.game.tiles;
 					this.turn = response.body.game.turn;
+					this.gameStatus = response.body.game.gameStatus;
+					console.log("GETTING OPPONENT")
 					if(this.user.name === this.player1.name){
 						this.opponent = this.player2;
 					} else if(this.user.name === this.player2.name) {
 						this.opponent = this.player1;
 					}
+					this.listenForBoardUpdates();
+					
 				}, error => {
 				console.log(error);
 			});
-	},
-	mounted: function() {
-		let room = window.location.href.slice(30)
-		socket.emit('joinroom', room);
-		this.listenForBoardUpdates();
+
 	}, 
 	methods: {
 		checkWinner() {
-			if (this.redPieces.length === 0) {
-				this.gameStatus = 'OVER'
-				this.winner = this.player1.name;
-			} else if (this.bluePieces.length === 0) {
-				this.gameStatus = 'OVER'
-				this.winner = this.player2.name;
+			let url = window.location.href;
+			let id = url.split('game/').pop();
+			let setGameStatus = this.setGameStatus;
+			let setWinner = this.setWinner;
+			if (this.player1Captures.length === 12) {
+				setGameStatus('OVER');
+				let winner = this.player1.name;
+				setWinner(winner);
+				this.$http.post('http://localhost:3000/newgame/winner', {
+				id: id,
+				winner: winner	});
+			} else if (this.player2Captures.length === 12) {
+				setGameStatus('OVER');
+				let winner = this.player2.name;
+				setWinner(winner);
+				this.$http.post('http://localhost:3000/newgame/winner', {
+				id: id,
+				winner: winner	});
 			}
+			
 
 		},
 		setPlayer1HasCaptured() {
@@ -120,6 +147,7 @@ export default {
 					player1Captures.push(piece);
 				}
 			}
+			this.checkWinner();
 		},
 		setPlayer2HasCaptured() {
 			let player2Captures = this.player2Captures;
@@ -130,6 +158,8 @@ export default {
 					player2Captures.push(piece);
 				}
 			}
+			this.checkWinner();
+
 		},
 		setTurn(t) {
 			this.turn = t;
@@ -143,8 +173,15 @@ export default {
 		setGameBoardTiles(tiles) {
 			this.gameBoardTiles = tiles;
 		},
+		setGameStatus(status) {
+			this.gameStatus = status;
+		},
+		setWinner(win) {
+			this.winner = win;
+		},
 
 		listenForBoardUpdates() {
+			console.log("LISTENING FOR BOARD")
 			let setTurn = this.setTurn;
 			let setGameBoardTiles = this.setGameBoardTiles;
 			let setPlayer1 = this.setPlayer1;
