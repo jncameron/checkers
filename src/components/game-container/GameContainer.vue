@@ -3,9 +3,10 @@
 		<div class="col-md-1 blank-col el"></div>
 		<game-score-board class="col-md-2 el"
 			:turn="turn"
-			:bluePlayerCaptures="bluePlayerCaptures"
-			:redPlayerCaptures="redPlayerCaptures"
+			:player1Captures="player1Captures"
+			:player2Captures="player2Captures"
 			:user="user"
+			:opponent="opponent"
 			:player2="player2"
 			:player1="player1"
 			:message="message" 
@@ -17,12 +18,18 @@
 			:gameStatus="gameStatus"
 			:winner="winner"
 			:draw="draw"
-			@turn="whoseTurn($event)"
-			@redPiecesRemaining="redPiecesRemaining($event)"
-			@bluePiecesRemaining="bluePiecesRemaining($event)"
+			:player2="player2"
+			:player1="player1"
+			:gameBoardTiles="gameBoardTiles"
+			:turn="turn"
 			style="padding:0px 0px;height:630px;width:630px;border: inset #2d353c 15px"></game-board>
 	<div class="col-md-1 blank-col"></div>
-		<game-chat :user="user" :player2="player2" class="col-md-2" style="height:630px;width:300px;border: inset #2d353c 10px;border-radius:10px"></game-chat>
+		<game-chat :player2="player2" 
+					:player1="player1" 
+					:user="user"
+					:opponent="opponent"
+					class="col-md-2" 
+					style="height:630px;width:300px;border: inset #2d353c 10px;border-radius:10px"></game-chat>
 
 	</div>
 </template>
@@ -36,13 +43,11 @@ import redPieces from '../../data/RedPlayerModel';
 import user from '../../data/UserModel';
 import player1 from '../../data/Player1Model';
 import player2 from '../../data/Player2Model';
+import gameBoardTiles from '../../data/GameBoardModel.js'
 
 
 export default {
 	props: {
-		// user: {type: Object},
-		// player1: {type: Object},
-		// player2: {type: Object},
 		onlineUsers: {type: Object},
 		newGame: {type: Object}
 	},
@@ -58,20 +63,43 @@ export default {
 			gameStatus: "PLAYING",
 			winner: "",
 			draw: false,
-			redPieces: ['red1','red2','red3','red4','red5','red6','red7','red8','red9','red10','red11','red12'],
-			bluePieces: ['blue1','blue2','blue3','blue4','blue5','blue6','blue7','blue8','blue9','blue10','blue11','blue12'],
-			redPlayerCaptures: [],
-			bluePlayerCaptures: [],
+			player1Captures: [],
+			player2Captures: [],
 			player1: player1,
 			player2: player2,
 			user: user,
+			opponent: {},
+			gameBoardTiles: gameBoardTiles,
 			turn: "",
 			info: "",
 			message: "",
 			gameStatus: "",
-      		posts: {} ,
     	};
-  	},
+	},
+	beforeCreate: function() {
+		let id = window.location.href.slice(30)
+			this.$http.post('http://localhost:3000/newgame/board', {
+				id: id	})
+				.then(response => {
+					console.log(response);
+					this.player1 = response.body.game.player1;
+					this.player2 = response.body.game.player2;
+					this.gameBoardTiles = response.body.game.tiles;
+					this.turn = response.body.game.turn;
+					if(this.user.name === this.player1.name){
+						this.opponent = this.player2;
+					} else if(this.user.name === this.player2.name) {
+						this.opponent = this.player1;
+					}
+				}, error => {
+				console.log(error);
+			});
+	},
+	mounted: function() {
+		let room = window.location.href.slice(30)
+		socket.emit('joinroom', room);
+		this.listenForBoardUpdates();
+	}, 
 	methods: {
 		checkWinner() {
 			if (this.redPieces.length === 0) {
@@ -83,42 +111,61 @@ export default {
 			}
 
 		},
-		redPiecesRemaining(pieces) {
-			this.redPieces = pieces;
-			this.bluePlayerHasCaptured();
-			this.checkWinner();
+		setPlayer1HasCaptured() {
+			let player1Captures = this.player1Captures;
+			player1Captures.length = 0;
+			for(let piece in this.player2.pieces) {
+				if(this.player2.pieces[piece] === 'CAPTURED') {
+					console.log("PIECE " + piece)
+					player1Captures.push(piece);
+				}
+			}
 		},
-		bluePiecesRemaining(pieces) {
-			this.bluePieces = pieces;
-			this.redPlayerHasCaptured();
-			this.checkWinner();
+		setPlayer2HasCaptured() {
+			let player2Captures = this.player2Captures;
+			player2Captures.length = 0;
+			for(let piece in this.player1.pieces) {
+				console.log("PIECE " + this.player1.pieces[piece])
+				if(this.player1.pieces[piece] === 'CAPTURED') {
+					player2Captures.push(piece);
+				}
+			}
 		},
-		redPlayerHasCaptured() {
-			
-			console.log("REMAINING ")
-			this.redPlayerCaptures.length = 12 - this.bluePieces.length;
- 
-		},
-		bluePlayerHasCaptured() {
-			this.bluePlayerCaptures.length = 12 - this.redPieces.length;
-		},
-		whoseTurn(t) {
+		setTurn(t) {
 			this.turn = t;
-
 		},
-		// fetchData() {
-		// 	this.$http.get('http://localhost:3000/user/signup')
-		// 		.then(response => {
-		// 			return response.json();	
-		// 		}).then(data => console.log("DATA: " + JSON.stringify(data)));
-		// },
-
-		fetchCurrentBoard() {
-			this.$http.get('http://localhost:3000/newgame/update')
-				.then(response => {
-					return response.json();	
-				}).then(data => console.log("DATA: " + JSON.stringify(data)));
+		setPlayer1(player) {
+			this.player1 = player;
 		},
+		setPlayer2(player) {
+			this.player2 = player;
+		},
+		setGameBoardTiles(tiles) {
+			this.gameBoardTiles = tiles;
+		},
+
+		listenForBoardUpdates() {
+			let setTurn = this.setTurn;
+			let setGameBoardTiles = this.setGameBoardTiles;
+			let setPlayer1 = this.setPlayer1;
+			let setPlayer2 = this.setPlayer2;
+			let setPlayer1HasCaptured = this.setPlayer1HasCaptured;
+			let setPlayer2HasCaptured = this.setPlayer2HasCaptured;
+
+			console.log("CLIENT SOCKET ID: " + socket.id)
+            socket.on('gamedata', function(data) {
+				console.log("CLIENT SOCKET ID: " + socket.id)
+				setPlayer1(data.player1);
+				setPlayer2(data.player2);
+				setTurn(data.turn);
+				setGameBoardTiles(data.tiles);
+				setPlayer1HasCaptured();
+				setPlayer2HasCaptured();
+
+				
+			});
+		},
+
 	}
 };
 </script>

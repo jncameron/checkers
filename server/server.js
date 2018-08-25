@@ -2,8 +2,6 @@ const app = require("./app");
 const debug = require("debug")("node-vue");
 const http = require("http");
 const socket = require("socket.io");
-const NewGame = require('./models/newGame');
-const mongoose = require("mongoose");
 
 const normalizePort = val => {
   var port = parseInt(val, 10);
@@ -57,10 +55,21 @@ const io = socket(server);
 let onlineUsers = [];
 
 io.on("connection", (socket) => {
+  let room = "";
   console.log('made socket connection', socket.id);
-  socket.on('chat', (data) => {
-    io.sockets.emit('chat', data);
+
+  socket.on('joinroom', (data) => {
+    room = data;
   });
+
+  socket.on('chat', (data) => {
+    socket.join(room)
+    console.log("JOINING ROOM " + room)
+    io.sockets.in(room).emit('chat', data)
+  })
+
+  
+
   socket.on('login', (data) => {
     let unique = true;
     onlineUsers.forEach(function(user) {
@@ -70,13 +79,17 @@ io.on("connection", (socket) => {
     })
     if (unique) {
       onlineUsers.push(data)
-      io.sockets.emit('login', onlineUsers);
-      console.log("online users " + onlineUsers);
+      
     }
+    io.sockets.emit('login', onlineUsers);
+    console.log("EMITTING users")
   });
 
     socket.on('gamedata', (data) => {
-        io.sockets.emit('gamedata', data);
+        socket.join(room)
+        let gameId = data._id
+        console.log("GAME ID" + JSON.stringify(data));
+        io.sockets.in(room).emit('gamedata', data);
         console.log("EMITTING")
 
     });

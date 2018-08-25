@@ -1,12 +1,8 @@
 <template>
 
   <div id="app" style="margin-left:auto;margin-right:auto;">
-    <app-header style="z-index:9998"></app-header>
-    <!-- <h1>NAME</h1>
-    <input id="name" type="text" />
-	  <h1 class="user">{{ user.name }} </h1> -->
-    <!-- <button class="btn" v-on:click="enterName()">submit</button> -->
-    <router-view></router-view>
+    <app-header :user="user" style="z-index:9998"></app-header>
+    <router-view @update-user="updateUser($event)"></router-view>
 
   </div>
 </template>
@@ -38,10 +34,6 @@ export default {
   },
 
   methods: {
-    enterName() {
-        this.user.name = document.getElementById('name').value
-        console.log(this.user)
-    },
 		listenForUsers() {
 			let updateOnlineUsers = this.updateOnlineUsers;
 			socket.on('login', function(data) {
@@ -56,7 +48,10 @@ export default {
       });
 			
 			console.log("Online Users " + JSON.stringify(this.onlineUsers));
-		}
+    },
+    updateUser(usr) {
+      this.user = usr;
+    }
 	},
     mounted: function() {
         this.listenForUsers();

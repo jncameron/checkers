@@ -1,60 +1,63 @@
 <template>
     <div id="container">
         <div style="height:40px;padding-top:7px;background-color:#7f0000;color:#FFF">
-            <h3 v-if="player1.redPieces" style="margin:0 0 0 0">{{ player1.name }}</h3>
+            <h3 v-if="player1.color === 'red'" style="margin:0 0 0 0">{{ player1.name }}</h3>
             <h3 v-else style="margin:0 0 0 0">{{ player2.name }}</h3>
         </div>
         <div id="box">
-            <div v-if="player1.redPieces" id="play-red">
-                <player-one :player-one="player-one" style="height:80px;padding-top:12px;"></player-one>
+
+            <div v-if="player1.color === 'red'" id="play-red">
+                <player-one :player1="player1" style="height:80px;padding-top:12px;"></player-one>
                 <div id="player-one-captures">
                 <svg x="0" y="0" height="80" width="155">
-                    <player-one-captures v-for="(piece,index) in bluePlayerCaptures"
-                    :transform='transformPiece(index)'>
+                    <player-one-captures v-for="(piece,index) in player1Captures"
+                        :transform='transformPiece(index)'>
                     </player-one-captures>
                 </svg>
                 </div>
             </div>
+
             <div v-else id="play-red">
-                <player-two :player-two="player-two" style="height:80px;"></player-two>
+                <player-two :player2="player2" style="height:80px;"></player-two>
                 <div id="player-two-captures">
                 <svg x="0" y="0" height="80" width="155">
-                    <player-two-captures v-for="(piece,index) in redPlayerCaptures"
-                    :transform='transformPiece(index)'>
+                    <player-two-captures v-for="(piece,index) in player2Captures"
+                        :transform='transformPiece(index)'>
                     </player-two-captures>
                 </svg>
                 </div>
+
             </div>
 
             <div id="gameMessages">
                 <p > {{ gameMessage }} </p>
                 <p><strong> {{ info }}</strong></p>
             </div>
-            <div v-if="player2.bluePieces" id="play-blue">
+            <div v-if="player2.color === 'blue'" id="play-blue">
                 <div id="player-two-captures">
                     <svg x="0" y="0" height="80" width="155">
-                        <player-two-captures v-for="(piece,index) in redPlayerCaptures"
+                        <player-two-captures v-for="(piece,index) in player2Captures"
                         :transform='transformPiece(index)'>
                         </player-two-captures>
                     </svg>
                 </div>
-              <player-one :player-one="player-one" style="height:80px;">
+              <player-one :player1="player1" style="height:80px;">
             </player-one>
             </div>
             <div v-else id="play-blue">
                 <div id="player-one-captures">
                     <svg x="0" y="0" height="80" width="155">
-                        <player-one-captures v-for="(piece,index) in bluePlayerCaptures"
+                        <player-one-captures v-for="(piece,index) in player1Captures"
                         :transform='transformPiece(index)'>
                         </player-one-captures>
                     </svg>
                 </div>
-              <player-one :player-one="player-one" style="height:80px;">
+              <player-one :player1="player1" style="height:80px;">
             </player-one>
             </div>
         </div>
         <div style="height:40px;padding-top:5px;background-color:#34537c;color:#FFF">
-            <h3 v-if="player2.bluePieces" style="margin:0 0 0 0">{{ player2.name }}</h3>
+            <h3 v-if="player2.color === 'blue'" style="margin:0 0 0 0">{{ player2.name }}</h3>
             <h3 v-else style="margin:0 0 0 0">{{ player1.name }}</h3>
         </div>
     </div>
@@ -66,44 +69,30 @@ import Player1 from "../players/Player1.vue";
 import Player2 from "../players/Player2.vue";
 import Player2Captures from "../players/Player2Captures";
 import Player1Captures from "../players/Player1Captures";
-import bluePieces from "../../../data/BluePlayerModel";
-import redPieces from "../../../data/RedPlayerModel";
 
 export default {
   props: {
     turn: String,
-    bluePlayerCaptures: Array,
-    redPlayerCaptures: Array,
     info: String,
+    opponent: Object,
     user: Object,
     player1: Object,
     player2: Object,
+    player1Captures: Array,
+    player2Captures: Array,
+
 
   },
   data() {
     return {
-      bluePieces: bluePieces,
-
-      redPieces: redPieces,
       gameMessage: "Good Luck!",
       pieceX: [0, 24, 48, 72, 96, 120, 0, 24, 48, 72, 96, 120],
-      pieceY: [0, 0, 0, 0, 0, 0, 40, 40, 40, 40, 40, 40]
+      pieceY: [0, 0, 0, 0, 0, 0, 40, 40, 40, 40, 40, 40],
+      redCaptured:[],
+      blueCaptured:[],
     };
   },
-  beforeCreate: function() {
-		let id = window.location.href.slice(30)
-			console.log("Getting initial Board, id: " + id)
-			this.$http.post('http://localhost:3000/newgame/board', {
-				id: id	})
-				.then(response => {
-					console.log(response);
-					this.player1 = response.body.game.player1;
-					this.player2 = response.body.game.player2;
-					this.turn = response.body.game.turn;
-				}, error => {
-				console.log(error);
-			});
-  },
+
   	mounted: function() {
 		this.listenForGameMessages();
 	},
@@ -124,7 +113,16 @@ export default {
       });
     },
 
+    updateCaptured() {
+      if(i[0] === 'r') {
+        this.redCaptured.push(i)
+      } else if(i[0] === 'b') {
+        this.blueCaptured.push(i)
+      }
+    },
+
     transformPiece(i) {
+
       let x = this.pieceX[i];
       let y = this.pieceY[i];
       return `translate(${x},${y})`;

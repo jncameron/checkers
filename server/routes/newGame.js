@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const NewGame = require('../models/newGame');
 
 
-
 router.post('/moves', (req,res,next) => {
 
     let pieceName = req.body.postGame.pieceName;
@@ -19,7 +18,9 @@ router.post('/moves', (req,res,next) => {
         captured = req.body.postGame.captured;
     }
     
+
     console.log("ID: " + req.body.gameId)
+    gameId = req.body.gameId;
     NewGame.findByIdAndUpdate({_id: req.body.gameId})
         .exec()
         .then(game => {

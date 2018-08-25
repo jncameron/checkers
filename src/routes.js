@@ -15,17 +15,18 @@ import bluePieces from './data/BluePlayerModel';
 
 
 export const routes = [
-    { path: '/game/:id', component: GameContainer, props: {user: user, player1: player1, player2: player2 }, name: 'newGame'},
-    { path: '/signup', component: SignUp, props: {user: user, onlineUsers: onlineUsers}},
-    { path: '/profile', component: Profile },
-    { path: '/choose-game', component: ChooseGame, props: {
+    { path: '/game/:id', component: GameContainer, props: {user: user, player1: player1, player2: player2 }},
+    { path: '/signup', component: SignUp, props: { onlineUsers: onlineUsers}},
+    { path: '/profile', component: Profile, props:{user: user}},
+    { path: '/choose-game', component: ChooseGame,  props: {
             user: user, 
             onlineUsers: onlineUsers, 
             newGame: newGame,
             player1: player1,
             player2: player2,
             redPieces: redPieces,
-            bluePieces: bluePieces} 
+            bluePieces: bluePieces},
+            
     },
     
 

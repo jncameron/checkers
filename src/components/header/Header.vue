@@ -7,22 +7,65 @@
         </div> 
 
         <div class="nav navbar navbar-right"  style="margin-bottom:0;margin-top:10px;">
-        <ul class="nav navbar-nav" >
-            <router-link to="/game" tag="li" active-class="active"  ><a class="nav-link" style="color:d3d3d3">PLAY</a></router-link>
-            <!-- <li class="nav-item-active"><a class="nav-link" href="#">PLAY</a></li> -->
-            <router-link to="/profile" tag="li" active-class="active" ><a class="nav-link" style="color:d3d3d3">PROFILE</a></router-link>
-            <!-- <li class="nav-item" style="padding-left:20px;"><a class="nav-link" style="color:#d3d3d3" href="#">PROFILE</a></li> -->
-        </ul>
+            <ul class="nav navbar-nav" v-if="user.name.length > 0">
+                <router-link   :to="'/choose-game'" tag="li" active-class="active"><a class="nav-link" style="color:d3d3d3">PLAY</a></router-link>
+            </ul>
+            <ul class="nav navbar-nav" v-else>
+                <router-link   :to="'/signup'" tag="li" active-class="active" ><a class="nav-link" style="color:d3d3d3">SIGN IN</a></router-link>
+            </ul>
+        <img v-if="user.name.length > 0" class=" nav navbar-brand profile-image"  @click="toProfile" :src="getAvatarLink()" style="margin-top:0px;margin-left:5px;margin-right:15px;">
         </div>
+            
+
     </div>
     </nav>
 </template>
+
+<script>
+const baseUrl = process.env.BASE_URL;
+
+export default {
+    props: {
+        user: {type: Object}
+    },
+    data() {
+        return {
+            avatarLink: "",
+            loaded: false,
+            signedIn: false,
+            avatarLink: ``
+        }
+    },
+
+    methods: {
+        setUser(user) {           
+            if(this.userName.length > 0) {
+                this.signedIn = true;
+            }
+            
+        },
+        getAvatarLink() {
+            return `${baseUrl}${this.user.avatar}`
+        },
+        toProfile() {
+            this.$router.push('profile');
+        },
+        toPlay() {
+            this.$router.push('choose-game');
+        },
+        toSignUp() {
+            this.$router.push('signup');
+        }
+    }
+}
+</script>
+
 
 <style scoped>
 nav {
     font-family: 'Audiowide', cursive;
     font-weight: bold;
-    background-color: dimgray;
+    background-color: #4072a0;
     color: #FFF;
     z-index: 9998;
 }
@@ -40,6 +83,13 @@ img {
     padding-bottom: 0px;
     padding-right: 0px;
     margin-top: 15px;
+}
+
+.profile-image:hover {
+	opacity: 0.8;
+}
+.nav .navbar-nav:hover {
+    opacity: 0.8;
 }
 
 .navbar-default .navbar-nav>li>a {

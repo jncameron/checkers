@@ -1,7 +1,7 @@
 let user = {
     name: "",
     email: "",
-    avatar: "../../../assets/user-5.svg",
+    avatar: "",
 }
 
 export default user;

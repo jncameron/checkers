@@ -1,6 +1,6 @@
 <template>
 
-    <g id="black-link" :transform="transform" stroke="#000000" stroke-width="3">
+    <g id="black-link" :transform="transform" stroke="#000000" stroke-width="3" v-on:click="selectRed()">
         <g id="black">
             <ellipse id="Oval" fill="#000000" cx="19.934334" cy="20.5428287" rx="35" ry="30"></ellipse>
             <ellipse id="Oval" fill="url(#redGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>

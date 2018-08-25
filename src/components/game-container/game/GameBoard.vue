@@ -6,9 +6,9 @@
         default content
       -->
     </game-finished>
-   
     <svg viewBox="0 0 800 800" 
-      xmlns="http://www.w3.org/2000/svg"
+      xmlns="http://www.w3.org/2000/svg" version="1.1"
+	  xmlns:xlink="http://www.w3.org/1999/xlink"
       style="position:relative;">
       <defs> 
         <linearGradient id="redGradient" y2="60%">
@@ -20,7 +20,6 @@
           <stop offset="100%" stop-color="#4072a0" />
         </linearGradient>
       </defs>
-
       <board-tile v-for="(tile, index) in gameBoardTiles"
 				:key="index"
 			  	:x="gameBoardTiles[(index)]['x']"
@@ -33,12 +32,11 @@
 				@dropPiece="dropPiece($event)">
       </board-tile>
 
-
-      	<g v-if="player1.color === 'red'">
+		<g v-if="player1.color === 'red'">
 			<red-piece v-for="(redPiece, index) in player1.pieces"
 					v-if="redPiece.pos"
 					:key="index"
-					:transform="transform(index, 'player1')"
+					:transform="transform(redPiece, 'player1')"
 					:turn="turn"
 
 					@redSelected="selectPiece($event, 'red', 'blue')">
@@ -47,8 +45,7 @@
 	  			v-if="bluePiece.pos"
 				:key="index"
 				:turn="turn"
-				:transform="transform(index, 'player2')"
-
+				:transform="transform(bluePiece, 'player2')"
 				@blueSelected="selectPiece($event, 'blue', 'red')">
       		</blue-piece>
 		</g>
@@ -56,49 +53,45 @@
 			<red-piece v-for="(redPiece, index) in player2.pieces"
 					v-if="redPiece.pos"
 					:key="index"
-					:transform="transform(index, 'player1')"
+					:transform="transform(redPiece, 'player2')"
 					:turn="turn"
-					:crownedRed="redPieceCrowned(index, 'player2')"
+
 					@redSelected="selectPiece($event, 'red', 'blue')">
 			</red-piece>
 		    <blue-piece v-for="(bluePiece, index) in player1.pieces"
 	  			v-if="bluePiece.pos"
 				:key="index"
 				:turn="turn"
-				:transformBlue="transformBlue(index)"
-				:crownedBlue="bluePieceCrowned(index)"
+				:transform="transform(bluePiece, 'player1')"
 				@blueSelected="selectPiece($event, 'blue', 'red')">
       		</blue-piece>
 		</g>
-
-
     </svg>
   </div>
 </template>
 
 <script>
-import gameBoardTiles from '../../../data/GameBoardModel.js'
+
 import GameFinished from './GameFinished.vue';
 import Tile from './Tile.vue';
 import RedPiece from './RedPiece.vue';
 import BluePiece from './BluePiece.vue';
 import newGame from '../../../data/NewGameModel.js'
 
-
-
 export default {
 	props: {
 		gameStatus: {type: String},
 		draw: {type: Boolean},
 		winner: {type: String},
-
+		player1: {type: Object},
+		player2: {type: Object},
+		gameBoardTiles: {type: Object},
+		turn: {type: String},
 	},
 	data() {
 			return {
 				newGame: newGame,
-				player1: {},
-				player2: {},
-				gameBoardTiles: gameBoardTiles,
+				gameBoardTiles: {},
 				turn: 'red',
 				selectedPieceXY: [],
 				selectedPiece: {},
@@ -120,24 +113,7 @@ export default {
 				message: "Good luck!",
 			}
 	},
-    beforeCreate: function() {
-		let id = window.location.href.slice(30)
-			console.log("Getting initial Board, id: " + id)
-			this.$http.post('http://localhost:3000/newgame/board', {
-				id: id	})
-				.then(response => {
-					console.log(response);
-					this.player1 = response.body.game.player1;
-					this.player2 = response.body.game.player2;
-					this.turn = response.body.game.turn;
-					this.gameBoardTiles = response.body.game.tiles;
-				}, error => {
-				console.log(error);
-			});
-	},
-	mounted: function() {
-		this.listenForBoardUpdates();
-	}, 
+
 	components: {
 			'board-tile': Tile,
 			'red-piece': RedPiece,
@@ -145,17 +121,10 @@ export default {
 			'game-finished': GameFinished,
 	},
 	methods: {
-		transform(i,player){
-			if(player === 'player1') {
-				let x = this.player1.pieces[i]['x'] + 30;
-				let y = this.player1.pieces[i]['y'] + 30;
-				return(`translate(${x},${y})`);
-			}else if(player === 'player2') {
-				let x = this.player2.pieces[i]['x'] + 30;
-				let y = this.player2.pieces[i]['y'] + 30;
-				return(`translate(${x},${y})`);
-			}
-
+		transform(piece,player){
+			let x = piece.x + 30;
+			let y = piece.y + 30;
+			return(`translate(${x},${y})`);
 		},
 
 		selectPiece(pos, color, opponentColor) {
@@ -229,6 +198,7 @@ export default {
 						selectedPiece = getSelectedPiece();
 					}
 				}
+				
 				
 				let selectedTile = getSelectedTile();
 
@@ -328,15 +298,22 @@ export default {
 			let pieceName = this.pieceName;
 			let getPieceName = this.getPieceName;
 			let updateGameBoardTile = this.updateGameBoardTile;
+			let gameBoardTiles = this.gameBoardTiles;
 
 
 			//MORE HERE
 			if(color === 'red' && this.player1.color === 'red') {
 				opponentColor = 'blue';
 				opponentPieces = this.player2.pieces;
-			} else if (color === 'red' && this.player1.color === 'blue') {
+			} else if (color === 'red' && this.player2.color === 'red') {
+				opponentColor = 'blue';
+				opponentPieces = this.player1.pieces;
+			}else if (color === 'blue' && this.player1.color === 'blue') {
 				opponentColor = 'red';
 				opponentPieces = this.player2.pieces;
+			}else if (color === 'blue' && this.player2.color === 'blue') {
+				opponentColor = 'red';
+				opponentPieces = this.player1.pieces;
 			}
 
 			selectedPiece = getSelectedPiece();
@@ -520,7 +497,7 @@ export default {
 			this.selectedTile = tile;
 		},
 		getSelectedPiece() {
-
+			console.log("clicked")
 			return this.selectedPiece;
 		},
 		setSelectedPiece(piece) {
@@ -554,27 +531,6 @@ export default {
 		setValidJumpXY(jumpXY) {
 			this.validJumpXY = jumpXY;
 		},
-
-		listenForBoardUpdates() {
-			let setTurn = this.setTurn;
-			let setGameBoardTiles = this.setGameBoardTiles;
-
-            socket.on('gamedata', function(data) {
-
-
-				this.player1 = data.player1;
-				this.player2 = data.player2;
-				setTurn(data.turn);
-				setGameBoardTiles(data.tiles)
-				
-			});
-		},
-		setTurn(t) {
-			this.turn = t;
-		},
-		setGameBoardTiles(tiles) {
-			this.gameBoardTiles = tiles;
-		}
 	}
 }
 </script>

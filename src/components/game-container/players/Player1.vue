@@ -1,26 +1,43 @@
 <template>
     <div>
-        <img src="../../../assets/avatars/user-5.svg" alt="" height="70px" width="70px">
-
-
+        <img v-if="loaded" :src="avatarLink"  alt="" height="70px" width="70px" >
     </div>
     
 </template>
 
 <script>
 
-
+const baseUrl = process.env.BASE_URL;
 export default {
 
+    
+
     props: {
-      user: {type: Object}  
+      player1: {type: Object}  
     },
     
     data() {
         return {
-            avatar: "/user-5.svg",
+            loaded: false,
+            
+            avatarLink: ``
+        }
+    },
+    mounted: function() {
+            let setLoaded = this.setLoaded;
+            setTimeout(function(){
+                setLoaded();
+            },1000)
+
+    },
+    methods: {
+        setLoaded() {
+            
+            this.loaded = true;
+            this.avatarLink = `${baseUrl}${this.player1.avatar}`
         }
     }
+
     
 }
 </script>

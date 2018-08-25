@@ -1,20 +1,30 @@
 <template>
     <div class="row" style="margin-left:10px">
-        <img class="col-md-2" src="../../../../assets/avatars/man.svg" alt="" height="30px" width="30px">
+        <img :src="avatarLink" class="col-md-2" alt="" height="30px" width="30px">   
         <div class="col-md-8 speech-bubble">
             <p> {{ usrMsg }} </p>
         </div>
+                 
+
     </div>
 
 </template>
 
 <script>
+const baseUrl = process.env.BASE_URL;
 export default {
     props: {
         usrMsg: {type: String},
-    }
+        opponent: {type: Object},
+    },
+    data() {
+        return {
+            avatarLink:`${baseUrl}${this.opponent.avatar}`
+        }
+    },
 }
 </script>
+
 
 
 <style scoped>
@@ -33,16 +43,15 @@ p {
 
 .speech-bubble {
 	position: relative;
-	background: #b71c1c;
-    text-align: left;
+	background: #4072a0;
 	border-radius: 1em;
+    text-align: left;
     height: auto;
     width: 70%;
     margin-top:20px;
-    margin-left:10px;
+    margin-left: 10px;
 }
 
 
 </style>
 
-border-right-color: #b71c1c;

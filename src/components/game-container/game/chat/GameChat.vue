@@ -5,8 +5,16 @@
         </div>
         <div id="all-messages" style="height:440px;overflow:hidden;">
             <div v-for="usrMsg in usrMsgs">
-                <player-two-message v-if="usrMsg[1] !== user.name" :usrMsg="usrMsg[0]"></player-two-message>
-                <player-one-message v-if="usrMsg[1] === user.name " :usrMsg="usrMsg[0]"></player-one-message>  
+                <div v-if="usrMsg[1] !== user.name">
+                    <red-player-opponent-message v-if="opponent.color === 'red'" :usrMsg="usrMsg[0]" :opponent="opponent"></red-player-opponent-message>
+                    <blue-player-opponent-message v-if="opponent.color === 'blue'" :usrMsg="usrMsg[0]" :opponent="opponent"></blue-player-opponent-message>                
+                </div>
+                
+                <div v-if="usrMsg[1] === user.name">
+                    <blue-player-user-message v-if="opponent.color === 'red'" :usrMsg="usrMsg[0]" :user="user"></blue-player-user-message>  
+                    <red-player-user-message v-if="opponent.color === 'blue'" :usrMsg="usrMsg[0]" :user="user"></red-player-user-message>  
+                </div>
+    
             </div>
    
         </div>
@@ -24,25 +32,31 @@
 </template>
 
 <script>
-import Player1Message from './Player1Message.vue';
-import Player2Message from './Player2Message.vue';
+import BluePlayerUserMessage from './BluePlayerUserMessage.vue';
+import RedPlayerUserMessage from './RedPlayerUserMessage.vue';
+import BluePlayerOpponentMessage from './BluePlayerOpponentMessage.vue';
+import RedPlayerOpponentMessage from './RedPlayerOpponentMessage.vue';
 import NewMessage from './NewMessage.vue';
 
 export default {
     props: {
         player1: {type: Object},
         player2: {type: Object},
-        user: {type: Object}
+        user: {type: Object},
+        opponent: {type: Object},
     },
     data(){
         return {
             usrMsg: [],
             usrMsgs: [],
+            
         }
     },
     components: {
-        'player-two-message': Player2Message,
-        'player-one-message': Player1Message,
+        'blue-player-user-message': BluePlayerUserMessage,
+        'red-player-user-message': RedPlayerUserMessage,
+        'blue-player-opponent-message': BluePlayerOpponentMessage,
+        'red-player-opponent-message': RedPlayerOpponentMessage,
         'new-message': NewMessage
     }, methods: {
         scrollToEnd() {
@@ -53,12 +67,14 @@ export default {
             let usrMsgs = this.usrMsgs;
             let usrMsg = this.usrMsg;
             let scrollToEnd = this.scrollToEnd;
+            let room = window.location.href.slice(30)
+
             socket.on('chat', function(data) {
                 usrMsg = data.msg
                 let usr = data.usr
                 usrMsgs.push([usrMsg,usr])
                 scrollToEnd();
-                console.log("DATA: " + usrMsg + usr);
+                console.log("IN ROOM " + room + " DATA: " + usrMsg + usr);
             });
             
         },
