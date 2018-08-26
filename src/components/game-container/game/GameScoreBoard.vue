@@ -11,7 +11,7 @@
                 <div id="player-one-captures">
                 <svg x="0" y="0" height="80" width="155">
                     <player-one-captures v-for="(piece,index) in player1Captures"
-                        :transform='transformPiece(index)'>
+                        :color="'blue'" :transform='transformPiece(index)'>
                     </player-one-captures>
                 </svg>
                 </div>
@@ -22,7 +22,7 @@
                 <div id="player-two-captures">
                 <svg x="0" y="0" height="80" width="155">
                     <player-two-captures v-for="(piece,index) in player2Captures"
-                        :transform='transformPiece(index)'>
+                        :color="'blue'" :transform='transformPiece(index)'>
                     </player-two-captures>
                 </svg>
                 </div>
@@ -38,7 +38,7 @@
                 <div id="player-two-captures">
                     <svg x="0" y="0" height="80" width="155">
                         <player-two-captures v-for="(piece,index) in player2Captures"
-                        :transform='transformPiece(index)'>
+                        :color="'red'" :transform='transformPiece(index)'>
                         </player-two-captures>
                     </svg>
                 </div>
@@ -49,7 +49,7 @@
                 <div id="player-one-captures">
                     <svg x="0" y="0" height="80" width="155">
                         <player-one-captures v-for="(piece,index) in player1Captures"
-                        :transform='transformPiece(index)'>
+                        :color="'red'" :transform='transformPiece(index)'>
                         </player-one-captures>
                     </svg>
                 </div>

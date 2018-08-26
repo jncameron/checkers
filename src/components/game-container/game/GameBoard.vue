@@ -1,6 +1,6 @@
 <template>
     <div>
-	<game-finished v-if="gameStatus === 'OVER'" :winner="winner" @close="showModal = false">
+	<game-finished v-if="gameStatus === 'OVER'" :winnerName="winnerName" @close="showModal = false">
       <!--
         you can use custom content here to overwrite
         default content
@@ -88,7 +88,7 @@ export default {
 	props: {
 		gameStatus: {type: String},
 		draw: {type: Boolean},
-		winner: {type: String},
+		winnerName: {type: String},
 		player1: {type: Object},
 		player2: {type: Object},
 		gameBoardTiles: {type: Object},

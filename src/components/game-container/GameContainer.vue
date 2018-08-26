@@ -16,7 +16,7 @@
 		<game-board class="col-md-5 el"
 			:newGame="newGame"
 			:gameStatus="gameStatus"
-			:winner="winner"
+			:winnerName="winnerName"
 			:draw="draw"
 			:player2="player2"
 			:player1="player1"
@@ -64,7 +64,9 @@ export default {
 	data() {
 		return {
 			gameStatus: "PLAYING",
-			winner: "",
+			winnerId: "",
+			winnerName: "",
+			loserId: "",
 			draw: false,
 			player1Captures: [],
 			player2Captures: [],
@@ -117,24 +119,40 @@ export default {
 	methods: {
 		checkWinner() {
 			let url = window.location.href;
-			let id = url.split('game/').pop();
+			let gameId = url.split('game/').pop();
 			let setGameStatus = this.setGameStatus;
 			let setWinner = this.setWinner;
+			let winnerId = this.winnerId;
+			let winnerName = this.winnerName;
+			let loserId = this.loserId
+
 			if (this.player1Captures.length === 12) {
 				setGameStatus('OVER');
-				let winner = this.player1.name;
-				setWinner(winner);
-				this.$http.post('http://localhost:3000/newgame/winner', {
-				id: id,
-				winner: winner	});
+				winnerId = this.player1.id;
+				loserId = this.player2.id;
+				winnerName = this.player1.name;
+				setWinner(winnerName);
 			} else if (this.player2Captures.length === 12) {
 				setGameStatus('OVER');
-				let winner = this.player2.name;
-				setWinner(winner);
-				this.$http.post('http://localhost:3000/newgame/winner', {
-				id: id,
-				winner: winner	});
+				winnerId = this.player2.id;
+				loserId = this.player1.id;
+				winnerName = this.player2.name;
+				setWinner(winnerName);
 			}
+
+			if(this.user.id === winnerId) {
+					this.$http.post('http://localhost:3000/newgame/winner', {
+					gameId: gameId,
+					loserId: loserId,
+					winnerId: winnerId	
+				}).then(response => {
+					console.log(response)
+				}, error => {
+					console.log(error);
+			});
+			}
+
+			
 			
 
 		},
@@ -177,7 +195,7 @@ export default {
 			this.gameStatus = status;
 		},
 		setWinner(win) {
-			this.winner = win;
+			this.winnerName = win;
 		},
 
 		listenForBoardUpdates() {

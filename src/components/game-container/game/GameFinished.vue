@@ -13,7 +13,7 @@
 
           <div class="modal-body">
             <slot name="body">
-              {{ winner }} Wins
+              {{ winnerName }} Wins
             </slot>
           </div>
 
@@ -37,7 +37,7 @@
 <script>
 export default {
   props: {
-    winner: {type: String}
+    winnerName: {type: String}
   },
   data() {
     return {

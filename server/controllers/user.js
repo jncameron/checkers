@@ -34,6 +34,7 @@ exports.user_signup = (req, res, next) => {
               .then(result => {
                 console.log(result);
                 res.status(201).json({
+                  id: user.id,
                   message: "User created"
                 });
               })
@@ -47,6 +48,47 @@ exports.user_signup = (req, res, next) => {
         });
       }
     });
+};
+
+exports.user_update = (req, res, next) => {
+  User.findByIdAndUpdate({ _id: req.body.id })
+  .exec()
+  .then(user => {
+    console.log("USER FOUND: ")
+    user.set({'name': req.body.name})
+    user.set({'email': req.body.email})
+    user.save()
+    .then(result => {
+        res.status(200).send({
+            message: "USER UPDATED",
+            user: user 
+        });
+    }).catch(err => {
+        res.status(500).json({
+            error: err
+        })
+    })
+  });
+};
+
+exports.user_updateav = (req, res, next) => {
+  User.findByIdAndUpdate({ _id: req.body.id })
+  .exec()
+  .then(user => {
+    console.log("USER FOUND: ")
+    user.set({'avatar': req.body.avatar})
+    user.save()
+    .then(result => {
+        res.status(200).send({
+            message: "USER AVATAR UPDATED",
+            user: user 
+        });
+    }).catch(err => {
+        res.status(500).json({
+            error: err
+        })
+    })
+  });
 };
 
 exports.user_login = (req, res, next) => {

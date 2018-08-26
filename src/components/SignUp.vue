@@ -80,8 +80,9 @@ export default {
 			this.user.email= document.getElementById('reg-email').value;
 			this.user.password= document.getElementById('reg-password').value;
 			//console.log("signUp: " + signUpName, signUpEmail, signUpPassword);
-			axios.post('http://localhost:3000/user/signup', this.user)
+			this.$http.post('http://localhost:3000/user/signup', this.user)
 				.then(response => {
+					this.user.id = response.body.id
 					console.log(response)
 					const token = response.data.token
       				localStorage.setItem('user-token', token) // store the token in localstorage
@@ -97,7 +98,7 @@ export default {
 			validUser.email= document.getElementById('login-email').value;
 			validUser.password= document.getElementById('login-password').value;
 			//console.log("signUp: " + signUpName, signUpEmail, signUpPassword);
-			axios.post('http://localhost:3000/user/login', validUser)
+			this.$http.post('http://localhost:3000/user/login', validUser)
 				.then(response => {
 					console.log(response)
 					const token = response.data.token
@@ -118,12 +119,16 @@ export default {
 			this.user.name = update.name;
 			this.user.email = update.email;
 			this.user.avatar = update.avatar;
+			this.user.id = update._id;
+			console.log("signup userid: " + this.user.id)
+
 			this.$emit('update-user', this.user)
 			
 			socket.emit('login', {
 				name: this.user.name,
 				email: this.user.email,
 				avatar: this.user.avatar,
+				id: this.user.id
 			});
 			console.log("Emitting User to Sockets: " + JSON.stringify(this.user))
 		},

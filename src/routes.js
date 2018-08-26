@@ -28,6 +28,7 @@ export const routes = [
             bluePieces: bluePieces},
             
     },
+    { path: '*', redirect: '/choose-game'}
     
 
 ]

@@ -1,19 +1,24 @@
 <template>
-    <nav class="navbar navbar-default"  style="margin-bottom:0;padding-bottom:3px;">
+    <nav class="navbar navbar-default"  style="margin-bottom:0;padding-bottom:3px;height:87px;">
     <div class="container-fluid">
         <div class="navbar-header">
-        <img class=" nav navbar-brand"  src="./checkers-icon.svg">
-        <h1 class="navbar-brand" style="color:#FFF;font-size:32px">Checkers</h1>
+        <img class=" nav navbar-brand"  src="./checkers-icon.svg" style="margin-left:5px;margin-top:20px">
+        <h1 class="navbar-brand" style="color:#FFF;font-size:32px;margin-top:20px">Checkers</h1>
         </div> 
-
+        
         <div class="nav navbar navbar-right"  style="margin-bottom:0;margin-top:10px;">
-            <ul class="nav navbar-nav" v-if="user.name.length > 0">
-                <router-link   :to="'/choose-game'" tag="li" active-class="active"><a class="nav-link" style="color:d3d3d3">PLAY</a></router-link>
+            
+            <ul class="nav navbar-nav" style="margin-top:7px" v-if="user.name.length > 0">
+                <router-link   :to="'choose-game'" tag="li" active-class="active"><a class="nav-link">PLAY</a></router-link>
             </ul>
-            <ul class="nav navbar-nav" v-else>
-                <router-link   :to="'/signup'" tag="li" active-class="active" ><a class="nav-link" style="color:d3d3d3">SIGN IN</a></router-link>
+            <ul class="nav navbar-nav" style="margin-top:7px" v-else>
+                <router-link   :to="'/signup'" tag="li" active-class="active" ><a class="nav-link" style="margin-right:10px;">SIGN IN</a></router-link>
             </ul>
-        <img v-if="user.name.length > 0" class=" nav navbar-brand profile-image"  @click="toProfile" :src="getAvatarLink()" style="margin-top:0px;margin-left:5px;margin-right:15px;">
+            <div class="nav navbar-nav">
+                <img v-if="user.name.length > 0" class=" nav navbar-brand profile-image"  @click="toProfile" :src="getAvatarLink()" style="margin-top:0px;margin-left:5px;margin-right:15px;">
+                <p style="margin-bottom:0px">{{user.name}}</p>
+            </div>
+       
         </div>
             
 
@@ -48,13 +53,13 @@ export default {
             return `${baseUrl}${this.user.avatar}`
         },
         toProfile() {
-            this.$router.push('profile');
+            this.$router.push('/profile');
         },
         toPlay() {
-            this.$router.push('choose-game');
+            this.$router.push('/choose-game');
         },
         toSignUp() {
-            this.$router.push('signup');
+            this.$router.push('/signup');
         }
     }
 }
@@ -100,7 +105,7 @@ img {
 
 .active .nav-link {
     color: #FFF;
-    background-color: #777;
+    background-color: #34537c;
 }
 
 

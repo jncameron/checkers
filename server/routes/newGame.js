@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require("mongoose");
 const NewGame = require('../models/newGame');
+const User = require('../models/user');
 
 
 router.post('/moves', (req,res,next) => {
@@ -104,22 +105,33 @@ router.get('/update', (req,res,next) => {
 });
 
 router.post('/winner', (req,res,next) => {
-    NewGame.findByIdAndUpdate({_id: req.body.id})
+    NewGame.findByIdAndUpdate({_id: req.body.gameId})
     .exec()
     .then(game => {
-        console.log("GAME FOUND: " + game)
-        game.set({'winner': req.body.winner});
+        console.log("COMPLETED GAME FOUND: ")
+        game.set({'winner': req.body.winnerId});
         game.save()
-        .then(result => {
-            res.status(200).send({
-                message: "WINNER SAVED"
-            });
-        }).catch(err => {
-            res.status(500).json({
-                error: err
-            })
-        })
-    })
+    });
+    User.findByIdAndUpdate({_id: req.body.winnerId})
+    .exec()
+    .then(winner => {
+        winner.gamesCompleted.push(req.body)
+        winner.save()
+    });
+    User.findByIdAndUpdate({_id: req.body.loserId})
+    .exec()
+    .then(loser => {
+        loser.gamesCompleted.push(req.body)
+        loser.save()
+    }).then( result => {
+        res.status(200).send({
+            message: "completed game ref save"
+        });
+    }).catch(err => {
+        res.status(500).json({
+            error: err
+        });
+    });
 });
 
 router.post('/', (req,res,next) => {

@@ -154,6 +154,7 @@ export default {
 			this.player1.name = this.user.name;
 			this.player1.avatar = this.user.avatar;
 			this.player1.email = this.user.email;
+			this.player1.id = this.user.id;
 			let assignColor = this.getRandom();
 			console.log("ASSIGNCOLOR: " + assignColor);
 			if(assignColor <= 0.5) {
@@ -170,6 +171,7 @@ export default {
 			this.player2.name = this.onlineUsers[button]['name'];
 			this.player2.avatar = this.onlineUsers[button]['avatar'];
 			this.player2.email = this.onlineUsers[button]['email'];
+			this.player2.id = this.onlineUsers[button]['id'];
 			this.newGame.player1 = this.player1;
 			this.newGame.player2 = this.player2;
 			this.newGame.turn = 'red';
