@@ -2,10 +2,10 @@
 ## UNE COSC560 Project
 
 ## Install and Run:
-npm install
-npm run build
-cd server
-node server.js
+* npm install
+* npm run build
+* cd server
+* node server.js
 
 ## TODOS - SERVER
 move newGame logic to /controllers/newGame.js
