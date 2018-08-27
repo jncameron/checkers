@@ -22,7 +22,7 @@
               <button class="btn btn-primary" @click="navigateToProfile()">
                 Game Stats
               </button>
-              <button class="btn btn-primary" @click="navigateToChooseGame()">
+              <button class="btn btn-primary" @click="navigateToLobby()">
                 Lobby
               </button>
             </slot>
@@ -49,7 +49,7 @@ export default {
       this.$router.push({path: '/profile'})
     },
     navigateToLobby() {
-      this.$router.push({path: '/choose-game'})
+      this.$router.push({path: '/*'})
     },
   }
 }

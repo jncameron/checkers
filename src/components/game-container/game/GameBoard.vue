@@ -40,6 +40,7 @@
 					:turn="turn"
 					:player="player1"
 					:user="user"
+					:crownedRed="redPiece.crown === true"
 					@redSelected="selectPiece($event, 'red', 'blue')">
 			</red-piece>
 		    <blue-piece v-for="(bluePiece, index) in player2.pieces"
@@ -48,6 +49,7 @@
 				:turn="turn"
 				:player="player2"
 				:user="user"
+				:crownedBlue="bluePiece.crown === true"
 				:transform="transform(bluePiece, 'player2')"
 				@blueSelected="selectPiece($event, 'blue', 'red')">
       		</blue-piece>
@@ -339,7 +341,7 @@ export default {
 							selectedPiece.x = newTile.x;
 							selectedPiece.y = newTile.y;
 							setSelectedPiece(selectedPiece);
-							
+							allowedJumps.length = 0;
 							oldTile.occupied = 'empty';
 
 							updateGameBoardTile(`tile${oldTile.pos}`,'empty')
@@ -362,17 +364,17 @@ export default {
 											
 										}
 									});
-									// crownPiece(selectedPiece);
-									validMoveXY.length = 0;
-									validJumpXY.length = 0;
-									selectedPiece = {};
-									selectedPieceXY.length = 0;
-									setSelectedPiece({});		
-									justCrowned = getJustCrowned();														
-									changeTurn();
-									postMove(gameId, oldAndNewPositions);
 								}
 							}
+							crownPiece(selectedPiece);
+							validMoveXY.length = 0;
+							validJumpXY.length = 0;
+							selectedPiece = {};
+							selectedPieceXY.length = 0;
+							setSelectedPiece({});		
+							justCrowned = getJustCrowned();														
+							changeTurn();
+							postMove(gameId, oldAndNewPositions);
 					}
 				});
 			}
@@ -392,7 +394,7 @@ export default {
 							selectedPiece.pos = newTile.pos;
 							selectedPiece.x = newTile.x;
 							selectedPiece.y = newTile.y;
-							// crownPiece(selectedPiece);
+							crownPiece(selectedPiece);
 							oldTile.occupied = 'empty';
 							updateGameBoardTile(`tile${oldTile.pos}`,'empty')
 							// gameBoardTiles[`tile${oldTile.pos}`]['occupied'] = 'empty';
@@ -421,26 +423,26 @@ export default {
 		},
 
 		
-		// crownPiece(piece) {
-		// 	let justCrowned = false;
+		crownPiece(piece) {
+			 let justCrowned = false;
 
-		// 	if (piece['crown'] === false && this.turn === 'red') {
-		// 		if (piece['pos'] === 29 || piece['pos'] === 30 || piece['pos'] === 31 || piece['pos'] === 32) {
-		// 			piece['crown'] = true;
-		// 			justCrowned = true;				
-		// 		}
-		// 	}
-		// 	else if (piece['crown'] === false && this.turn === 'blue') {
-		// 		if (piece['pos'] === 1 || piece['pos'] === 2 || piece['pos'] === 3 || piece['pos'] === 4) {
-		// 			piece['crown'] = true;
-		// 			justCrowned = true;
-		// 		}	
-		// 	}
-		// 	if (justCrowned === true) {
-		// 		this.setJustCrowned(justCrowned);
-		// 	}
+			if (piece['crown'] === false && this.turn === 'red') {
+				if (piece['pos'] === 29 || piece['pos'] === 30 || piece['pos'] === 31 || piece['pos'] === 32) {
+					piece['crown'] = true;
+					justCrowned = true;				
+				}
+			}
+			else if (piece['crown'] === false && this.turn === 'blue') {
+				if (piece['pos'] === 1 || piece['pos'] === 2 || piece['pos'] === 3 || piece['pos'] === 4) {
+					piece['crown'] = true;
+					justCrowned = true;
+				}	
+			}
+			if (justCrowned === true) {
+				this.setJustCrowned(justCrowned);
+			}
 
-		// },
+		},
 
 		postMove(gameId, oldAndNew) {
 			let url = window.location.href;

@@ -48,7 +48,7 @@
 							</div>
 							<div class="col-md-12 send-link" style="margin: 0 0;">
 								<div class="option">
-									<h2>Send a challenge link</h2>
+									<h2>Continue Game</h2>
 								</div>
 							</div>
 						</div>
