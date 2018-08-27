@@ -106,11 +106,13 @@ export default {
   },
   methods: {
     
+    //move and turn info sent to opponent via socket
     listenForGameMessages() {
       let setGameMessage = this.setGameMessage;
       
       socket.on('gamedata', function(data) {
         console.log("TURN "  + data.turn)
+        //TODO: game messages such as 'JOHN has Captured your Piece' etc.
         setGameMessage(data.turn);
       });
     },

@@ -2,7 +2,7 @@ let user = {
     id: "",
     name: "",
     email: "",
-    avatar: "",
+    avatar: "man.svg",
 }
 
 export default user;

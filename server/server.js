@@ -3,8 +3,12 @@ const debug = require("debug")("node-vue");
 const http = require("http");
 const socket = require("socket.io");
 
+
+//Server opens port and sockets
+
 const normalizePort = val => {
   var port = parseInt(val, 10);
+
 
   if (isNaN(port)) {
     // named pipe

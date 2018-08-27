@@ -112,14 +112,9 @@ export default {
     methods: {
 
         confirmAvatar() {
-            // let activeImageDiv = document.getElementsByClassName("item active");
-            // let activeImage = activeImageDiv.getElementsByTagName('img')[0];
-
             let activeImageDiv = document.getElementsByClassName('active')[0];
-            //WILL NEED TO UPDATE THE SPLIT
+            //TODO: WILL NEED TO UPDATE THE SPLIT
             let activeImage = activeImageDiv.children[0].src.split('3000/').pop();;
-            console.log(activeImageDiv);
-            console.log(activeImage);
             this.user.avatar = activeImage;
 
 

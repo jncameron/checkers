@@ -9,7 +9,7 @@
         <div class="nav navbar navbar-right"  style="margin-bottom:0;margin-top:10px;">
             
             <ul class="nav navbar-nav" style="margin-top:7px" v-if="user.name.length > 0">
-                <router-link   :to="'choose-game'" tag="li" active-class="active"><a class="nav-link">PLAY</a></router-link>
+                <router-link   :to="'/choose-game'" tag="li" active-class="active"><a class="nav-link">PLAY</a></router-link>
             </ul>
             <ul class="nav navbar-nav" style="margin-top:7px" v-else>
                 <router-link   :to="'/signup'" tag="li" active-class="active" ><a class="nav-link" style="margin-right:10px;">SIGN IN</a></router-link>

@@ -73,6 +73,12 @@
 
 
 <script>
+// Profile component
+// User can:
+// i - update their name, email, avatar and (TODO) password
+// ii - TODO - see total win/loss record
+// iii - TODO see best win/loss and worst win/loss opponent records
+
 import UserStats from './UserStats.vue';
 import UserWinLoss from './UserWinLoss.vue';
 import AvatarChoice from './AvatarChoice.vue';
@@ -112,7 +118,6 @@ export default {
 		confirmDetails() {
 			this.user.name= document.getElementById('edit-name').value;
 			this.user.email= document.getElementById('edit-email').value;
-			console.log("avatar link: " + document.getElementById("cool").value)
 			if(document.getElementById('edit-password').value.length > 0) {
 				this.user.password= document.getElementById('edit-password').value;
 			}

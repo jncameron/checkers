@@ -15,6 +15,7 @@
 </template>
 
 <script>
+//TODO: Make Profile, Signup, and ChooseGame UI compatible with Edge and Firefox (fine on Chrome)
 
 import Header from './components/header/Header.vue';
 import GameContainer from './components/game-container/GameContainer.vue';
@@ -64,9 +65,7 @@ export default {
       let setGameId = this.setGameId;
       socket.on('challenge', function(data) {
         this.challengeUrl = `${baseUrl}#/game/${data.id}`
-        console.log(this.challengeUrl)
         setGameId(data.id)
-        console.log(data.player1.name + " has challenged " + data.player2.name);
         if(user.name === data.player2.name) {
           setChallenger(data.player1.name)
           setChallenged(true);

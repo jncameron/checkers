@@ -61,6 +61,12 @@
 
 <script>
 
+//ChooseGame Component: User has option to:
+// i - play against Computer (TODO)
+// ii - find a player online and challenge them/create game
+// iii - play local 2 player
+// iv - continue a previous local/online game (TODO)
+
 import gameBoardTiles from '../../../data/GameBoardModel'
 
 export default {

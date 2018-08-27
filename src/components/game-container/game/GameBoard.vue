@@ -26,6 +26,7 @@
       			:y="gameBoardTiles[(index)]['y']"
 				:turn="turn"
 				:occupied="tile.occupied"
+				:allowedJumps="allowedJumps"
 				:selectedPieceXY="selectedPieceXY"
 				:validMoveXY="validMoveXY"
 				:validJumpXY="validJumpXY"
@@ -105,7 +106,6 @@ export default {
 				selectedPieceXY: [],
 				selectedPiece: {},
 				selectedTile: {},
-				piecesAreSelectable: true,
 				validJumps: [],
 				validMoveXY: [],
 				validJumpXY: [],
@@ -117,7 +117,6 @@ export default {
 				canBeJumped: [],
 				pieceName: "",
 				gameId: "",
-				movesAvailable: true,
 				justCrowned: false,
 				message: "Good luck!",
 			}
@@ -130,12 +129,16 @@ export default {
 			'game-finished': GameFinished,
 	},
 	methods: {
+		// pass xy coords to pieces
 		transform(piece,player){
 			let x = piece.x + 30;
 			let y = piece.y + 30;
 			return(`translate(${x},${y})`);
 		},
-
+		// one of the two main methods in GameBoard.vue
+		// handles selecting piece logic, moves and jumps available
+		// if a piece can jump, it must
+		//TODO: if ANY piece can jump, player must jump that piece
 		selectPiece(pos, color, opponentColor) {
 			let setSelectedTile = this.setSelectedTile;
 			let gameBoardTiles = this.gameBoardTiles;
@@ -160,7 +163,6 @@ export default {
 			let pieces = {};
 			let opponentPieces = {};
 			let canBeJumped = [];
-			let movesAvailable = this.movesAvailable;
 			let changeTurn = this.changeTurn;
 			let setCanBeJumped = this.setCanBeJumped;
 			let selectedPiece = this.selectedPiece;
@@ -275,6 +277,11 @@ export default {
 				}
 		},
 
+		//the other major function. After valid Moves and jumps are computed in selectPiece()
+		//dropPiece allows player to choose a move
+		//TODO: player can only drop piece on jump if any jump is available
+		//TODO: 'multijumps' - if jump completed, new tile is selected, if valid jumps found,
+		//	player can continue move
 		dropPiece(newPosition) {
 			let pieces = {};
 			let opponentPieces = {};
@@ -297,7 +304,6 @@ export default {
 			let allowedMoves = this.allowedMoves;
 			let selectPiece = this.selectPiece;
 			let setSelectedPiece = this.setSelectedPiece;
-
 			let crownPiece = this.crownPiece;
 			let justCrowned = this.justCrowned;
 			let getJustCrowned = this.getJustCrowned;
@@ -334,7 +340,6 @@ export default {
 							newTile.occupied = color;
 							updateGameBoardTile(tile, color)
 							pieceName = getPieceName()
-							console.log("PIECE NAME: " + pieceName)
 							let oldAndNewPositions = [pieceName, oldTile.pos, newTile.pos, newTile.x, newTile.y]
 
 							selectedPiece.pos = newTile.pos;
@@ -378,8 +383,7 @@ export default {
 					}
 				});
 			}
-		
-
+			else if( allowedJumps.length === 0) {
 				allowedMoves.forEach(function(tile){
 					if(gameBoardTiles[tile]['x'] === newPosition[0]
 						&& gameBoardTiles[tile]['y'] === newPosition[1]) {
@@ -406,6 +410,9 @@ export default {
 					}
 					
 				});
+			}
+
+
 			
 			
 		},
@@ -414,15 +421,18 @@ export default {
 			this.gameBoardTiles[tile]['occupied'] = occupied;
 		},
 
+		//implemented after dropPiece()
+		//TODO: if multijump available- do not change turn
 		changeTurn() {
 			if(this.turn === 'red') {
 				this.turn = 'blue';
+			
 			} else if(this.turn === 'blue') {
 				this.turn = 'red';
 			}
 		},
 
-		
+		//if crowned - player can move forwards and backwards
 		crownPiece(piece) {
 			 let justCrowned = false;
 
@@ -443,7 +453,8 @@ export default {
 			}
 
 		},
-
+		
+		//send move information to server
 		postMove(gameId, oldAndNew) {
 			let url = window.location.href;
 			gameId = url.split('game/').pop();
@@ -478,12 +489,13 @@ export default {
 			gameData.tiles = this.gameBoardTiles;
 			gameData.turn = this.turn
 			socket.emit('gamedata', gameData);
-			console.log("game data" + JSON.stringify(gameData))
 			}
 
 			);
 		},
 
+		//getters and setters. I've had namespace/this trouble updating certain variables directly.
+		//getters and setters seem to help
 		getGameBoardTiles() {
 			return this.gameBoardTiles
 		},
@@ -507,7 +519,6 @@ export default {
 			this.selectedTile = tile;
 		},
 		getSelectedPiece() {
-			console.log("clicked")
 			return this.selectedPiece;
 		},
 		setSelectedPiece(piece) {

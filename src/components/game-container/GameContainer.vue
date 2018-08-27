@@ -62,6 +62,8 @@ export default {
 
 	},
 	data() {
+		//Game Container holds most of the game logic - passing props to child components 'GameScoreBoard',
+		//  GameBoard, and GameChat
 		return {
 			gameStatus: "PLAYING",
 			winnerId: "",
@@ -87,13 +89,13 @@ export default {
 		console.log("join Room " + room)
 	},
 	mounted: function() {
+		//Request initial game state on game created (or page refresh)
 		let url = window.location.href;
 		let id = url.split('game/').pop();
 		console.log("NEW ID " + id)
 		let room = url.split('game/').pop();
 		socket.emit('joinroom', room);
 		console.log("join Room " + room)
-
 			this.$http.post('http://localhost:3000/newgame/board', {
 				id: id	})
 				.then(response => {
@@ -117,6 +119,7 @@ export default {
 
 	}, 
 	methods: {
+		//after any piece is captured, check if either player has 12 captures
 		checkWinner() {
 			let url = window.location.href;
 			let gameId = url.split('game/').pop();
@@ -140,6 +143,7 @@ export default {
 				setWinner(winnerName);
 			}
 
+			//post winner and loser info to game db collection and user db collection(for win/loss stats)
 			if(this.user.id === winnerId) {
 					this.$http.post('http://localhost:3000/newgame/winner', {
 					gameId: gameId,
@@ -197,7 +201,7 @@ export default {
 		setWinner(win) {
 			this.winnerName = win;
 		},
-
+		//board state sent to other player via socket
 		listenForBoardUpdates() {
 			console.log("LISTENING FOR BOARD")
 			let setTurn = this.setTurn;

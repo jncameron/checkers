@@ -12,6 +12,8 @@ const Message = require('./models/message');
 
 const app = express();
 
+//app.js extends server and connects to mongo cloud db through mongoose
+
 mongoose.connect("mongodb+srv://jncam:Ui2KnTGHwYlvjrWN@cluster0-bxxsv.mongodb.net/test?retryWrites=true")
     .then(() => {
         console.log('Connected to database');
@@ -67,18 +69,5 @@ app.post("/api/send", (req,res,next) => {
         message: 'Post Added! ' + message
     });
 });
-// app.use((req,res,next) => {
-//     res.sendFile(path.join(__dirname, "dist","index.html"))
-// });
-
-// app.get("/api/receive",(req, res, next) => {
-//     Message.find().then(documents => {
-//         res.send({
-//             message: "Thanks",
-//             got: documents
-//         });
-//     });
-// });
-
 
 module.exports = app;

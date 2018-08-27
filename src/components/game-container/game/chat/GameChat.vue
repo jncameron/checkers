@@ -32,6 +32,9 @@
 </template>
 
 <script>
+
+//TODO: Fix - GameChat component does not scroll all the way to the bottom on new message
+
 import BluePlayerUserMessage from './BluePlayerUserMessage.vue';
 import RedPlayerUserMessage from './RedPlayerUserMessage.vue';
 import BluePlayerOpponentMessage from './BluePlayerOpponentMessage.vue';
@@ -61,9 +64,7 @@ export default {
     }, methods: {
         scrollToEnd() {
             let allMessages = this.$el.querySelector("#all-messages");
-            console.log(allMessages.scrollTop);
             allMessages.scrollTop = allMessages.scrollHeight;
-            console.log(allMessages.scrollTop);
         },
         listenForMessages() {
             let usrMsgs = this.usrMsgs;

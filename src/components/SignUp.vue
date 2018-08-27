@@ -73,18 +73,20 @@ export default {
 			baseUrl: process.env.BASE_URL
         }
 	},
-
+	//signup component allows returning users to login in or new users to create account
+	//TODO: use local storage to keep users logged in on refresh
+	//TODO: Redirect to signup if player logged out(and no token / token expired)
     methods: {
 		addUser() {
 			this.user.name= document.getElementById('reg-name').value;
 			this.user.email= document.getElementById('reg-email').value;
 			this.user.password= document.getElementById('reg-password').value;
-			//console.log("signUp: " + signUpName, signUpEmail, signUpPassword);
 			this.$http.post('http://localhost:3000/user/signup', this.user)
 				.then(response => {
 					this.user.id = response.body.id
 					console.log(response)
 					const token = response.data.token
+					this.userOnline();
       				localStorage.setItem('user-token', token) // store the token in localstorage
 					this.navigateToChooseGame();
 				}, error => {
@@ -97,16 +99,15 @@ export default {
 			let validUser = {};
 			validUser.email= document.getElementById('login-email').value;
 			validUser.password= document.getElementById('login-password').value;
-			//console.log("signUp: " + signUpName, signUpEmail, signUpPassword);
 			this.$http.post('http://localhost:3000/user/login', validUser)
 				.then(response => {
 					console.log(response)
 					const token = response.data.token
 					localStorage.setItem('user-token', token) // store the token in localstorage
-					this.updateUser(response.data.user);
-					localStorage.setItem('name', this.user.name);
+					localStorage.setItem('name', this.user.name); //TODO - remain signed in on refresh if token not expired
 					localStorage.setItem('email', this.user.email);
 					localStorage.setItem('avatar', this.user.avatar);
+					this.updateUser(response.data.user);
 					this.navigateToChooseGame();
     				})
   				.catch(err => {
@@ -114,23 +115,21 @@ export default {
   			});
 		},  
 		updateUser(update) {
-			console.log(this.user);
-			console.log(JSON.stringify(update.name))
 			this.user.name = update.name;
 			this.user.email = update.email;
 			this.user.avatar = update.avatar;
 			this.user.id = update._id;
-			console.log("signup userid: " + this.user.id)
-
+			this.userOnline();
 			this.$emit('update-user', this.user)
 			
+		},
+		userOnline() {
 			socket.emit('login', {
 				name: this.user.name,
 				email: this.user.email,
 				avatar: this.user.avatar,
 				id: this.user.id
 			});
-			console.log("Emitting User to Sockets: " + JSON.stringify(this.user))
 		},
 		navigateToChooseGame() {
 			this.$router.push('/choose-game');
