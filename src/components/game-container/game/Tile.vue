@@ -21,13 +21,13 @@
         <rect v-for=" move in validMoveXY"
           v-if="move[0] === x && move[1] === y 
             && turn === 'red' && allowedJumps.length === 0
-            && allAvailableJumps.length === 0"
+            && !availableJumps"
           v-on:click="dropPiece()" x=0 y=0 width="100" height="100" fill="#B71C1C" fill-opacity="0.5"/>
 
         <rect v-for=" move in validMoveXY"
           v-if="move[0] === x && move[1] === y 
             && turn === 'blue' && allowedJumps.length === 0
-            && allAvailableJumps.length === 0"
+            && !availableJumps"
           v-on:click="dropPiece()" x=0 y=0 width="100" height="100" fill="#4072a0" fill-opacity="0.5"/>
 
         <rect v-for=" jump in validJumpXY"
@@ -55,7 +55,7 @@ export default {
         turn: {type: String},
         occupied: {type: String},
         allowedJumps: {type: Array},
-        allAvailableJumps: {type: Array}
+        availableJumps: {type: Array}
         },
 
   data() {

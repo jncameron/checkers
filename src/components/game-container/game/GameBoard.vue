@@ -26,7 +26,7 @@
 				:selectedPieceXY="selectedPieceXY"
 				:validMoveXY="validMoveXY"
 				:validJumpXY="validJumpXY"
-				:allAvailableJumps="allAvailableJumps"
+				:availableJumps="availableJumps"
 				@dropPiece="dropPiece($event)">
       </board-tile>
 
@@ -116,7 +116,8 @@ export default {
 				gameId: "",
 				justCrowned: false,
 				message: "Good luck!",
-				allAvailableJumps: [],
+				hasJumped: false,
+				availableJumps: false,
 			}
 	},
 
@@ -134,7 +135,7 @@ export default {
 		//run after turn changes to find any available jumps
 		//if any jumps available, player must jump
 		selectAllPieces(pieces, color, opponentColor) {
-			this.allAvailableJumps.length = 0;
+			this.setAvailableJumps(false);
 			let selectPiece = this.selectPiece;
 			for(let piece in pieces) {
 				let x = pieces[piece]['x']
@@ -149,7 +150,6 @@ export default {
 			this.allowedJumps.length = 0;
 			this.allowedMoves.length = 0;
 			this.canBeJumped.length = 0;
-			console.log(this.allAvailableJumps)
 			
 		},
 
@@ -157,7 +157,9 @@ export default {
 			let setSelectedTile = this.setSelectedTile;
 			let gameBoardTiles = this.gameBoardTiles;
 			let getSelectedTile = this.getSelectedTile;
+			this.allowedJumps.length = 0;
 			let allowedJumps = this.allowedJumps;
+			let setAllowedJumps = this.setAllowedJumps;
 			let allowedMoves = this.allowedMoves;
 			let validJumps = this.validJumps;
 			let validMoves = this.validMoves;
@@ -183,7 +185,8 @@ export default {
 			let getGameBoardTiles = this.getGameBoardTiles;
 			let pieceName = this.pieceName;
 			let setPieceName = this.setPieceName;
-			let allAvailableJumps = this.allAvailableJumps;
+			let setAvailableJumps = this.setAvailableJumps;
+			let getHasJumped = this.getHasJumped;
 			
 			validMoveXY.length = 0;
 			validJumpXY.length = 0;
@@ -238,7 +241,6 @@ export default {
 					&& color === 'red') {
 
 					allowedJumps.push(`tile${t}`)
-					allAvailableJumps.push(`tile${t}`)
 					canBeJumped.push(validMoves[i])
 				}
 				if((t < selectedTile.pos || selectedPiece.crown === true)
@@ -248,13 +250,18 @@ export default {
 					&& gameBoardTiles[`tile${validMoves[i]}`]['occupied'] === 'red'
 					&& color === 'blue') {
 
-					allowedJumps.push(`tile${t}`)
-					allAvailableJumps.push(`tile${t}`)					
+					allowedJumps.push(`tile${t}`)				
 					canBeJumped.push(validMoves[i])
 				}
-				setCanBeJumped(canBeJumped)
+				if(allowedJumps.length >= 1) {
+					setAvailableJumps(true);
+				}
+				
+				setCanBeJumped(canBeJumped);
+				
 
 			});
+			setAllowedJumps(allowedJumps);
 			//IF PLAYER HASN'T JUMPED, CHECK FOR MOVES
 
 			validMoves.forEach(function(t) {
@@ -286,8 +293,8 @@ export default {
 			}
 		},
 
-		//the other major function. After valid Moves and jumps are computed in selectPiece()
-		//dropPiece allows player to choose a move
+		//the other major function. After valid Moves and jumps are computed in selectPiece(),
+		//  dropPiece allows player to choose a move
 		//TODO: player must jump if any jump is available
 		//TODO: 'multijumps' - if jump completed, new tile is selected, if valid jumps found,
 		//	player can continue move
@@ -309,6 +316,7 @@ export default {
 			let validJumpXY = this.validJumpXY;
 			let selectedPieceXY = this.selectedPieceXY;
 			let changeTurn = this.changeTurn;
+			let jumpAgain = this.jumpAgain;
 			let allowedJumps = this.allowedJumps;
 			let allowedMoves = this.allowedMoves;
 			let selectPiece = this.selectPiece;
@@ -323,6 +331,8 @@ export default {
 			let getPieceName = this.getPieceName;
 			let updateGameBoardTile = this.updateGameBoardTile;
 			let gameBoardTiles = this.gameBoardTiles;
+			let setHasJumped = this.setHasJumped;
+			let getAvailableJumps = this.getAvailableJumps;
 
 			if(color === 'red' && this.player1.color === 'red') {
 				opponentColor = 'blue';
@@ -353,6 +363,10 @@ export default {
 							selectedPiece.pos = newTile.pos;
 							selectedPiece.x = newTile.x;
 							selectedPiece.y = newTile.y;
+							let checkForMoreJumps = [];
+							checkForMoreJumps[0] = [newTile.x,newTile.y];
+							checkForMoreJumps[1] = color;
+							checkForMoreJumps[2] = opponentColor;
 							setSelectedPiece(selectedPiece);
 							allowedJumps.length = 0;
 							oldTile.occupied = 'empty';
@@ -379,13 +393,15 @@ export default {
 							selectedPieceXY.length = 0;
 							setSelectedPiece({});		
 							justCrowned = getJustCrowned();														
-							changeTurn();
 							postMove(gameId, oldAndNewPositions);
+							setHasJumped(true);
+							jumpAgain(checkForMoreJumps);
+
 					}
 				});
 			}
 			//no jump available
-			else if(allowedJumps.length === 0 && this.allAvailableJumps.length === 0) {
+			else if(allowedJumps.length === 0 && getAvailableJumps() === false) {
 				allowedMoves.forEach(function(tile){
 					if(gameBoardTiles[tile]['x'] === newPosition[0]
 						&& gameBoardTiles[tile]['y'] === newPosition[1]) {
@@ -402,8 +418,9 @@ export default {
 							validMoveXY.length = 0;
 							validJumpXY.length = 0;;
 							selectedPieceXY.length = 0;
-							changeTurn();
+							
 							postMove(gameId, oldAndNewPositions);
+							changeTurn();
 					}					
 				});
 			}			
@@ -423,8 +440,17 @@ export default {
 		//implemented after dropPiece()
 		//TODO: if multijump available- do not change turn
 		changeTurn() {
-
+			this.setHasJumped(false);
+			this.setAvailableJumps(false);
 			if(this.turn === 'red') {
+				this.turn = 'blue';
+				if(this.player1.color === 'blue') {
+					this.selectAllPieces(this.player1.pieces, 'blue', 'red')
+				} else {
+					this.selectAllPieces(this.player2.pieces, 'blue', 'red')
+				}
+
+			} else if (this.turn === 'red') {
 				this.turn = 'blue';
 				if(this.player1.color === 'blue') {
 					this.selectAllPieces(this.player1.pieces, 'blue', 'red')
@@ -440,6 +466,18 @@ export default {
 				}
 			}
 
+		},
+
+		jumpAgain(moreJumps) {
+			console.log(JSON.stringify(moreJumps));
+			this.selectPiece(moreJumps[0],moreJumps[1],moreJumps[2]);
+			this.getAllowedJumps();
+			console.log(this.allowedJumps)
+			if(this.allowedJumps.length > 0) {
+				return
+			} else {
+				this.changeTurn();
+			}
 		},
 
 		//if crowned - player can move forwards and backwards
@@ -476,6 +514,27 @@ export default {
 			let tiles = this.gameBoardTiles;
 			let turn = this.turn;
 			let captured = "";
+			let player1 = this.player1;
+			let player2 = this.player2;
+
+			if(player1.color === 'red' && pieceName[0] === 'r') {
+				player1['pieces'][pieceName]['pos'] = oldAndNew[2];
+				player1['pieces'][pieceName]['x'] = oldAndNew[3];
+				player1['pieces'][pieceName]['y'] = oldAndNew[4];
+			} else if(player1.color === 'blue' && pieceName[0] === 'b') {
+				player1['pieces'][pieceName]['pos'] = oldAndNew[2];
+				player1['pieces'][pieceName]['x'] = oldAndNew[3];
+				player1['pieces'][pieceName]['y'] = oldAndNew[4];
+			} else if(player2.color === 'red' && pieceName[0] === 'r') {
+				player2['pieces'][pieceName]['pos'] = oldAndNew[2];
+				player2['pieces'][pieceName]['x'] = oldAndNew[3];
+				player2['pieces'][pieceName]['y'] = oldAndNew[4];
+			} else if(player2.color === 'blue' && pieceName[0] === 'b') {
+				player2['pieces'][pieceName]['pos'] = oldAndNew[2];
+				player2['pieces'][pieceName]['x'] = oldAndNew[3];
+				player2['pieces'][pieceName]['y'] = oldAndNew[4];
+			}
+
 			if(oldAndNew[5]) {
 				captured = oldAndNew[5];
 			}
@@ -489,15 +548,15 @@ export default {
 			}, error => {
 				console.log(error);
 			}).then(function() { 
-
-			//After posting to server/db, Send current board state to socket 'board'
-			socket.emit('gamedata', 'open');
-			let gameData = {};
-			gameData.player1 = this.player1;
-			gameData.player2 = this.player2;
-			gameData.tiles = this.gameBoardTiles;
-			gameData.turn = this.turn
-			socket.emit('gamedata', gameData);
+				//After posting to server/db, Send current board state to socket 'board'
+				socket.emit('gamedata', 'open');
+				let gameData = {};
+				gameData.player1 = player1;
+				gameData.player2 = player2;
+				gameData.tiles = this.gameBoardTiles;
+				gameData.turn = this.turn
+				console.log('gameDATA: ' + JSON.stringify(gameData));
+				socket.emit('gamedata', gameData);
 			}
 
 			);
@@ -541,6 +600,9 @@ export default {
 		getAllowedJumps() {
 			return this.allowedJumps;
 		},
+		setAllowedJumps(jumps) {
+			this.allowedJumps = jumps;
+		},
 		setSelectedPieceXY(pieceXY) {
 			this.selectedPieceXY = pieceXY;
 		},
@@ -553,6 +615,24 @@ export default {
 		setValidJumpXY(jumpXY) {
 			this.validJumpXY = jumpXY;
 		},
+		getHasJumped() {
+			return this.hasjumped;
+		},
+		setHasJumped(tf) {
+			this.hasJumped = tf
+		},
+		getAvailableJumps() {
+			return(this.availableJumps);
+		},
+		setAvailableJumps(tf) {
+			this.availableJumps = tf;
+		},
+		getPlayer1() {
+			return this.player1;
+		},
+		getPlayer2() {
+			return this.player2;
+		}
 	}
 }
 </script>
