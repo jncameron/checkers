@@ -165,7 +165,6 @@ export default {
 			player1Captures.length = 0;
 			for(let piece in this.player2.pieces) {
 				if(this.player2.pieces[piece] === 'CAPTURED') {
-					console.log("PIECE " + piece)
 					player1Captures.push(piece);
 				}
 			}
@@ -175,7 +174,6 @@ export default {
 			let player2Captures = this.player2Captures;
 			player2Captures.length = 0;
 			for(let piece in this.player1.pieces) {
-				console.log("PIECE " + this.player1.pieces[piece])
 				if(this.player1.pieces[piece] === 'CAPTURED') {
 					player2Captures.push(piece);
 				}

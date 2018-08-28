@@ -1,10 +1,6 @@
 <template>
     <div>
 	<game-finished v-if="gameStatus === 'OVER'" :winnerName="winnerName" @close="showModal = false">
-      <!--
-        you can use custom content here to overwrite
-        default content
-      -->
     </game-finished>
     <svg viewBox="0 0 800 800" 
       xmlns="http://www.w3.org/2000/svg" version="1.1"
@@ -30,6 +26,7 @@
 				:selectedPieceXY="selectedPieceXY"
 				:validMoveXY="validMoveXY"
 				:validJumpXY="validJumpXY"
+				:allAvailableJumps="allAvailableJumps"
 				@dropPiece="dropPiece($event)">
       </board-tile>
 
@@ -119,6 +116,7 @@ export default {
 				gameId: "",
 				justCrowned: false,
 				message: "Good luck!",
+				allAvailableJumps: [],
 			}
 	},
 
@@ -129,16 +127,32 @@ export default {
 			'game-finished': GameFinished,
 	},
 	methods: {
-		// pass xy coords to pieces
-		transform(piece,player){
-			let x = piece.x + 30;
-			let y = piece.y + 30;
-			return(`translate(${x},${y})`);
-		},
 		// one of the two main methods in GameBoard.vue
 		// handles selecting piece logic, moves and jumps available
 		// if a piece can jump, it must
-		//TODO: if ANY piece can jump, player must jump that piece
+
+		//run after turn changes to find any available jumps
+		//if any jumps available, player must jump
+		selectAllPieces(pieces, color, opponentColor) {
+			this.allAvailableJumps.length = 0;
+			let selectPiece = this.selectPiece;
+			for(let piece in pieces) {
+				let x = pieces[piece]['x']
+				let y = pieces[piece]['y']
+				selectPiece([x,y],color,opponentColor)
+				//deselect
+				
+			}
+			this.validMoveXY.length = 0;
+			this.validJumpXY.length = 0;
+			this.selectedPieceXY.length = 0;		
+			this.allowedJumps.length = 0;
+			this.allowedMoves.length = 0;
+			this.canBeJumped.length = 0;
+			console.log(this.allAvailableJumps)
+			
+		},
+
 		selectPiece(pos, color, opponentColor) {
 			let setSelectedTile = this.setSelectedTile;
 			let gameBoardTiles = this.gameBoardTiles;
@@ -169,6 +183,7 @@ export default {
 			let getGameBoardTiles = this.getGameBoardTiles;
 			let pieceName = this.pieceName;
 			let setPieceName = this.setPieceName;
+			let allAvailableJumps = this.allAvailableJumps;
 			
 			validMoveXY.length = 0;
 			validJumpXY.length = 0;
@@ -190,96 +205,90 @@ export default {
 			blueOccupied.length = 0;
 			selectedPieceXY = [pos[0],pos[1]]
 
-				for (let tile in gameBoardTiles) {
-					
-					if(gameBoardTiles[tile]['occupied'] === 'red' ) {
-						redOccupied.push(gameBoardTiles[tile]['pos'])
-					} else if (gameBoardTiles[tile]['occupied'] === 'blue') {
-						blueOccupied.push(gameBoardTiles[tile]['pos'])
-					}	if (gameBoardTiles[tile]['x'] === selectedPieceXY[0] && gameBoardTiles[tile]['y'] === selectedPieceXY[1]){
-						setSelectedTile(gameBoardTiles[tile]);
-					}
-				}			
-				for (let piece in pieces) {
-					if (pieces[piece]['x'] === pos[0] && pieces[piece]['y'] === pos[1]) {
-						
-						setPieceName(piece);
-						setSelectedPiece(pieces[piece]);
-						setSelectedPieceXY([pos[0],pos[1]]);
-						selectedPiece = getSelectedPiece();
-					}
+			for (let tile in gameBoardTiles) {
+				
+				if(gameBoardTiles[tile]['occupied'] === 'red' ) {
+					redOccupied.push(gameBoardTiles[tile]['pos'])
+				} else if (gameBoardTiles[tile]['occupied'] === 'blue') {
+					blueOccupied.push(gameBoardTiles[tile]['pos'])
+				}	if (gameBoardTiles[tile]['x'] === selectedPieceXY[0] && gameBoardTiles[tile]['y'] === selectedPieceXY[1]){
+					setSelectedTile(gameBoardTiles[tile]);
 				}
-				
-				
-				let selectedTile = getSelectedTile();
-
-				validMoves = selectedTile.validMoves;
-				validJumps = selectedTile.validJumps;
-
+			}			
+			for (let piece in pieces) {
+				if (pieces[piece]['x'] === pos[0] && pieces[piece]['y'] === pos[1]) {
 					
-					validJumps.forEach(function(t,i) {
-
-						if((t > selectedTile.pos || selectedPiece.crown === true)
-							&& !redOccupied.includes(t)
-							&& !blueOccupied.includes(t)
-							&& t !== false
-							&& gameBoardTiles[`tile${validMoves[i]}`]['occupied'] === 'blue'
-							&& color === 'red') {
-
-							allowedJumps.push(`tile${t}`)
-							canBeJumped.push(validMoves[i])
-						}
-						if((t < selectedTile.pos || selectedPiece.crown === true)
-							&& !redOccupied.includes(t)
-							&& !blueOccupied.includes(t)
-							&& t !== false
-							&& gameBoardTiles[`tile${validMoves[i]}`]['occupied'] === 'red'
-							&& color === 'blue') {
-
-							allowedJumps.push(`tile${t}`)
-							
-							canBeJumped.push(validMoves[i])
-						}
-						setCanBeJumped(canBeJumped)
-
-					});
-
-				//IF PLAYER HASN'T JUMPED, CHECK FOR MOVES
-
-					validMoves.forEach(function(t) {
-						if ((t > selectedTile.pos || selectedPiece.crown === true)
-							&& !redOccupied.includes(t)
-							&& !blueOccupied.includes(t)
-							&& t !== false
-							&& color === 'red') {
-								allowedMoves.push(`tile${t}`);
-						}
-
-						else if ((t < selectedTile.pos || selectedPiece.crown === true)
-							&& !redOccupied.includes(t)
-							&& !blueOccupied.includes(t)
-							&& t !== false
-							&& color === 'blue') {
-								allowedMoves.push(`tile${t}`);
-						}
-					});
-				
-				for(let tileName in gameBoardTiles) {
-
-					if(allowedJumps.includes(tileName)) {
-						validJumpXY.push([gameBoardTiles[tileName]['x'],gameBoardTiles[tileName]['y']])
-
-					}
-					if(allowedMoves.includes(tileName)) {
-						validMoveXY.push([gameBoardTiles[tileName]['x'],gameBoardTiles[tileName]['y']])
-
-					}
+					setPieceName(piece);
+					setSelectedPiece(pieces[piece]);
+					setSelectedPieceXY([pos[0],pos[1]]);
+					selectedPiece = getSelectedPiece();
 				}
+			}
+			
+			let selectedTile = getSelectedTile();
+			validMoves = selectedTile.validMoves;
+			validJumps = selectedTile.validJumps;
+			validJumps.forEach(function(t,i) {
+
+				if((t > selectedTile.pos || selectedPiece.crown === true)
+					&& !redOccupied.includes(t)
+					&& !blueOccupied.includes(t)
+					&& t !== false
+					&& gameBoardTiles[`tile${validMoves[i]}`]['occupied'] === 'blue'
+					&& color === 'red') {
+
+					allowedJumps.push(`tile${t}`)
+					allAvailableJumps.push(`tile${t}`)
+					canBeJumped.push(validMoves[i])
+				}
+				if((t < selectedTile.pos || selectedPiece.crown === true)
+					&& !redOccupied.includes(t)
+					&& !blueOccupied.includes(t)
+					&& t !== false
+					&& gameBoardTiles[`tile${validMoves[i]}`]['occupied'] === 'red'
+					&& color === 'blue') {
+
+					allowedJumps.push(`tile${t}`)
+					allAvailableJumps.push(`tile${t}`)					
+					canBeJumped.push(validMoves[i])
+				}
+				setCanBeJumped(canBeJumped)
+
+			});
+			//IF PLAYER HASN'T JUMPED, CHECK FOR MOVES
+
+			validMoves.forEach(function(t) {
+				if ((t > selectedTile.pos || selectedPiece.crown === true)
+					&& !redOccupied.includes(t)
+					&& !blueOccupied.includes(t)
+					&& t !== false
+					&& color === 'red') {
+						allowedMoves.push(`tile${t}`);
+				}
+
+				else if ((t < selectedTile.pos || selectedPiece.crown === true)
+					&& !redOccupied.includes(t)
+					&& !blueOccupied.includes(t)
+					&& t !== false
+					&& color === 'blue') {
+						allowedMoves.push(`tile${t}`);
+				}
+			});
+			
+			for(let tileName in gameBoardTiles) {
+
+				if(allowedJumps.includes(tileName)) {
+					validJumpXY.push([gameBoardTiles[tileName]['x'],gameBoardTiles[tileName]['y']])
+				}
+				if(allowedMoves.includes(tileName)) {
+					validMoveXY.push([gameBoardTiles[tileName]['x'],gameBoardTiles[tileName]['y']])
+				}
+			}
 		},
 
 		//the other major function. After valid Moves and jumps are computed in selectPiece()
 		//dropPiece allows player to choose a move
-		//TODO: player can only drop piece on jump if any jump is available
+		//TODO: player must jump if any jump is available
 		//TODO: 'multijumps' - if jump completed, new tile is selected, if valid jumps found,
 		//	player can continue move
 		dropPiece(newPosition) {
@@ -315,8 +324,6 @@ export default {
 			let updateGameBoardTile = this.updateGameBoardTile;
 			let gameBoardTiles = this.gameBoardTiles;
 
-
-			//MORE HERE
 			if(color === 'red' && this.player1.color === 'red') {
 				opponentColor = 'blue';
 				opponentPieces = this.player2.pieces;
@@ -332,6 +339,8 @@ export default {
 			}
 
 			selectedPiece = getSelectedPiece();
+			//selected piece has avaiable jumps
+			//if any jumps are available, player must jump
 			if (allowedJumps.length > 0) {
 				allowedJumps.forEach(function(tile) {
 					if(gameBoardTiles[tile]['x'] === newPosition[0]
@@ -341,32 +350,24 @@ export default {
 							updateGameBoardTile(tile, color)
 							pieceName = getPieceName()
 							let oldAndNewPositions = [pieceName, oldTile.pos, newTile.pos, newTile.x, newTile.y]
-
 							selectedPiece.pos = newTile.pos;
 							selectedPiece.x = newTile.x;
 							selectedPiece.y = newTile.y;
 							setSelectedPiece(selectedPiece);
 							allowedJumps.length = 0;
 							oldTile.occupied = 'empty';
-
 							updateGameBoardTile(`tile${oldTile.pos}`,'empty')
 							for(let piece in opponentPieces) {	
 								if (canBeJumped.includes(opponentPieces[piece]['pos'])) {
 									validJumps.forEach(function (jump, index) {
 										if (jump === newTile.pos) {
 											let moveIndex = validMoves[index]
-
 											if (opponentPieces[piece]['pos'] === validMoves[index]) {
-												
 												let position = opponentPieces[piece]['pos'] 
-												oldAndNewPositions.push(piece)
-												
+												oldAndNewPositions.push(piece)												
 												updateGameBoardTile(`tile${position}`,'empty')
-												
 												opponentPieces[piece] = "CAPTURED";
-
-											}
-											
+											}											
 										}
 									});
 								}
@@ -383,38 +384,36 @@ export default {
 					}
 				});
 			}
-			else if( allowedJumps.length === 0) {
+			//no jump available
+			else if(allowedJumps.length === 0 && this.allAvailableJumps.length === 0) {
 				allowedMoves.forEach(function(tile){
 					if(gameBoardTiles[tile]['x'] === newPosition[0]
 						&& gameBoardTiles[tile]['y'] === newPosition[1]) {
-						
 							newTile = gameBoardTiles[tile]
-							
 							newTile.occupied = color;
 							updateGameBoardTile(tile, color)
-		
-							let oldAndNewPositions = [pieceName, oldTile.pos, newTile.pos, newTile.x, newTile.y]
-							
+							let oldAndNewPositions = [pieceName, oldTile.pos, newTile.pos, newTile.x, newTile.y]							
 							selectedPiece.pos = newTile.pos;
 							selectedPiece.x = newTile.x;
 							selectedPiece.y = newTile.y;
 							crownPiece(selectedPiece);
 							oldTile.occupied = 'empty';
 							updateGameBoardTile(`tile${oldTile.pos}`,'empty')
-							// gameBoardTiles[`tile${oldTile.pos}`]['occupied'] = 'empty';
 							validMoveXY.length = 0;
 							validJumpXY.length = 0;;
 							selectedPieceXY.length = 0;
 							changeTurn();
 							postMove(gameId, oldAndNewPositions);
-					}
-					
+					}					
 				});
-			}
-
-
-			
-			
+			}			
+		},
+		
+		// pass xy coords to pieces
+		transform(piece,player){
+			let x = piece.x + 30;
+			let y = piece.y + 30;
+			return(`translate(${x},${y})`);
 		},
 
 		updateGameBoardTile(tile, occupied) {
@@ -424,12 +423,23 @@ export default {
 		//implemented after dropPiece()
 		//TODO: if multijump available- do not change turn
 		changeTurn() {
+
 			if(this.turn === 'red') {
 				this.turn = 'blue';
-			
+				if(this.player1.color === 'blue') {
+					this.selectAllPieces(this.player1.pieces, 'blue', 'red')
+				} else {
+					this.selectAllPieces(this.player2.pieces, 'blue', 'red')
+				}
 			} else if(this.turn === 'blue') {
 				this.turn = 'red';
+				if(this.player1.color === 'red') {
+					this.selectAllPieces(this.player1.pieces, 'red', 'blue')
+				} else {
+					this.selectAllPieces(this.player2.pieces, 'red', 'blue')
+				}
 			}
+
 		},
 
 		//if crowned - player can move forwards and backwards
@@ -480,7 +490,6 @@ export default {
 				console.log(error);
 			}).then(function() { 
 
-
 			//After posting to server/db, Send current board state to socket 'board'
 			socket.emit('gamedata', 'open');
 			let gameData = {};
@@ -499,19 +508,15 @@ export default {
 		getGameBoardTiles() {
 			return this.gameBoardTiles
 		},
-
 		setCanBeJumped(jumpsPossible) {
 			this.canBeJumped = jumpsPossible
 		},
-
 		getJustCrowned() {
 			return this.justCrowned
 		},
-
 		setJustCrowned(crownStatus) {
 			this.justCrowned = crownStatus;
 		},
-
 		getSelectedTile() {
 			return this.selectedTile;
 		},
@@ -522,18 +527,14 @@ export default {
 			return this.selectedPiece;
 		},
 		setSelectedPiece(piece) {
-			
 			this.selectedPiece = piece
 		},
 		getPieceName() {
-
 			return this.pieceName;
 		},
 		setPieceName(pieceName) {
-			
 			this.pieceName = pieceName;
 		},
-
 		getAllowedMoves() {
 			return this.allowedMoves;
 		},
@@ -556,11 +557,8 @@ export default {
 }
 </script>
 
-
 <style scoped>
   svg {
     background-color: #D3D3D3
   }
 </style>
-
-
