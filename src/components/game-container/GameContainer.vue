@@ -90,13 +90,14 @@ export default {
 	},
 	mounted: function() {
 		//Request initial game state on game created (or page refresh)
-		let url = window.location.href;
-		let id = url.split('game/').pop();
-		console.log("NEW ID " + id)
-		let room = url.split('game/').pop();
-		socket.emit('joinroom', room);
-		console.log("join Room " + room)
-			this.$http.post('http://localhost:3000/newgame/board', {
+		if(this.player1.name !== 'Local Larry' && this.player2.name !== 'Local Larry') {
+						let url = window.location.href;
+			let id = url.split('game/').pop();
+			console.log("NEW ID " + id)
+			let room = url.split('game/').pop();
+			socket.emit('joinroom', room);
+			console.log("join Room " + room)
+		    this.$http.post('http://localhost:3000/newgame/board', {
 				id: id	})
 				.then(response => {
 					console.log(response);
@@ -111,12 +112,13 @@ export default {
 					} else if(this.user.name === this.player2.name) {
 						this.opponent = this.player1;
 					}
-					this.listenForBoardUpdates();
-					
 				}, error => {
 				console.log(error);
 			});
-
+		} else {
+			this.turn = 'red';
+		}
+		this.listenForBoardUpdates();
 	}, 
 	methods: {
 		//after any piece is captured, check if either player has 12 captures

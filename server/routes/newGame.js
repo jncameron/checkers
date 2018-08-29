@@ -65,6 +65,7 @@ router.post('/moves', (req,res,next) => {
             game.set({'turn': turn});
             game.save()
             .then(result => {
+
                 res.status(200).send({
                     game: game
                 });
@@ -79,8 +80,9 @@ router.post('/moves', (req,res,next) => {
 
 router.post('/board', (req,res,next) => {
     NewGame.findById({_id: req.body.id})
-        .exec()
-        .then(function(game) { 
+
+        .then(game => { 
+            console.log("fetching board " + game._id)
             game.save()
             .then(result => {
                 res.status(200).send({

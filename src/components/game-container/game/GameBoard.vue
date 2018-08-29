@@ -38,7 +38,7 @@
 					:turn="turn"
 					:player="player1"
 					:user="user"
-					:crownedRed="redPiece.crown === true"
+					:crownedRed="redPiece.crown"
 					@redSelected="selectPiece($event, 'red', 'blue')">
 			</red-piece>
 		    <blue-piece v-for="(bluePiece, index) in player2.pieces"
@@ -47,26 +47,28 @@
 				:turn="turn"
 				:player="player2"
 				:user="user"
-				:crownedBlue="bluePiece.crown === true"
+				:crownedBlue="bluePiece.crown"
 				:transform="transform(bluePiece, 'player2')"
 				@blueSelected="selectPiece($event, 'blue', 'red')">
       		</blue-piece>
 		</g>
 		<g v-else>
 			<red-piece v-for="(redPiece, index) in player2.pieces"
-					v-if="redPiece.pos"
-					:key="index"
-					:transform="transform(redPiece, 'player2')"
-					:turn="turn"
-					:player="player2"
-					:user="user"
-					@redSelected="selectPiece($event, 'red', 'blue')">
+				v-if="redPiece.pos"
+				:key="index"
+				:transform="transform(redPiece, 'player2')"
+				:turn="turn"
+				:player="player2"
+				:crownedRed="redPiece.crown"
+				:user="user"
+				@redSelected="selectPiece($event, 'red', 'blue')">
 			</red-piece>
 		    <blue-piece v-for="(bluePiece, index) in player1.pieces"
 	  			v-if="bluePiece.pos"
 				:key="index"
 				:turn="turn"
 				:player="player1"
+				:crownedBlue="bluePiece.crown"
 				:user="user"
 				:transform="transform(bluePiece, 'player1')"
 				@blueSelected="selectPiece($event, 'blue', 'red')">
@@ -127,6 +129,19 @@ export default {
 			'blue-piece': BluePiece,
 			'game-finished': GameFinished,
 	},
+	watch: {
+		turn: function(newValue, oldValue) {
+			if(this.player1.color === 'blue' && newValue === 'blue') {
+					this.selectAllPieces(this.player1.pieces, newValue, oldValue)
+			} else if (this.player2.color === 'blue' && newValue === 'blue'){
+					this.selectAllPieces(this.player2.pieces, newValue, oldValue)
+			} else if(this.player1.color === 'red' && newValue === 'red') {
+					this.selectAllPieces(this.player1.pieces, newValue, oldValue)
+			} else if(this.player2.color === 'red' && newValue === 'red'){
+					this.selectAllPieces(this.player2.pieces, newValue, oldValue)
+			}
+		}
+	},
 	methods: {
 		// one of the two main methods in GameBoard.vue
 		// handles selecting piece logic, moves and jumps available
@@ -137,12 +152,14 @@ export default {
 		selectAllPieces(pieces, color, opponentColor) {
 			this.setAvailableJumps(false);
 			let selectPiece = this.selectPiece;
-			for(let piece in pieces) {
-				let x = pieces[piece]['x']
-				let y = pieces[piece]['y']
-				selectPiece([x,y],color,opponentColor)
-				//deselect
-				
+				for(let piece in pieces) {
+					if(pieces[piece].pos) {
+						let x = pieces[piece]['x']
+						let y = pieces[piece]['y']
+						selectPiece([x,y],color,opponentColor)
+						//deselect
+					}
+
 			}
 			this.validMoveXY.length = 0;
 			this.validJumpXY.length = 0;
@@ -334,6 +351,8 @@ export default {
 			let setHasJumped = this.setHasJumped;
 			let getAvailableJumps = this.getAvailableJumps;
 
+			setJustCrowned(false);
+
 			if(color === 'red' && this.player1.color === 'red') {
 				opponentColor = 'blue';
 				opponentPieces = this.player2.pieces;
@@ -392,10 +411,19 @@ export default {
 							selectedPiece = {};
 							selectedPieceXY.length = 0;
 							setSelectedPiece({});		
-							justCrowned = getJustCrowned();														
-							postMove(gameId, oldAndNewPositions);
+								
 							setHasJumped(true);
-							jumpAgain(checkForMoreJumps);
+								
+							justCrowned = getJustCrowned();	
+							if(justCrowned === true) {
+								console.log("Changing turn - justCrowned TRUE")
+								changeTurn();
+							}else {
+								jumpAgain(checkForMoreJumps);
+							}	
+
+							postMove(gameId, oldAndNewPositions, justCrowned);
+							
 
 					}
 				});
@@ -444,35 +472,14 @@ export default {
 			this.setAvailableJumps(false);
 			if(this.turn === 'red') {
 				this.turn = 'blue';
-				if(this.player1.color === 'blue') {
-					this.selectAllPieces(this.player1.pieces, 'blue', 'red')
-				} else {
-					this.selectAllPieces(this.player2.pieces, 'blue', 'red')
-				}
-
-			} else if (this.turn === 'red') {
-				this.turn = 'blue';
-				if(this.player1.color === 'blue') {
-					this.selectAllPieces(this.player1.pieces, 'blue', 'red')
-				} else {
-					this.selectAllPieces(this.player2.pieces, 'blue', 'red')
-				}
 			} else if(this.turn === 'blue') {
 				this.turn = 'red';
-				if(this.player1.color === 'red') {
-					this.selectAllPieces(this.player1.pieces, 'red', 'blue')
-				} else {
-					this.selectAllPieces(this.player2.pieces, 'red', 'blue')
-				}
 			}
-
 		},
 
 		jumpAgain(moreJumps) {
-			console.log(JSON.stringify(moreJumps));
 			this.selectPiece(moreJumps[0],moreJumps[1],moreJumps[2]);
 			this.getAllowedJumps();
-			console.log(this.allowedJumps)
 			if(this.allowedJumps.length > 0) {
 				return
 			} else {
@@ -483,17 +490,22 @@ export default {
 		//if crowned - player can move forwards and backwards
 		crownPiece(piece) {
 			 let justCrowned = false;
+			 console.log("Piece Crown : " + piece['crown'])
+			 console.log("Piece Pos : " + piece['pos'])
+
 
 			if (piece['crown'] === false && this.turn === 'red') {
 				if (piece['pos'] === 29 || piece['pos'] === 30 || piece['pos'] === 31 || piece['pos'] === 32) {
 					piece['crown'] = true;
-					justCrowned = true;				
+					justCrowned = true;		
+					console.log("Piece Crown : " + piece['crown'])		
 				}
 			}
 			else if (piece['crown'] === false && this.turn === 'blue') {
 				if (piece['pos'] === 1 || piece['pos'] === 2 || piece['pos'] === 3 || piece['pos'] === 4) {
 					piece['crown'] = true;
 					justCrowned = true;
+					console.log("Piece Crown : " + piece['crown'])
 				}	
 			}
 			if (justCrowned === true) {
@@ -503,7 +515,7 @@ export default {
 		},
 		
 		//send move information to server
-		postMove(gameId, oldAndNew) {
+		postMove(gameId, oldAndNew, crowned) {
 			let url = window.location.href;
 			gameId = url.split('game/').pop();
 			let pieceName = oldAndNew[0];
@@ -514,6 +526,7 @@ export default {
 			let tiles = this.gameBoardTiles;
 			let turn = this.turn;
 			let captured = "";
+
 			let player1 = this.player1;
 			let player2 = this.player2;
 
@@ -521,18 +534,31 @@ export default {
 				player1['pieces'][pieceName]['pos'] = oldAndNew[2];
 				player1['pieces'][pieceName]['x'] = oldAndNew[3];
 				player1['pieces'][pieceName]['y'] = oldAndNew[4];
+				if(crowned) {
+					player1['pieces'][pieceName]['crown'] = crowned;
+				}
+				
 			} else if(player1.color === 'blue' && pieceName[0] === 'b') {
 				player1['pieces'][pieceName]['pos'] = oldAndNew[2];
 				player1['pieces'][pieceName]['x'] = oldAndNew[3];
 				player1['pieces'][pieceName]['y'] = oldAndNew[4];
+				if(crowned) {
+					player1['pieces'][pieceName]['crown'] = crowned;
+				}
 			} else if(player2.color === 'red' && pieceName[0] === 'r') {
 				player2['pieces'][pieceName]['pos'] = oldAndNew[2];
 				player2['pieces'][pieceName]['x'] = oldAndNew[3];
 				player2['pieces'][pieceName]['y'] = oldAndNew[4];
+				if(crowned) {
+					player2['pieces'][pieceName]['crown'] = crowned;
+				}
 			} else if(player2.color === 'blue' && pieceName[0] === 'b') {
 				player2['pieces'][pieceName]['pos'] = oldAndNew[2];
 				player2['pieces'][pieceName]['x'] = oldAndNew[3];
 				player2['pieces'][pieceName]['y'] = oldAndNew[4];
+				if(crowned) {
+					player2['pieces'][pieceName]['crown'] = crowned;
+				}
 			}
 
 			if(oldAndNew[5]) {
@@ -555,7 +581,6 @@ export default {
 				gameData.player2 = player2;
 				gameData.tiles = this.gameBoardTiles;
 				gameData.turn = this.turn
-				console.log('gameDATA: ' + JSON.stringify(gameData));
 				socket.emit('gamedata', gameData);
 			}
 

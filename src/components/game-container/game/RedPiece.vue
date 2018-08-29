@@ -6,7 +6,7 @@
             <ellipse id="Oval" fill="url(#redGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>
             <ellipse v-if="turn === 'red'" v-on:click="selectRed()" id="Oval" fill="url(#redGradient)" cx="19.934334" cy="16.185259" rx="35" ry="29"></ellipse>
            	<image v-if="crownedRed && turn==='red'" v-on:click="selectRed()" class="expandOpen" x="-6" y="-10" width="53" height="53"  xlink:href="gold-crown-red.svg" />
-			<image v-else-if="crownedRed" class="expandOpen" x="-6" y="-10" width="53" height="53" xlink:href="gold-crown-red.svg" />
+			<image v-else-if="crownedRed" class="expandOpen" x="-6" y="-10" width="53" height="53" :xlink:href="crownSrc" />
         
 		</g>
     </g>
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-
+const baseUrl = process.env.BASE_URL;
 
 export default {
     props: {
@@ -31,7 +31,8 @@ export default {
         return {
             posX: 0,
             posY: 0,
-            posXY: []
+            posXY: [],
+            crownSrc:`${baseUrl}gold-crown-red.svg`
         }
     },
  
@@ -44,9 +45,6 @@ export default {
                 this.posXY = [this.posX, this.posY];
                 this.$emit('redSelected', this.posXY);
             }
-
-
-
         }
     }
  
