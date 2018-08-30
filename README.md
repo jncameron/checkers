@@ -1,6 +1,6 @@
 # Checkers
-## UNE COSC560 Project
-* John Cameron
+## UNE COSC560 Project - John Cameron
+
 
 ## Install and Run:
 * npm install
@@ -12,13 +12,12 @@
 
 ## Get Started
 * for best results - please use Chrome and navigate to http://localhost:3000/#/signup
-* navigate to #/signup (you 'should' be redirected there)
 * Register (fake email is fine, there is no confirmation email)
 * you should see your name and an avatar in the top right of the header
 * click the avatar to update your details
 * url should now be #/{your name}
 * click 'change' under avatar to update from avatar carousel
-* click 'edit details to change name or email address (TODO: change password)
+* click 'edit details' to change name or email address (TODO: change password)
 * navigate to 'play' on the header. It 'should' send you to #/choose-game, but may send you back to #/sign-up (TODO: fix routing)
 * 2 of the 4 options on #/choose-game are mostly operational: "Two Players on this computer" and "Find Player online"
 * "Two Players on this computer" allows both red and blue pieces to be selected. Player 2 name is set as "Local Larry" (TODO - allow player 2 to enter name)
