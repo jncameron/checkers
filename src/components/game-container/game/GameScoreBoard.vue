@@ -30,8 +30,8 @@
             </div>
 
             <div id="gameMessages">
-                <p > {{ gameMessage }} </p>
-                <p><strong> {{ info }}</strong></p>
+                <h4 > {{ gameMessage }} </h4>
+                <h4><strong> {{ turnMessage }}</strong></h4>
             </div>
 
             <div v-if="player2.color === 'blue'" id="play-blue">
@@ -88,6 +88,7 @@ export default {
   data() {
     return {
       gameMessage: "Good Luck!",
+      turnMessage: "",
       pieceX: [0, 24, 48, 72, 96, 120, 0, 24, 48, 72, 96, 120],
       pieceY: [0, 0, 0, 0, 0, 0, 40, 40, 40, 40, 40, 40],
       redCaptured:[],
@@ -109,11 +110,11 @@ export default {
     //move and turn info sent to opponent via socket
     listenForGameMessages() {
       let setGameMessage = this.setGameMessage;
-      
+      let setTurnMessage = this.setTurnMessage;
       socket.on('gamedata', function(data) {
-        console.log("TURN "  + data.turn)
         //TODO: game messages such as 'JOHN has Captured your Piece' etc.
-        setGameMessage(data.turn);
+        setGameMessage(data.captureMsg);
+        setTurnMessage(data.turn);
       });
     },
 
@@ -133,7 +134,19 @@ export default {
     },
     setGameMessage(message) {
       this.gameMessage = message;
-    }
+    },
+        setTurnMessage(message) {
+      let turnMessage = this.turnMessage;
+      if((message === this.player1.color && this.player1.name === this.user.name)
+        || (message === this.player2.color && this.player2.name === this.user.name)) {
+        this.turnMessage = `Your Move`;
+      } else if (message !== this.player1.color && this.player1.name === this.user.name) {
+        this.turnMessage = `${this.player2.name}'s Move`;
+      } else if (message !== this.player2.color && this.player2.name === this.user.name) {
+        this.turnMessage = `${this.player1.name}'s Move`;
+      }
+
+    },
   }
 };
 </script>
@@ -175,8 +188,9 @@ p {
 
 #gameMessages {
   height: 120px;
-  background-color: dimgray;
+  background-color: #d3d3d3;
   margin: 15px 0;
+  padding: 10px 10px;
 }
 </style>
 
