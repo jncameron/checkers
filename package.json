@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service build && cd server/ && npm install && node server.js",
+    "start": "npm install && vue-cli-service build && cd server/ && npm install && node server.js",
     "build": "vue-cli-service build",
+    "watch": "vue-cli-service build --watch",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
