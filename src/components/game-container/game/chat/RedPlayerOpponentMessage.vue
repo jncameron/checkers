@@ -17,7 +17,7 @@ export default {
     },
     data() {
         return {
-            avatarLink:`${baseUrl}${this.opponent.avatar}`
+            avatarLink: this.opponent.avatar
         }
     },
 }

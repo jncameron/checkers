@@ -107,7 +107,7 @@ export default {
     },
     methods: {
         getAvatarLink() {
-            return `${baseUrl}${this.user.avatar}`
+           	return this.user.avatar;
 		},
 		editDetails() {
 			this.updateDetails = true;

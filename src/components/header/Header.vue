@@ -50,10 +50,10 @@ export default {
             
         },
         getAvatarLink() {
-            return `${baseUrl}${this.user.avatar}`
+            return this.user.avatar;
         },
         toProfile() {
-            this.$router.push('/profile');
+            this.$router.push({path: '/profile/' + this.user.name});
         },
         toPlay() {
             this.$router.push('/choose-game');

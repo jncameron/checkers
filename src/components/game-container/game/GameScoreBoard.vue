@@ -113,7 +113,7 @@ export default {
       let setTurnMessage = this.setTurnMessage;
       socket.on('gamedata', function(data) {
         //TODO: game messages such as 'JOHN has Captured your Piece' etc.
-        setGameMessage(data.captureMsg);
+        setGameMessage(data.gameMessage);
         setTurnMessage(data.turn);
       });
     },

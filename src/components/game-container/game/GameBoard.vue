@@ -577,10 +577,21 @@ export default {
 				//After posting to server/db, Send current board state to socket 'board'
 				socket.emit('gamedata', 'open');
 				let gameData = {};
+				let gameMessage = "";
+				if(captured) {
+					if((pieceName[0] === 'r' && player1.color === 'red' && this.user.name === player1.name)
+						|| pieceName[0] === 'b' && player1.color === 'blue' && this.user.name === player1.name) {
+						gameMessage = `${player1.name} captured ${player2.name}'s piece!`
+					} else if((pieceName[0] === 'r' && player2.color === 'red' && this.user.name === player2.name)
+						|| pieceName[0] === 'b' && player2.color === 'blue' && this.user.name === player2.name) {
+						gameMessage = `${player2.name} captured ${player1.name}'s piece!`
+					}
+				}
 				gameData.player1 = player1;
 				gameData.player2 = player2;
 				gameData.tiles = this.gameBoardTiles;
-				gameData.turn = this.turn
+				gameData.turn = this.turn;
+				gameData.gameMessage = gameMessage;
 				socket.emit('gamedata', gameData);
 			}
 

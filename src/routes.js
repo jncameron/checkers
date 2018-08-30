@@ -17,7 +17,7 @@ import bluePieces from './data/BluePlayerModel';
 export const routes = [
     { path: '/game/:id', component: GameContainer, props: {user: user, player1: player1, player2: player2 }},
     { path: '/signup', component: SignUp, props: { onlineUsers: onlineUsers}},
-    { path: '/profile', component: Profile, props:{user: user}},
+    { path: '/profile/:id', component: Profile, props:{user: user}},
     { path: '/choose-game', component: ChooseGame,  props: {
             user: user, 
             onlineUsers: onlineUsers, 
@@ -28,6 +28,7 @@ export const routes = [
             bluePieces: bluePieces},
             
     },
+    { path: '/', redirect: '/sign-up'},
     { path: '*', redirect: '/choose-game'}
     
 
