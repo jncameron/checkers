@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<transition name="modal">
-			<div class="container" id="container">
+			<div class="container sign-up" id="container">
 				<div class="modal-wrapper">
 					<div class="modal-container">
 						<div class="col-md-6" style="margin: 0 0;">
@@ -19,14 +19,14 @@
 									<button @click="addUser" class="reg-button" type="button">Register</button>
 								</form>
 							</div>
-						
+
 
 							<div class="col-md-12 blank1" style="margin: 0 0;">
 								<div class="option" style="width:100%">
 									<img :src="`${baseUrl}piece.svg`" style="width:50%" />
 								</div>
 							</div>
-						
+
 						</div>
 
 						<div class="col-md-6" style="margin: 0 0;" >
@@ -63,7 +63,7 @@
 import axios from 'axios';
 import user from '../data/UserModel';
 export default {
-	props: { 
+	props: {
 		onlineUsers: {type: Array},
 
 	},
@@ -92,7 +92,7 @@ export default {
 				}, error => {
 					console.log(error)
 				});
-		}, 
+		},
 
 		validateUser() {
 			let user = this.user;
@@ -113,7 +113,7 @@ export default {
   				.catch(err => {
     				localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
   			});
-		},  
+		},
 		updateUser(update) {
 			this.user.name = update.name;
 			this.user.email = update.email;
@@ -121,7 +121,7 @@ export default {
 			this.user.id = update._id;
 			this.userOnline();
 			this.$emit('update-user', this.user)
-			
+
 		},
 		userOnline() {
 			socket.emit('login', {
@@ -148,7 +148,7 @@ export default {
 
   position: absolute;
   z-index: 9996;
-  top: 70px;
+  top: 80px;
   left: 0;
     background-image: /* tint image */
                     linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
@@ -164,20 +164,16 @@ export default {
   transition: opacity .3s ease;
 }
 
-
+.login-box,
 .register-box {
 	background-color: #B71C1C;
 	height: 50%;
 	margin: 0 0;
 	border: #000 solid 3px;
-
+	padding: 40px 15px;
 }
 .login-box {
 	background-color: #4072a0;
-	height: 50%;
-	margin: 0 0;
-	border: #000 solid 3px;
-
 }
 
 .reg-button {
@@ -239,6 +235,7 @@ export default {
 .modal-container {
 	height:80%;
 	width: 40%;
+	min-width: 800px;
 	margin: auto;
 	display: flex;
 	justify-content: center;
@@ -249,7 +246,7 @@ export default {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
 	transition: all .3s ease;
 	font-family: 'Audiowide', cursive;
-	
+
 }
 
 .col-md-6 {

@@ -4,23 +4,23 @@
         <div class="navbar-header">
         <img class=" nav navbar-brand"  src="./checkers-icon.svg" style="margin-left:5px;margin-top:20px">
         <h1 class="navbar-brand" style="color:#FFF;font-size:32px;margin-top:20px">Checkers</h1>
-        </div> 
-        
+        </div>
+
         <div class="nav navbar navbar-right"  style="margin-bottom:0;margin-top:10px;">
-            
+
             <ul class="nav navbar-nav" style="margin-top:7px" v-if="user.name.length > 0">
                 <router-link   :to="'/choose-game'" tag="li" active-class="active"><a class="nav-link">PLAY</a></router-link>
             </ul>
             <ul class="nav navbar-nav" style="margin-top:7px" v-else>
-                <router-link   :to="'/signup'" tag="li" active-class="active" ><a class="nav-link" style="margin-right:10px;">SIGN IN</a></router-link>
+                <router-link   :to="'/signup'" tag="li" active-class="hidden" ><a class="nav-link" style="margin-right:10px;">SIGN IN</a></router-link>
             </ul>
             <div class="nav navbar-nav">
                 <img v-if="user.name.length > 0" class=" nav navbar-brand profile-image"  @click="toProfile" :src="getAvatarLink()" style="margin-top:0px;margin-left:5px;margin-right:15px;">
                 <p style="margin-bottom:0px">{{user.name}}</p>
             </div>
-       
+
         </div>
-            
+
 
     </div>
     </nav>
@@ -43,11 +43,11 @@ export default {
     },
 
     methods: {
-        setUser(user) {           
+        setUser(user) {
             if(this.userName.length > 0) {
                 this.signedIn = true;
             }
-            
+
         },
         getAvatarLink() {
             return `${baseUrl}${this.user.avatar}`
@@ -80,7 +80,7 @@ h1 {
     margin-top: 15px;
     margin-bottom: 5px;
     font-size: 24px;
-    
+
 }
 
 img {
