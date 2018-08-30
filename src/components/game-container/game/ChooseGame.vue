@@ -46,7 +46,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-md-12 send-link" style="margin: 0 0;">
+							<div class="col-md-12 continue" style="margin: 0 0;">
 								<div class="option">
 									<h2>Continue Game</h2>
 								</div>
@@ -288,6 +288,12 @@ export default {
 	margin: 0 0;
 	border: #000 solid 3px;
 }
+.computer:hover {
+	background-image: url('../../../assets/under-construction.svg');
+	background-position: center;
+	background-repeat: no-repeat;
+
+}
 .two-local {
 	background-color: #000;
 	height: 50%;
@@ -328,12 +334,17 @@ export default {
 .play-button:focus{
     outline: none;
 }
-.send-link {
+.continue{
 	
 	background-color: #4072a0;
 	height: 50%;
 	margin: 0 0;
 	border: #000 solid 3px;
+}
+.continue:hover {
+	background-image: url('../../../assets/under-construction.svg');
+	background-position: center;
+	background-repeat: no-repeat;
 
 }
 #button {
