@@ -285,7 +285,7 @@ export default {
 				if ((t > selectedTile.pos || selectedPiece.crown === true)
 					&& !redOccupied.includes(t)
 					&& !blueOccupied.includes(t)
-					&& t !== falset !== false
+					&& t !== false
 					&& color === 'red') {
 						allowedMoves.push(`tile${t}`);
 				}

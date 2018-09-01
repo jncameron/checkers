@@ -92,7 +92,7 @@ export default {
 		//Request initial game state on game created (or page refresh)
 		if(this.player1.name !== 'Local Larry' && this.player2.name !== 'Local Larry') {
 			let url = window.location.href;
-			let id = url.split('game/').pop();t id = url.split('game/').pop();
+			let id = url.split('game/').pop();
 			console.log("NEW ID " + id)
 			let room = url.split('game/').pop();
 			socket.emit('joinroom', room);

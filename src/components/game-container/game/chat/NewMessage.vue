@@ -23,8 +23,6 @@ export default {
     },
     mounted: function() {
             let open = "";
-            console.log(msg)
-
             socket.emit('chat', {
                 usr: this.user.name,
                 open: "open chat."
