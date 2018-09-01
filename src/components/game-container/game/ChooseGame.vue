@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div id="choose-game">
 		<transition name="modal">
 			<div class="modal-mask">
 				<div class="modal-wrapper">
@@ -34,7 +34,7 @@
 											</div>
 											<div class="col-md-1"></div>
 											<div class="col-md-2">
-												<img :src="`${baseUrl}${player.avatar}`" alt="" 
+												<img :src="`${baseUrl}${player.avatar}`" alt=""
 												style="height:30px;width:30px;margin-top:5px;">
 											</div>
 											<div class="col-md-1"></div>
@@ -79,8 +79,8 @@ export default {
 		redPieces: {type: Object},
 		bluePieces: {type: Object},
 		newGame: {type: Object},
-		
-		
+
+
   },
   data() {
     return {
@@ -133,7 +133,7 @@ export default {
 			this.newGame.turn = 'red';
 			this.newGame.tiles = gameBoardTiles;
 			console.log(this.newGame)
-			
+
 
 			let gameId = "";
 
@@ -179,7 +179,7 @@ export default {
 			this.newGame.turn = 'red';
 			this.newGame.tiles = gameBoardTiles;
 			console.log(this.newGame)
-			
+
 			let gameId = "";
 
 			this.$http.post('http://localhost:3000/newgame/', this.newGame)
@@ -193,7 +193,7 @@ export default {
 					console.log(error);
 			});
 			this.gameCreated = true;
-			
+
 		},
 		getRandom() {
 			return Math.random();
@@ -209,6 +209,8 @@ export default {
   position: absolute;
   z-index: 9996;
   top: 70px;
+  padding: 25px 15px;
+	
   left: 0;
     background-image: /* tint image */
                     linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
@@ -232,6 +234,7 @@ export default {
 .modal-container {
 	height:80%;
 	width: 40%;
+	min-width: 800px;
 	margin: auto;
 	display: flex;
 	justify-content: center;
@@ -242,7 +245,7 @@ export default {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
 	transition: all .3s ease;
 	font-family: 'Audiowide', cursive;
-	
+
 }
 
 .col-md-6 {
@@ -267,6 +270,9 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	h2{
+		margin-top: 10px;
+	}
 }
 
 .option:hover {
@@ -330,8 +336,13 @@ export default {
 .play-button:focus{
     outline: none;
 }
+<<<<<<< HEAD
 .continue{
 	
+=======
+.send-link {
+
+>>>>>>> checkers/richard
 	background-color: #4072a0;
 	height: 50%;
 	margin: 0 0;

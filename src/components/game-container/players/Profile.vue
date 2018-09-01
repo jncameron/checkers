@@ -9,9 +9,9 @@
 								<img v-if="updateAvatar === false" :src="getAvatarLink()" style="width:80%;margin-top:30px;">
 
 								<button v-if="updateAvatar === false" class="edit-details" type="button" @click="editAvatar()">change</button>
-                                
-								<avatar-choice :user="user" v-if="updateAvatar" 
-									@confirmAvatar="confirmAvatar()" 
+
+								<avatar-choice :user="user" v-if="updateAvatar"
+									@confirmAvatar="confirmAvatar()"
 									style="width:75%;float:none;margin: 0 auto;"></avatar-choice>
 							</div>
 
@@ -22,7 +22,7 @@
                                     <h2>Win / Loss Record</h2>
 								</div>
 							</div>
-						
+
 						</div>
 
 						<div class="col-md-6" style="margin: 0 0;" >
@@ -35,9 +35,9 @@
 								<div v-if="updateDetails" class="option" style="width:100%">
 									<label for="edit-name">Name</label>
 									<input v-model.lazy="user.name" id="edit-name" type="text" class="form-control" style="margin-bottom:10px;">
-									<label for="edit-email">Email</label>                                    
+									<label for="edit-email">Email</label>
 									<input v-model.lazy="user.email" id="edit-email" type="text" class="form-control" style="margin-bottom:10px;">
-									<label for="edit-password">New Password</label>									
+									<label for="edit-password">New Password</label>
 									<input id="edit-password" type="password" class="form-control">
 									<button class="confirm-details" type="button" @click="confirmDetails()">confirm</button>
 								</div>
@@ -147,6 +147,7 @@ export default {
     z-index: 9996;
     top: 70px;
     left: 0;
+	padding: 40px 15px 20px;
 
     background-image: /* tint image */
                     linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
@@ -168,7 +169,7 @@ export default {
 	height: 50%;
 	margin: 0 0;
 	border: #000 solid 3px;
-
+	padding: 20px 15px;
 }
 .opponent-record-box {
 	background-color: #4072a0;
@@ -180,7 +181,7 @@ export default {
 .user-win-loss {
 	background-color: #000;
 	height: 50%;
-	
+
 	border: #000 solid 3px;
     align-items: center;
     width:80%;
@@ -231,6 +232,7 @@ export default {
 .modal-container {
 	height:80%;
 	width: 40%;
+	min-width: 800px;
 	margin: auto;
 	display: flex;
 	justify-content: center;
@@ -241,7 +243,7 @@ export default {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
 	transition: all .3s ease;
 	font-family: 'Audiowide', cursive;
-	
+
 }
 
 .col-md-6 {
@@ -271,5 +273,5 @@ export default {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
 }
-    
+
 </style>
