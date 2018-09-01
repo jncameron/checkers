@@ -285,7 +285,7 @@ export default {
 				if ((t > selectedTile.pos || selectedPiece.crown === true)
 					&& !redOccupied.includes(t)
 					&& !blueOccupied.includes(t)
-					&& t !== false
+					&& t !== falset !== false
 					&& color === 'red') {
 						allowedMoves.push(`tile${t}`);
 				}
@@ -677,4 +677,4 @@ export default {
   svg {
     background-color: #D3D3D3
   }
-</style>
+</style> 

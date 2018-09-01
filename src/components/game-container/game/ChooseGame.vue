@@ -24,7 +24,9 @@
 								<div v-if="connectOnline === true" class="choose-player" >
 									<h2>Players Online</h2>
 									<hr>
-									<div class="player-box" v-for="(player,index) in onlineUsers" v-if="player.name !== user.name 
+									<div class="player-box" v-for="(player,index) in onlineUsers" 
+											:key="index" 
+											v-if="player.name !== user.name 
 											&& onlineUsers.length > 1">
 										<div id="player" style="background-color:#d3d3d3">
 											<div class="col-md-4">
@@ -94,20 +96,14 @@ export default {
     },
 
 	methods: {
-	listenForUsers() {
-			console.log('oh hai')
+		listenForUsers() {
 			let updateOnlineUsers = this.updateOnlineUsers;
 			socket.on('login', function(data) {
 				updateOnlineUsers(data);
 			});
 		},
 		playOnline() {
-			console.log("PLAY ONLINE: " + JSON.stringify(this.onlineUsers))
-			console.log(Array.isArray(this.onlineUsers));
-			console.log("This User: " + JSON.stringify(this.user));
 			this.connectOnline = true;
-
-			// this.$router.push('/players-online');
 		},
 		updateOnlineUsers(users) {
 			this.onlineUsers = users;
@@ -351,17 +347,6 @@ export default {
 
 	-webkit-appearance: none;
 }
-
-
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
 
 .modal-enter {
   opacity: 0;

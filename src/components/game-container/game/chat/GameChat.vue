@@ -4,7 +4,8 @@
 
         </div>
         <div id="all-messages" style="height:440px;overflow:hidden;">
-            <div v-for="usrMsg in usrMsgs">
+            <div v-for="(usrMsg, index) in usrMsgs"
+					:key="index">
                 <div v-if="usrMsg[1] !== user.name">
                     <red-player-opponent-message v-if="opponent.color === 'red'" :usrMsg="usrMsg[0]" :opponent="opponent"></red-player-opponent-message>
                     <blue-player-opponent-message v-if="opponent.color === 'blue'" :usrMsg="usrMsg[0]" :opponent="opponent"></blue-player-opponent-message>                

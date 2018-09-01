@@ -7,36 +7,40 @@
         <rect v-on:click="dropPiece()" x=0 y=0 width="100" height="100" fill="dimgray" />
 
         <rect v-if="selectedPieceXY.length === 2
-                    && selectedPieceXY[0] === x 
-                    && selectedPieceXY[1] === y
-                    && turn === 'red'"
-                    x=0 y=0 width="100" height="100" fill="#B71C1C" fill-opacity="0.4"/>
+			&& selectedPieceXY[0] === x 
+			&& selectedPieceXY[1] === y
+			&& turn === 'red'"
+			x=0 y=0 width="100" height="100" fill="#B71C1C" fill-opacity="0.4"/>
 
         <rect v-if="selectedPieceXY.length === 2
-                    && selectedPieceXY[0] === x 
-                    && selectedPieceXY[1] === y
-                    && turn === 'blue'"
-                    x=0 y=0 width="100" height="100" fill="#4072a0" fill-opacity="0.4"/>
+			&& selectedPieceXY[0] === x 
+			&& selectedPieceXY[1] === y
+			&& turn === 'blue'"
+			x=0 y=0 width="100" height="100" fill="#4072a0" fill-opacity="0.4"/>
 
-        <rect v-for=" move in validMoveXY"
-          v-if="move[0] === x && move[1] === y 
+        <rect v-for=" (move,index) in validMoveXY"
+			:key="index"
+          	v-if="move[0] === x && move[1] === y 
             && turn === 'red' && allowedJumps.length === 0
             && !availableJumps"
-          v-on:click="dropPiece()" x=0 y=0 width="100" height="100" fill="#B71C1C" fill-opacity="0.5"/>
+          	v-on:click="dropPiece()" x=0 y=0 width="100" height="100" fill="#B71C1C" fill-opacity="0.5"/>
 
-        <rect v-for=" move in validMoveXY"
-          v-if="move[0] === x && move[1] === y 
+        <rect v-for=" (move,index) in validMoveXY"
+			:key="index"
+          	v-if="move[0] === x && move[1] === y 
             && turn === 'blue' && allowedJumps.length === 0
             && !availableJumps"
-          v-on:click="dropPiece()" x=0 y=0 width="100" height="100" fill="#4072a0" fill-opacity="0.5"/>
+          	v-on:click="dropPiece()" x=0 y=0 width="100" height="100" fill="#4072a0" fill-opacity="0.5"/>
 
-        <rect v-for=" jump in validJumpXY"
-          v-if="jump[0] === x && jump[1] === y && turn === 'red'"
-          v-on:click="dropPiece()" x=0 y=0 width="100" height="100" fill="#B71C1C" fill-opacity="0.5"/>
+        <rect v-for=" (jump, index) in validJumpXY"
+			:key="index"
+          	v-if="jump[0] === x && jump[1] === y && turn === 'red'"
+          	v-on:click="dropPiece()" x=0 y=0 width="100" height="100" fill="#B71C1C" fill-opacity="0.5"/>
 
-        <rect v-for=" jump in validJumpXY"
-          v-if="jump[0] === x && jump[1] === y && turn === 'blue'"
-          v-on:click="dropPiece()" x=0 y=0 width="100" height="100" fill="#4072a0" fill-opacity="0.5"/>
+        <rect v-for=" (jump,index) in validJumpXY"
+			:key="index"
+         	v-if="jump[0] === x && jump[1] === y && turn === 'blue'"
+          	v-on:click="dropPiece()" x=0 y=0 width="100" height="100" fill="#4072a0" fill-opacity="0.5"/>
         
     </g>
   </svg>
@@ -45,29 +49,29 @@
 <script>
 
 export default {
-  props: 
-  {
-        x:{type: Number}, 
-        y:{type: Number},
-        selectedPieceXY: {type: Array},
-        validMoveXY: {type: Array},
-        validJumpXY: {type: Array},
-        turn: {type: String},
-        occupied: {type: String},
-        allowedJumps: {type: Array},
-        availableJumps: {type: Array}
-        },
+props: 
+{
+	x:{type: Number}, 
+	y:{type: Number},
+	selectedPieceXY: {type: Array},
+	validMoveXY: {type: Array},
+	validJumpXY: {type: Array},
+	turn: {type: String},
+	occupied: {type: String},
+	allowedJumps: {type: Array},
+	availableJumps: {type: Array}
+},
 
-  data() {
-    return {
+data() {
+	return {
 
-    }
-  },
-  methods: {
-    dropPiece() {
-      this.$emit('dropPiece', [this.x, this.y]);
-    },
-  }
+	}
+},
+ 	methods: {
+		dropPiece() {
+			this.$emit('dropPiece', [this.x, this.y]);
+		},
+  	}
 
 
 }

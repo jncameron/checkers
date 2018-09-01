@@ -50,7 +50,5 @@ Profile:
 GameChat: 
 * Does not scroll all the way to the bottom on new message
 
-GameBoard: 
-* If ANY piece can jump, player must jump that piece
-* 'multijumps' - if jump completed, new tile is selected, if valid jumps found, player can continue move (do not change turn)
+
 

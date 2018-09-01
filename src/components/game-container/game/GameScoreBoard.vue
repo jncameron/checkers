@@ -11,6 +11,7 @@
                 <div id="player-one-captures">
                 <svg x="0" y="0" height="80" width="155">
                     <player-one-captures v-for="(piece,index) in player1Captures"
+                        :key="index"
                         :color="'blue'" :transform='transformPiece(index)'>
                     </player-one-captures>
                 </svg>
@@ -22,6 +23,7 @@
                 <div id="player-two-captures">
                 <svg x="0" y="0" height="80" width="155">
                     <player-two-captures v-for="(piece,index) in player2Captures"
+                    	:key="index"
                         :color="'blue'" :transform='transformPiece(index)'>
                     </player-two-captures>
                 </svg>
@@ -38,6 +40,7 @@
                 <div id="player-two-captures">
                     <svg x="0" y="0" height="80" width="155">
                         <player-two-captures v-for="(piece,index) in player2Captures"
+                        :key="index"
                         :color="'red'" :transform='transformPiece(index)'>
                         </player-two-captures>
                     </svg>
@@ -49,6 +52,7 @@
                 <div id="player-one-captures">
                     <svg x="0" y="0" height="80" width="155">
                         <player-one-captures v-for="(piece,index) in player1Captures"
+                        :key="index"
                         :color="'red'" :transform='transformPiece(index)'>
                         </player-one-captures>
                     </svg>
@@ -85,112 +89,111 @@ export default {
 
 
   },
-  data() {
-    return {
-      gameMessage: "Good Luck!",
-      turnMessage: "",
-      pieceX: [0, 24, 48, 72, 96, 120, 0, 24, 48, 72, 96, 120],
-      pieceY: [0, 0, 0, 0, 0, 0, 40, 40, 40, 40, 40, 40],
-      redCaptured:[],
-      blueCaptured:[],
-    };
-  },
+	data() {
+		return {
+		gameMessage: "Good Luck!",
+		turnMessage: "",
+		pieceX: [0, 24, 48, 72, 96, 120, 0, 24, 48, 72, 96, 120],
+		pieceY: [0, 0, 0, 0, 0, 0, 40, 40, 40, 40, 40, 40],
+		redCaptured:[],
+		blueCaptured:[],
+		};
+	},
 
   	mounted: function() {
 		this.listenForGameMessages();
 	},
-  components: {
-    "player-two": Player2,
-    "player-one": Player1,
-    "player-two-captures": Player2Captures,
-    "player-one-captures": Player1Captures
-  },
-  methods: {
-    
-    //move and turn info sent to opponent via socket
-    listenForGameMessages() {
-      let setGameMessage = this.setGameMessage;
-      let setTurnMessage = this.setTurnMessage;
-      socket.on('gamedata', function(data) {
-        //TODO: game messages such as 'JOHN has Captured your Piece' etc.
-        setGameMessage(data.gameMessage);
-        setTurnMessage(data.turn);
-      });
-    },
+	components: {
+		"player-two": Player2,
+		"player-one": Player1,
+		"player-two-captures": Player2Captures,
+		"player-one-captures": Player1Captures
+	},
+	methods: {
+		
+		//move and turn info sent to opponent via socket
+		listenForGameMessages() {
+			let setGameMessage = this.setGameMessage;
+			let setTurnMessage = this.setTurnMessage;
+			socket.on('gamedata', function(data) {
+				//TODO: game messages such as 'JOHN has Captured your Piece' etc.
+				setGameMessage(data.gameMessage);
+				setTurnMessage(data.turn);
+			});
+		},
 
-    updateCaptured() {
-      if(i[0] === 'r') {
-        this.redCaptured.push(i)
-      } else if(i[0] === 'b') {
-        this.blueCaptured.push(i)
-      }
-    },
+		updateCaptured() {
+			if(i[0] === 'r') {
+				this.redCaptured.push(i)
+			} else if(i[0] === 'b') {
+				this.blueCaptured.push(i)
+			}
+		},
 
     transformPiece(i) {
 
-      let x = this.pieceX[i];
-      let y = this.pieceY[i];
-      return `translate(${x},${y})`;
+		let x = this.pieceX[i];
+		let y = this.pieceY[i];
+		return `translate(${x},${y})`;
     },
     setGameMessage(message) {
-      this.gameMessage = message;
+      	this.gameMessage = message;
     },
         setTurnMessage(message) {
-      let turnMessage = this.turnMessage;
-      if((message === this.player1.color && this.player1.name === this.user.name)
-        || (message === this.player2.color && this.player2.name === this.user.name)) {
-        this.turnMessage = `Your Move`;
-      } else if (message !== this.player1.color && this.player1.name === this.user.name) {
-        this.turnMessage = `${this.player2.name}'s Move`;
-      } else if (message !== this.player2.color && this.player2.name === this.user.name) {
-        this.turnMessage = `${this.player1.name}'s Move`;
-      }
-
-    },
-  }
+			let turnMessage = this.turnMessage;
+			if((message === this.player1.color && this.player1.name === this.user.name)
+				|| (message === this.player2.color && this.player2.name === this.user.name)) {
+				this.turnMessage = `Your Move`;
+			} else if (message !== this.player1.color && this.player1.name === this.user.name) {
+				this.turnMessage = `${this.player2.name}'s Move`;
+			} else if (message !== this.player2.color && this.player2.name === this.user.name) {
+				this.turnMessage = `${this.player1.name}'s Move`;
+			}
+		},
+	}
 };
 </script>
 
 <style scoped>
 p {
-  margin-top: 5px;
-  margin-bottom: 0;
-  font-family: Roboto;
+	margin-top: 5px;
+	margin-bottom: 0;
+	font-family: Roboto;
 }
 
 #box {
-  background-color: #d3d3d3;
+  	background-color: #d3d3d3;
 }
 
 #player-two-captures {
-  height: 95px;
-  background-color: rgba(211,211,211,0.2);
-  margin: 15px 0;
+	height: 95px;
+	background-color: rgba(211,211,211,0.2);
+	margin: 15px 0;
 }
 
 #play-blue {
-  background-color: #4072a0;
+  	background-color: #4072a0;
 }
 
 #play-red {
-  background-color: #b71c1c;
+  	background-color: #b71c1c;
 }
 
 #player-one-captures {
-  height: 95px;
-  background-color: rgba(211,211,211,0.2);
-  margin: 15px 0px;
+	height: 95px;
+	background-color: rgba(211,211,211,0.2);
+	margin: 15px 0px;
 }
 
 #container {
-  padding: 0 0;
+	padding: 0 0;
 }
 
 #gameMessages {
-  height: 120px;
-  background-color: #d3d3d3;
-  margin: 15px 0;
-  padding: 10px 10px;
+	height: 120px;
+	background-color: #d3d3d3;
+	margin: 15px 0;
+	padding: 10px 10px;
 }
 </style>
 

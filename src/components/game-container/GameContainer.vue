@@ -91,8 +91,8 @@ export default {
 	mounted: function() {
 		//Request initial game state on game created (or page refresh)
 		if(this.player1.name !== 'Local Larry' && this.player2.name !== 'Local Larry') {
-						let url = window.location.href;
-			let id = url.split('game/').pop();
+			let url = window.location.href;
+			let id = url.split('game/').pop();t id = url.split('game/').pop();
 			console.log("NEW ID " + id)
 			let room = url.split('game/').pop();
 			socket.emit('joinroom', room);
@@ -231,28 +231,28 @@ export default {
 
 <style scoped>
 
-	#game{
-		transform: translate(-50%, -50%);
-		position: absolute;
-	}
+#game {
+	transform: translate(-50%, -50%);
+	position: absolute;
+}
 
-	@media (min-width: 600px) {
-		.blank-col {
-			width: 10px
-		}
+@media (min-width: 600px) {
+	.blank-col {
+		width: 10px
 	}
+}
 
-	@media (min-width: 1500px) {
-		.blank-col {
-			width: 60px;
-		}
+@media (min-width: 1500px) {
+	.blank-col {
+		width: 60px;
 	}
-	@media (min-width: 1650px) {
-		.blank-col {
-			width: 140px;
-		}
+}
+@media (min-width: 1650px) {
+	.blank-col {
+		width: 140px;
 	}
+}
 </style>
-
+ 
 
 

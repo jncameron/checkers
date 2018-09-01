@@ -45,7 +45,8 @@
 							<div class="col-md-12 opponent-record-box" style="margin: 0 0;">
 								<div class="option" style="width:100%">
 									<h3>Record by opponent</h3>
-									<div class="game-box" v-for="(game,index) in activeGames">
+									<div class="game-box" v-for="(game,index) in activeGames"
+										:key="index">
 										<div id="game" style="background-color:#d3d3d3">
 											<div class="col-md-4">
 												<h4>game</h4>

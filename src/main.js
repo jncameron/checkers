@@ -19,16 +19,17 @@ const router = new VueRouter({
 Vue.config.productionTip = false
 
 var vm = new Vue({
-  http: {
-    root: '/root',
-    headers: {
-      Authorization: 'Content-Type'
-    }
+	http: {
+		root: '/root',
+		headers: {
+		Authorization: 'Content-Type'
+		}
 
-  },
-  store,
-  router,
-  render: h => h(App)
+	},
+	store,
+	router,
+	render: h => h(App)
 }).$mount('#app')
 
 Vue.config.devtools = true;
+ 

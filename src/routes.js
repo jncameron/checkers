@@ -25,11 +25,10 @@ export const routes = [
             player1: player1,
             player2: player2,
             redPieces: redPieces,
-            bluePieces: bluePieces},
-            
+            bluePieces: bluePieces},   
     },
     { path: '/', redirect: '/sign-up'},
     { path: '*', redirect: '/choose-game'}
     
-
+ 
 ]

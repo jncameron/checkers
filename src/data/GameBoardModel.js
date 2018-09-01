@@ -34,4 +34,4 @@ let gameBoardTiles = {
     tile32: { pos: 32, x: 600, y: 700, occupied: 'blue', validMoves: [27,28,false,false], validJumps:[23,false,false,false]}
 };
 
-  export default gameBoardTiles;
+export default gameBoardTiles;

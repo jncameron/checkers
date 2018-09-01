@@ -2,33 +2,33 @@
     <div>
     <transition name="modal">
     <div class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
+    	<div class="modal-wrapper">
+			<div class="modal-container">
 
-          <div class="modal-header">
-            <slot name="header">
-              Game Over
-            </slot>
-          </div>
+			<div class="modal-header">
+				<slot name="header">
+				Game Over
+				</slot>
+			</div>
 
-          <div class="modal-body">
-            <slot name="body">
-              {{ winnerName }} Wins
-            </slot>
-          </div>
+			<div class="modal-body">
+				<slot name="body">
+				{{ winnerName }} Wins
+				</slot>
+			</div>
 
-          <div class="modal-footer">
-            <slot name="footer">
-              <button class="btn btn-primary" @click="navigateToProfile()">
-                Game Stats
-              </button>
-              <button class="btn btn-primary" @click="navigateToLobby()">
-                Lobby
-              </button>
-            </slot>
-          </div>
-        </div>
-      </div>
+			<div class="modal-footer">
+				<slot name="footer">
+				<button class="btn btn-primary" @click="navigateToProfile()">
+					Game Stats
+				</button>
+				<button class="btn btn-primary" @click="navigateToLobby()">
+					Lobby
+				</button>
+				</slot>
+			</div>
+			</div>
+      	</div>
     </div>
   </transition>
     </div>
@@ -112,15 +112,6 @@ export default {
     font-family: 'Permanent Marker';
     font-size: 18px;
 }
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
 
 .modal-enter {
   opacity: 0;
