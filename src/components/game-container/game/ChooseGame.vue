@@ -336,13 +336,8 @@ export default {
 .play-button:focus{
     outline: none;
 }
-<<<<<<< HEAD
 .continue{
 	
-=======
-.send-link {
-
->>>>>>> checkers/richard
 	background-color: #4072a0;
 	height: 50%;
 	margin: 0 0;
