@@ -100,8 +100,6 @@ export default {
 	data() {
 			return {
 				newGame: newGame,
-				gameBoardTiles: {},
-				turn: 'red',
 				selectedPieceXY: [],
 				selectedPiece: {},
 				selectedTile: {},
@@ -466,7 +464,7 @@ export default {
 		},
 
 		//implemented after dropPiece()
-		//TODO: if multijump available- do not change turn
+		// TODO: if multijump available- do not change turn
 		changeTurn() {
 			this.setHasJumped(false);
 			this.setAvailableJumps(false);

@@ -3,9 +3,9 @@
         <div style="height:40px;background-color:#7f0000;color:#FFF">
 
         </div>
-        <div id="all-messages" style="height:440px;overflow:hidden;">
+            <div id="all-messages" style="height:440px;overflow-x:hidden;overflow-y:auto;">
             <div v-for="(usrMsg, index) in usrMsgs"
-					:key="index">
+                    :key="index">
                 <div v-if="usrMsg[1] !== user.name">
                     <red-player-opponent-message v-if="opponent.color === 'red'" :usrMsg="usrMsg[0]" :opponent="opponent"></red-player-opponent-message>
                     <blue-player-opponent-message v-if="opponent.color === 'blue'" :usrMsg="usrMsg[0]" :opponent="opponent"></blue-player-opponent-message>                
@@ -15,9 +15,7 @@
                     <blue-player-user-message v-if="opponent.color === 'red'" :usrMsg="usrMsg[0]" :user="user"></blue-player-user-message>  
                     <red-player-user-message v-if="opponent.color === 'blue'" :usrMsg="usrMsg[0]" :user="user"></red-player-user-message>  
                 </div>
-    
             </div>
-   
         </div>
 
         <div>
@@ -92,6 +90,14 @@ export default {
     mounted: function() {
         this.listenForMessages();
     },
+    watch:{
+        usrMsgs: {
+            handler: function() {
+                this.scrollToEnd()
+            },
+            deep: true
+        }
+    }
 }
 </script>
 
@@ -106,5 +112,6 @@ h1 {
     margin-bottom: 0px;
 
 }
+
 </style>
 

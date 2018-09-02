@@ -59,7 +59,7 @@ props:
 	turn: {type: String},
 	occupied: {type: String},
 	allowedJumps: {type: Array},
-	availableJumps: {type: Array}
+	availableJumps: {type: Boolean}
 },
 
 data() {

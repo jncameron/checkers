@@ -32,4 +32,6 @@ var vm = new Vue({
 }).$mount('#app')
 
 Vue.config.devtools = true;
+Vue.config.silent = true;
+Vue.config.productionTip = false;
  

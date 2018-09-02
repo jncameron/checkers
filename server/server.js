@@ -1,6 +1,7 @@
 const app = require("./app");
 const debug = require("debug")("node-vue");
 const http = require("http");
+const https = require("https");
 const socket = require("socket.io");
 
 
@@ -46,7 +47,7 @@ const onListening = () => {
   const addr = server.address();
   const bind = typeof port === "string" ? "pipe " + port : "port " + port;
   console.log("Listening on: " + bind);
-  console.log('Server at: http://localhost:' + port)
+  console.log('Server at: https://localhost:' + port)
 };
 
 const port = normalizePort(process.env.PORT || "3000");
