@@ -86,7 +86,7 @@
 	
 		</div>
 
-    	<!-- Left and right controls -->
+		<!-- Left and right controls -->
 		<a class="left carousel-control" href="#myCarousel" data-slide="prev">
 			<span class="glyphicon glyphicon-chevron-left"></span>
 			<span class="sr-only">Previous</span>
@@ -95,8 +95,8 @@
 			<span class="glyphicon glyphicon-chevron-right"></span>
 			<span class="sr-only">Next</span>
 		</a>
-  	</div>
-  	<button class="confirm-avatar" type="button" @click="confirmAvatar()">confirm</button>
+	</div>
+	<button class="confirm-avatar" type="button" @click="confirmAvatar()">confirm</button>
 </div>
 
 </template>
@@ -106,15 +106,18 @@ export default {
     props: {
         user: Object
     },
-    data: {
-        updateAvatar: false
+    data() {
+		return {
+			updateAvatar: false
+		}
+        
     },
     methods: {
 
         confirmAvatar() {
             let activeImageDiv = document.getElementsByClassName('active')[0];
             //TODO: WILL NEED TO UPDATE THE SPLIT TO .split('.com/') for PROD
-            let activeImage = activeImageDiv.children[0].src.split('3000/').pop();;
+            let activeImage = activeImageDiv.children[0].src.split('3000/').pop();
             this.user.avatar = activeImage;
 
 

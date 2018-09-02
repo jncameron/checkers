@@ -23,7 +23,7 @@
                 <div id="player-two-captures">
                 <svg x="0" y="0" height="80" width="155">
                     <player-two-captures v-for="(piece,index) in player2Captures"
-                    	:key="index"
+                        :key="index"
                         :color="'blue'" :transform='transformPiece(index)'>
                     </player-two-captures>
                 </svg>
@@ -100,7 +100,7 @@ export default {
 		};
 	},
 
-  	mounted: function() {
+    mounted: function() {
 		this.listenForGameMessages();
 	},
 	components: {
@@ -111,45 +111,36 @@ export default {
 	},
 	methods: {
 		
-		//move and turn info sent to opponent via socket
-		listenForGameMessages() {
-			let setGameMessage = this.setGameMessage;
-			let setTurnMessage = this.setTurnMessage;
-			socket.on('gamedata', function(data) {
-				//TODO: game messages such as 'JOHN has Captured your Piece' etc.
-				setGameMessage(data.gameMessage);
-				setTurnMessage(data.turn);
-			});
-		},
+        //move and turn info sent to opponent via socket
+        listenForGameMessages() {
+            let setGameMessage = this.setGameMessage;
+            let setTurnMessage = this.setTurnMessage;
+            socket.on('gamedata', function(data) {
+                //TODO: game messages such as 'JOHN has Captured your Piece' etc.
+                setGameMessage(data.gameMessage);
+                setTurnMessage(data.turn);
+            });
+        },
 
-		updateCaptured() {
-			if(i[0] === 'r') {
-				this.redCaptured.push(i)
-			} else if(i[0] === 'b') {
-				this.blueCaptured.push(i)
-			}
-		},
+        transformPiece(i) {
 
-    transformPiece(i) {
-
-		let x = this.pieceX[i];
-		let y = this.pieceY[i];
-		return `translate(${x},${y})`;
-    },
-    setGameMessage(message) {
-      	this.gameMessage = message;
-    },
+            let x = this.pieceX[i];
+            let y = this.pieceY[i];
+            return `translate(${x},${y})`;
+        },
+        setGameMessage(message) {
+            this.gameMessage = message;
+        },
         setTurnMessage(message) {
-			let turnMessage = this.turnMessage;
-			if((message === this.player1.color && this.player1.name === this.user.name)
-				|| (message === this.player2.color && this.player2.name === this.user.name)) {
-				this.turnMessage = `Your Move`;
-			} else if (message !== this.player1.color && this.player1.name === this.user.name) {
-				this.turnMessage = `${this.player2.name}'s Move`;
-			} else if (message !== this.player2.color && this.player2.name === this.user.name) {
-				this.turnMessage = `${this.player1.name}'s Move`;
-			}
-		},
+            if((message === this.player1.color && this.player1.name === this.user.name)
+                || (message === this.player2.color && this.player2.name === this.user.name)) {
+                this.turnMessage = `Your Move`;
+            } else if (message !== this.player1.color && this.player1.name === this.user.name) {
+                this.turnMessage = `${this.player2.name}'s Move`;
+            } else if (message !== this.player2.color && this.player2.name === this.user.name) {
+                this.turnMessage = `${this.player1.name}'s Move`;
+            }
+        },
 	}
 };
 </script>
@@ -162,7 +153,7 @@ p {
 }
 
 #box {
-  	background-color: #d3d3d3;
+    background-color: #d3d3d3;
 }
 
 #player-two-captures {
@@ -172,11 +163,11 @@ p {
 }
 
 #play-blue {
-  	background-color: #4072a0;
+    background-color: #4072a0;
 }
 
 #play-red {
-  	background-color: #b71c1c;
+    background-color: #b71c1c;
 }
 
 #player-one-captures {

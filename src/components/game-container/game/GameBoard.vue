@@ -444,7 +444,7 @@ export default {
 							oldTile.occupied = 'empty';
 							updateGameBoardTile(`tile${oldTile.pos}`,'empty')
 							validMoveXY.length = 0;
-							validJumpXY.length = 0;;
+							validJumpXY.length = 0;
 							selectedPieceXY.length = 0;
 							
 							postMove(gameId, oldAndNewPositions);
