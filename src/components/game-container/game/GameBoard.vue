@@ -180,11 +180,12 @@ export default {
 			
 		},
 		moveComputer() {
-			let moveX = this.computerMoves[0][0]['x'];
-			let moveY = this.computerMoves[0][0]['y'];
+			let randomMove = Math.floor(Math.random()*this.computerMoves.length);
+			let moveX = this.computerMoves[randomMove][0]['x'];
+			let moveY = this.computerMoves[randomMove][0]['y'];
 			let color = this.player2.color;
 			let opponentColor = "";
-			let newMovePosition = this.computerMoves[0][1];
+			let newMovePosition = this.computerMoves[randomMove][1];
 			let computerJumps = this.computerJumps;
 			if(color === 'red') {
 				opponentColor = 'blue'
@@ -198,10 +199,10 @@ export default {
 					let newJumpPosition = computerJumps[0][1];
 					this.selectPiece([jumpX,jumpY],color,opponentColor);
 					this.dropPiece([newJumpPosition['x'],newJumpPosition['y']])
+
 				}else {
 					this.selectPiece([moveX,moveY],color,opponentColor);
 					console.log(newMovePosition)
-					console.log(gameBoardTiles[newMovePosition])
 					this.dropPiece([newMovePosition['x'],newMovePosition['y']])
 				}
 				
@@ -338,7 +339,7 @@ export default {
 					&& t !== false
 					&& color === 'blue') {
 						allowedMoves.push(`tile${t}`);
-						setComputerMoves([selectedPiece,`tile${t}`])
+						setComputerMoves([selectedPiece,gameBoardTiles[`tile${t}`]])
 				}
 				
 			});

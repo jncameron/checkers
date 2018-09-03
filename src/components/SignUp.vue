@@ -14,7 +14,7 @@
 										<label for="reg-email">Email</label>
 										<input id="reg-email" type="email" class="form-control" style="margin-bottom:10px;">
 										<label for="reg-password">Password</label>
-										<input id="reg-password" type="password" class="form-control" style="margin-bottom:25px;">
+										<input id="reg-password" type="password" v-on:keyup.13="addUser" class="form-control" style="margin-bottom:25px;">
 									</div>
 									<button @click="addUser" class="reg-button" type="button">Register</button>
 								</form>
@@ -42,7 +42,7 @@
 										<label for="email" style="margin-top:30px;">Email</label>
 										<input id="login-email" type="email" class="form-control" style="margin-bottom:10px;">
 										<label for="password">Password</label>
-										<input id="login-password" type="password" class="form-control" style="margin-bottom:25px;">
+										<input id="login-password" type="password" v-on:keyup.13="validateUser" class="form-control" style="margin-bottom:25px;">
 										<button @click="validateUser" class="login-button" type="button">Log In</button>
 									</form>
 
