@@ -5,7 +5,7 @@
 				<div class="modal-wrapper">
 					<div class="modal-container">
 						<div class="col-md-6" style="margin: 0 0;">
-							<div class="col-md-12 computer" >
+							<div class="col-md-12 computer" @click="createVsComputerGame()" >
 								<div class="option">
 									<h2>VS Computer</h2>
 								</div>
@@ -107,6 +107,46 @@ export default {
 		},
 		updateOnlineUsers(users) {
 			this.onlineUsers = users;
+		},
+		createVsComputerGame(button) {
+			this.player1.name = this.user.name;
+			this.player1.avatar = this.user.avatar;
+			this.player1.email = this.user.email;
+			let assignColor = this.getRandom();
+			console.log("ASSIGNCOLOR: " + assignColor);
+			if(assignColor <= 0.5) {
+				this.player1.pieces = this.redPieces;
+				this.player1.color = 'red';
+				this.player2.pieces = this.bluePieces;
+				this.player2.color = 'blue';
+			} else if (assignColor > 0.5 ) {
+				this.player1.pieces = this.bluePieces;
+				this.player1.color = 'blue';
+				this.player2.pieces = this.redPieces;
+				this.player2.color = 'red';
+			}
+			this.player2.name = "Computer";
+			this.player2.avatar = "robot.svg";
+			this.player2.email = "computer@computermail.com";
+			this.newGame.player1 = this.player1;
+			this.newGame.player2 = this.player2;
+			this.newGame.turn = 'red';
+			this.newGame.tiles = gameBoardTiles;
+			console.log(this.newGame)
+
+
+			let gameId = "";
+
+			this.$http.post(`${this.baseUrl}newgame/`, this.newGame)
+				.then(response => {
+					gameId = response.body.id
+					this.newGame.id = gameId;
+					console.log(this.newGame);
+					this.$router.push({path: '/game/' + gameId, params: { gameId: this.$route.params.gameId }})
+				}, error => {
+					console.log(error);
+			});
+			this.gameCreated = true;
 		},
 		createLocalGame(button) {
 			this.player1.name = this.user.name;

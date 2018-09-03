@@ -81,7 +81,7 @@ io.on("connection", (socket) => {
 	socket.on('login', (data) => {
 		let unique = true;
 		onlineUsers.forEach(function(user) {
-			if(user['email'] === data['email']) {
+			if(user['id'] === data['_id']) {
 				unique = false;
 			}
 		})

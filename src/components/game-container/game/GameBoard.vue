@@ -3,23 +3,23 @@
 	<game-finished v-if="gameStatus === 'OVER'" :winnerName="winnerName" @close="showModal = false">
     </game-finished>
     <svg viewBox="0 0 800 800" 
-      xmlns="http://www.w3.org/2000/svg" version="1.1"
-	  xmlns:xlink="http://www.w3.org/1999/xlink"
-      style="position:relative;">
-      <defs> 
-        <linearGradient id="redGradient" y2="60%">
-          <stop offset="0%" stop-color="#7f0000" />
-          <stop offset="100%" stop-color="#b71c1c" />
-        </linearGradient>
-        <linearGradient id="blueGradient" y2="60%">
-          <stop offset="50%" stop-color="#34537c" />
-          <stop offset="100%" stop-color="#4072a0" />
-        </linearGradient>
+		xmlns="http://www.w3.org/2000/svg" version="1.1"
+		xmlns:xlink="http://www.w3.org/1999/xlink"
+		style="position:relative;">
+		<defs> 
+		<linearGradient id="redGradient" y2="60%">
+				<stop offset="0%" stop-color="#7f0000" />
+				<stop offset="100%" stop-color="#b71c1c" />
+		</linearGradient>
+		<linearGradient id="blueGradient" y2="60%">
+			<stop offset="50%" stop-color="#34537c" />
+			<stop offset="100%" stop-color="#4072a0" />
+			</linearGradient>
       </defs>
       <board-tile v-for="(tile, index) in gameBoardTiles"
 				:key="index"
-			  	:x="gameBoardTiles[(index)]['x']"
-      			:y="gameBoardTiles[(index)]['y']"
+				:x="gameBoardTiles[(index)]['x']"
+				:y="gameBoardTiles[(index)]['y']"
 				:turn="turn"
 				:occupied="tile.occupied"
 				:allowedJumps="allowedJumps"
@@ -41,8 +41,8 @@
 					:crownedRed="redPiece.crown"
 					@redSelected="selectPiece($event, 'red', 'blue')">
 			</red-piece>
-		    <blue-piece v-for="(bluePiece, index) in player2.pieces"
-	  			v-if="bluePiece.pos"
+			<blue-piece v-for="(bluePiece, index) in player2.pieces"
+				v-if="bluePiece.pos"
 				:key="index"
 				:turn="turn"
 				:player="player2"
@@ -50,7 +50,7 @@
 				:crownedBlue="bluePiece.crown"
 				:transform="transform(bluePiece, 'player2')"
 				@blueSelected="selectPiece($event, 'blue', 'red')">
-      		</blue-piece>
+			</blue-piece>
 		</g>
 		<g v-else>
 			<red-piece v-for="(redPiece, index) in player2.pieces"
@@ -63,8 +63,8 @@
 				:user="user"
 				@redSelected="selectPiece($event, 'red', 'blue')">
 			</red-piece>
-		    <blue-piece v-for="(bluePiece, index) in player1.pieces"
-	  			v-if="bluePiece.pos"
+			<blue-piece v-for="(bluePiece, index) in player1.pieces"
+				v-if="bluePiece.pos"
 				:key="index"
 				:turn="turn"
 				:player="player1"
@@ -72,7 +72,7 @@
 				:user="user"
 				:transform="transform(bluePiece, 'player1')"
 				@blueSelected="selectPiece($event, 'blue', 'red')">
-      		</blue-piece>
+			</blue-piece>
 		</g>
     </svg>
   </div>
@@ -85,6 +85,7 @@ import Tile from './Tile.vue';
 import RedPiece from './RedPiece.vue';
 import BluePiece from './BluePiece.vue';
 import newGame from '../../../data/NewGameModel.js'
+import gameBoardTiles from '../../../data/GameBoardModel';
 const baseUrl = process.env.BASE_URL;
 
 export default {
@@ -110,6 +111,8 @@ export default {
 				validMoves: [],
 				allowedJumps: [],
 				allowedMoves: [],
+				computerMoves: [],
+				computerJumps: [],
 				redOccupied: [],
 				blueOccupied: [],
 				canBeJumped: [],
@@ -130,6 +133,9 @@ export default {
 	},
 	watch: {
 		turn: function(newValue, oldValue) {
+			this.computerMoves.length = 0;
+			this.computerJumps.length = 0;
+
 			if(this.player1.color === 'blue' && newValue === 'blue') {
 					this.selectAllPieces(this.player1.pieces, newValue, oldValue)
 			} else if (this.player2.color === 'blue' && newValue === 'blue'){
@@ -138,6 +144,11 @@ export default {
 					this.selectAllPieces(this.player1.pieces, newValue, oldValue)
 			} else if(this.player2.color === 'red' && newValue === 'red'){
 					this.selectAllPieces(this.player2.pieces, newValue, oldValue)
+			}
+
+
+			if(this.player2.name === "Computer") {
+				this.moveComputer();
 			}
 		}
 	},
@@ -168,7 +179,34 @@ export default {
 			this.canBeJumped.length = 0;
 			
 		},
-
+		moveComputer() {
+			let moveX = this.computerMoves[0][0]['x'];
+			let moveY = this.computerMoves[0][0]['y'];
+			let color = this.player2.color;
+			let opponentColor = "";
+			let newMovePosition = this.computerMoves[0][1];
+			let computerJumps = this.computerJumps;
+			if(color === 'red') {
+				opponentColor = 'blue'
+			} else if (color === 'blue') {
+				opponentColor = 'red'
+			}
+			if(this.player2.name === "Computer" && this.turn === color) {
+				if(this.computerJumps.length > 0) {
+					let jumpX = this.computerJumps[0][0]['x'];
+					let jumpY = this.computerJumps[0][0]['y'];
+					let newJumpPosition = computerJumps[0][1];
+					this.selectPiece([jumpX,jumpY],color,opponentColor);
+					this.dropPiece([newJumpPosition['x'],newJumpPosition['y']])
+				}else {
+					this.selectPiece([moveX,moveY],color,opponentColor);
+					console.log(newMovePosition)
+					console.log(gameBoardTiles[newMovePosition])
+					this.dropPiece([newMovePosition['x'],newMovePosition['y']])
+				}
+				
+			}
+		},
 		selectPiece(pos, color, opponentColor) {
 			let setSelectedTile = this.setSelectedTile;
 			let gameBoardTiles = this.gameBoardTiles;
@@ -203,6 +241,8 @@ export default {
 			let setPieceName = this.setPieceName;
 			let setAvailableJumps = this.setAvailableJumps;
 			let getHasJumped = this.getHasJumped;
+			let setComputerMoves = this.setComputerMoves;
+			let setComputerJumps = this.setComputerJumps;
 			
 			validMoveXY.length = 0;
 			validJumpXY.length = 0;
@@ -212,7 +252,7 @@ export default {
 			canBeJumped.length = 0;
 
 			if(color === 'red' && this.player1.color === 'red'
-			   	|| color === 'blue' && this.player1.color === 'blue') {
+				|| color === 'blue' && this.player1.color === 'blue') {
 				pieces = this.player1.pieces
 				opponentPieces = this.player2.pieces
 			} else if (color === 'red' && this.player2.color === 'red'
@@ -258,6 +298,7 @@ export default {
 
 					allowedJumps.push(`tile${t}`)
 					canBeJumped.push(validMoves[i])
+					setComputerJumps([selectedPiece, gameBoardTiles[`tile${t}`]])
 				}
 				if((t < selectedTile.pos || selectedPiece.crown === true)
 					&& !redOccupied.includes(t)
@@ -268,6 +309,7 @@ export default {
 
 					allowedJumps.push(`tile${t}`)				
 					canBeJumped.push(validMoves[i])
+					setComputerJumps([selectedPiece, gameBoardTiles[`tile${t}`]])
 				}
 				if(allowedJumps.length >= 1) {
 					setAvailableJumps(true);
@@ -287,6 +329,7 @@ export default {
 					&& t !== false
 					&& color === 'red') {
 						allowedMoves.push(`tile${t}`);
+						setComputerMoves([selectedPiece, gameBoardTiles[`tile${t}`]])
 				}
 
 				else if ((t < selectedTile.pos || selectedPiece.crown === true)
@@ -295,7 +338,9 @@ export default {
 					&& t !== false
 					&& color === 'blue') {
 						allowedMoves.push(`tile${t}`);
+						setComputerMoves([selectedPiece,`tile${t}`])
 				}
+				
 			});
 			
 			for(let tileName in gameBoardTiles) {
@@ -349,6 +394,7 @@ export default {
 			let gameBoardTiles = this.gameBoardTiles;
 			let setHasJumped = this.setHasJumped;
 			let getAvailableJumps = this.getAvailableJumps;
+
 
 			setJustCrowned(false);
 
@@ -488,9 +534,9 @@ export default {
 
 		//if crowned - player can move forwards and backwards
 		crownPiece(piece) {
-			 let justCrowned = false;
-			 console.log("Piece Crown : " + piece['crown'])
-			 console.log("Piece Pos : " + piece['pos'])
+			let justCrowned = false;
+			console.log("Piece Crown : " + piece['crown'])
+			console.log("Piece Pos : " + piece['pos'])
 
 
 			if (piece['crown'] === false && this.turn === 'red') {
@@ -667,6 +713,18 @@ export default {
 		},
 		getPlayer2() {
 			return this.player2;
+		},
+		getComputerMoves() {
+			return this.computerMoves;
+		},
+		setComputerMoves(move) {
+			this.computerMoves.push(move);
+		},
+		getComputerJumps() {
+			return this.computerJumps;
+		},
+		setComputerJumps(jump) {
+			this.computerJumps.push(jump);
 		}
 	}
 }

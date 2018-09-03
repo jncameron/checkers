@@ -55,9 +55,9 @@ export default {
 		onlineUsers: {type: Object},
 		newGame: {type: Object}
 	},
-  	components: {
-    	"game-board": GameBoard,
-    	"game-score-board": GameScoreBoard,
+	components: {
+		"game-board": GameBoard,
+		"game-score-board": GameScoreBoard,
 		"game-chat": GameChat,
 		"choose-game": ChooseGame,
 
@@ -81,7 +81,7 @@ export default {
 			turn: "",
 			info: "",
 			message: "",
-    	};
+		};
 	},
 	beforeCreate: function() {
 		let url = window.location.href;
@@ -91,14 +91,15 @@ export default {
 	},
 	mounted: function() {
 		//Request initial game state on game created (or page refresh)
-		if(this.player1.name !== 'Local Larry' && this.player2.name !== 'Local Larry') {
+		if(this.player1.name !== 'Local Larry' && this.player2.name !== 'Local Larry' 
+			&& this.player1.name !== 'Computer' && this.player2.name !== 'Computer' ) {
 			let url = window.location.href;
 			let id = url.split('game/').pop();
 			console.log("NEW ID " + id)
 			let room = url.split('game/').pop();
 			socket.emit('joinroom', room);
 			console.log("join Room " + room)
-		    this.$http.post(`${baseUrl}newgame/board`, {
+			this.$http.post(`${baseUrl}newgame/board`, {
 				id: id	})
 				.then(response => {
 					console.log(response);
