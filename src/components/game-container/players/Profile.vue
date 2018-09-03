@@ -122,7 +122,7 @@ export default {
 			if(document.getElementById('edit-password').value.length > 0) {
 				this.user.password= document.getElementById('edit-password').value;
 			}
-			this.$http.post('http://localhost:3000/user/update', this.user)
+			this.$http.post(`${baseUrl}user/update`, this.user)
 					.then(response => {
 					console.log(response)
 

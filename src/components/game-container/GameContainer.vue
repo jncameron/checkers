@@ -47,6 +47,7 @@ import user from '../../data/UserModel';
 import player1 from '../../data/Player1Model';
 import player2 from '../../data/Player2Model';
 import gameBoardTiles from '../../data/GameBoardModel.js'
+const baseUrl = process.env.BASE_URL;
 
 
 export default {
@@ -97,7 +98,7 @@ export default {
 			let room = url.split('game/').pop();
 			socket.emit('joinroom', room);
 			console.log("join Room " + room)
-		    this.$http.post('http://localhost:3000/newgame/board', {
+		    this.$http.post(`${baseUrl}newgame/board`, {
 				id: id	})
 				.then(response => {
 					console.log(response);
@@ -147,7 +148,7 @@ export default {
 
 			//post winner and loser info to game db collection and user db collection(for win/loss stats)
 			if(this.user.id === winnerId) {
-					this.$http.post('http://localhost:3000/newgame/winner', {
+					this.$http.post(`${baseUrl}newgame/winner`, {
 					gameId: gameId,
 					loserId: loserId,
 					winnerId: winnerId	

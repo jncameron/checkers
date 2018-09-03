@@ -81,7 +81,7 @@ export default {
 			this.user.name= document.getElementById('reg-name').value;
 			this.user.email= document.getElementById('reg-email').value;
 			this.user.password= document.getElementById('reg-password').value;
-			this.$http.post('http://localhost:3000/user/signup', this.user)
+			this.$http.post(`${this.baseUrl}user/signup`, this.user)
 				.then(response => {
 					this.user.id = response.body.id
 					console.log(response)
@@ -99,7 +99,7 @@ export default {
 			let validUser = {};
 			validUser.email= document.getElementById('login-email').value;
 			validUser.password= document.getElementById('login-password').value;
-			this.$http.post('http://localhost:3000/user/login', validUser)
+			this.$http.post(`${this.baseUrl}user/login`, validUser)
 				.then(response => {
 					console.log(response)
 					const token = response.data.token

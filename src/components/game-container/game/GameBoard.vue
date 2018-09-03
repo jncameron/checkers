@@ -85,6 +85,7 @@ import Tile from './Tile.vue';
 import RedPiece from './RedPiece.vue';
 import BluePiece from './BluePiece.vue';
 import newGame from '../../../data/NewGameModel.js'
+const baseUrl = process.env.BASE_URL;
 
 export default {
 	props: {
@@ -563,7 +564,7 @@ export default {
 				captured = oldAndNew[5];
 			}
 			let postGame = {pieceName, oldpos, newpos, newX, newY, tiles, turn, captured}
-			this.$http.post('http://localhost:3000/newgame/moves', {
+			this.$http.post(`${baseUrl}newgame/moves`, {
 
 			gameId: gameId, 
 			postGame: postGame})

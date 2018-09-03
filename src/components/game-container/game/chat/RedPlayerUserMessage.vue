@@ -9,7 +9,7 @@
 </template>
 
 <script>
-const baseUrl = process.env.BASE_URL;
+
 export default {
     props: {
         usrMsg: {type: String},
@@ -53,5 +53,3 @@ p {
 
 
 </style>
-
-border-right-color: #b71c1c;

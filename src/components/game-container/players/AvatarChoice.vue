@@ -102,6 +102,7 @@
 </template>
 
 <script>
+const baseUrl = process.env.BASE_URL;
 export default {
     props: {
         user: Object
@@ -121,7 +122,7 @@ export default {
             this.user.avatar = activeImage;
 
 
-			this.$http.post('http://localhost:3000/user/updateav', this.user)
+			this.$http.post(`${baseUrl}user/updateav`, this.user)
 					.then(response => {
 					console.log(response)
 

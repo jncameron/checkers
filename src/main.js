@@ -5,8 +5,10 @@ import App from './App.vue'
 import { store } from './store/store';
 import { routes } from './routes';
 import VueSocketio from 'vue-socket.io';
+const baseUrl = process.env.BASE_URL;
 
-Vue.use(VueSocketio,'http://localhost:3000')
+
+Vue.use(VueSocketio,`${baseUrl}`)
 
 Vue.use(VueResource);
 
