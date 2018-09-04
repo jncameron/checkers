@@ -135,6 +135,7 @@ export default {
 		turn: function(newValue, oldValue) {
 			this.computerMoves.length = 0;
 			this.computerJumps.length = 0;
+			let moveComputer = this.moveComputer;
 
 			if(this.player1.color === 'blue' && newValue === 'blue') {
 					this.selectAllPieces(this.player1.pieces, newValue, oldValue)
@@ -146,9 +147,10 @@ export default {
 					this.selectAllPieces(this.player2.pieces, newValue, oldValue)
 			}
 
-
 			if(this.player2.name === "Computer") {
-				this.moveComputer();
+					setTimeout(function(){
+						moveComputer();
+					},1000)
 			}
 		}
 	},
@@ -167,7 +169,6 @@ export default {
 						let x = pieces[piece]['x']
 						let y = pieces[piece]['y']
 						selectPiece([x,y],color,opponentColor)
-						//deselect
 					}
 
 			}
@@ -244,6 +245,7 @@ export default {
 			let getHasJumped = this.getHasJumped;
 			let setComputerMoves = this.setComputerMoves;
 			let setComputerJumps = this.setComputerJumps;
+			let player2 = this.player2;
 			
 			validMoveXY.length = 0;
 			validJumpXY.length = 0;
@@ -299,7 +301,10 @@ export default {
 
 					allowedJumps.push(`tile${t}`)
 					canBeJumped.push(validMoves[i])
-					setComputerJumps([selectedPiece, gameBoardTiles[`tile${t}`]])
+					if(player2.name === "Computer") {
+						setComputerJumps([selectedPiece, gameBoardTiles[`tile${t}`]])
+					}
+					
 				}
 				if((t < selectedTile.pos || selectedPiece.crown === true)
 					&& !redOccupied.includes(t)
@@ -310,7 +315,9 @@ export default {
 
 					allowedJumps.push(`tile${t}`)				
 					canBeJumped.push(validMoves[i])
-					setComputerJumps([selectedPiece, gameBoardTiles[`tile${t}`]])
+					if(player2.name === "Computer") {
+						setComputerJumps([selectedPiece, gameBoardTiles[`tile${t}`]])
+					}
 				}
 				if(allowedJumps.length >= 1) {
 					setAvailableJumps(true);
@@ -330,7 +337,9 @@ export default {
 					&& t !== false
 					&& color === 'red') {
 						allowedMoves.push(`tile${t}`);
-						setComputerMoves([selectedPiece, gameBoardTiles[`tile${t}`]])
+						if(player2.name === "Computer") {
+							setComputerMoves([selectedPiece, gameBoardTiles[`tile${t}`]])
+						}
 				}
 
 				else if ((t < selectedTile.pos || selectedPiece.crown === true)
@@ -339,7 +348,9 @@ export default {
 					&& t !== false
 					&& color === 'blue') {
 						allowedMoves.push(`tile${t}`);
-						setComputerMoves([selectedPiece,gameBoardTiles[`tile${t}`]])
+						if(player2.name === "Computer") {
+							setComputerMoves([selectedPiece,gameBoardTiles[`tile${t}`]])
+						}
 				}
 				
 			});

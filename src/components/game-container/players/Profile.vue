@@ -6,20 +6,19 @@
 					<div class="modal-container">
 						<div class="col-md-6" style="margin: 0 0;">
 							<div class="container-fluid avatar-box"  id="avatar-box" >
-								<img v-if="updateAvatar === false" :src="getAvatarLink()" style="width:80%;margin-top:30px;">
+								<img class="avatar-image" v-if="updateAvatar === false" :src="getAvatarLink()">
 
-								<button v-if="updateAvatar === false" class="edit-details" type="button" @click="editAvatar()">change</button>
+								<button class="change-avatar-button" v-if="updateAvatar === false" type="button" @click="editAvatar()">change</button>
 
-								<avatar-choice :user="user" v-if="updateAvatar"
-									@confirmAvatar="confirmAvatar()"
-									style="width:75%;float:none;margin: 0 auto;"></avatar-choice>
+								<avatar-choice class="confirm-avatar-image" :user="user" v-if="updateAvatar"
+									@confirmAvatar="confirmAvatar()"></avatar-choice>
 							</div>
 
 
 							<div class="col-md-12 win-loss" style="margin: 0 0;">
 								<div class="option" style="width:100%">
-                                    <user-win-loss style="margin: 60px 0 0 0;"></user-win-loss>
-                                    <h2>Win / Loss Record</h2>
+                                    <user-win-loss class="user-win-loss"></user-win-loss>
+                                    <h2 class="user-win-loss-text">Win / Loss Record</h2>
 								</div>
 							</div>
 
@@ -108,7 +107,7 @@ export default {
     },
     methods: {
         getAvatarLink() {
-           	return this.user.avatar;
+			return this.user.avatar;
 		},
 		editDetails() {
 			this.updateDetails = true;
@@ -145,10 +144,8 @@ export default {
 
     position: absolute;
     z-index: 9996;
-    top: 70px;
+    top: 20px;
     left: 0;
-	padding: 40px 15px 20px;
-
     background-image: /* tint image */
                     linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
                     /* checkered effect */
@@ -158,7 +155,7 @@ export default {
     background-size: 320px 320px;
 
     width: 100%;
-    height: 100%;
+    height: 670px;
     display: table;
     transition: opacity .3s ease;
 }
@@ -167,10 +164,22 @@ export default {
 .avatar-box {
 	background-color: #B71C1C;
 	height: 50%;
-	margin: 0 0;
+	margin: auto;
 	border: #000 solid 3px;
-	padding: 20px 15px;
+	padding: 10px 15px;
 }
+.avatar-image {
+	width:40%;
+	margin-top:0;
+}
+
+.confirm-avatar-image {
+	width:45%;
+	float:none;
+	margin: 0 auto;
+}
+
+
 .opponent-record-box {
 	background-color: #4072a0;
 	height: 50%;
@@ -187,6 +196,12 @@ export default {
     width:80%;
 
 }
+.user-win-loss-text {
+	font-size: 20px;
+	margin-top: 10px;
+}
+
+.change-avatar-button,
 .edit-details {
 	color:#FFF;
     background: #B71C1C;
@@ -196,6 +211,9 @@ export default {
     font-size: 18px;
 	width: 80%;
 	margin-top: 30px;
+}
+.change-avatar-button {
+	margin-top: 10px;
 }
 .edit-details:hover {
 	background-color: #7f0000;
@@ -220,8 +238,12 @@ export default {
 	height: 50%;
 	margin: 0 0;
 	border: #000 solid 3px;
-
 }
+.user-win-loss {
+	margin: auto;
+	width: 50%
+}
+
 
 
 .modal-wrapper {
@@ -243,7 +265,6 @@ export default {
 	box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
 	transition: all .3s ease;
 	font-family: 'Audiowide', cursive;
-
 }
 
 .col-md-6 {
@@ -260,6 +281,7 @@ export default {
 	align-items: center;
 
 }
+
 .modal-enter {
   opacity: 0;
 }
@@ -272,6 +294,74 @@ export default {
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
+}
+
+@media only screen and (min-height: 750px) {
+	.container {
+		height: 100%;
+	}
+	.avatar-image {
+		width:50%;
+		margin-top:20px;
+		padding: auto;
+	}
+	.confirm-avatar-image {
+		width:60%;
+	}
+	.change-avatar-button {
+		margin-top: 20px;
+	}
+	.user-win-loss {
+		margin: auto;
+		margin-top: 20px;
+		width: 60%
+	}
+	.user-win-loss-text {
+		font-size: 20px;
+		margin-top: 20px;
+	}
+}
+
+@media only screen and (min-height: 950px) {
+	.avatar-image {
+		width:65%;
+		margin-top:20px;
+	}
+	.confirm-avatar-image {
+		width:60%;
+	}
+	.change-avatar-button {
+		margin-top: 20px;
+	}
+	.user-win-loss {
+		margin: auto;
+		margin-top: 20px;
+		width: 70%
+	}
+	.user-win-loss-text {
+		font-size: 20px;
+		margin-top: 20px;
+	}
+}
+
+@media only screen and (min-height: 1100px) {
+	.avatar-image {
+		width:80%;
+		margin-top:30px;
+	}
+	.confirm-avatar-image {
+		width:75%;	
+	}
+	.user-win-loss {
+		margin: auto;
+		margin-top: 30px;
+		width: 80%
+	}
+	.user-win-loss-text {
+		font-size: 30px;
+		margin-top: 40px;
+	}
+
 }
 
 </style>

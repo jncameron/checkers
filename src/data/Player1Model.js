@@ -1,7 +1,7 @@
 let player1 = {
-    name: String,
+    name: "Player 1",
     email: String,
-    avatar: String,
+    avatar: "man.svg",
     pieces: Object
 }
 

@@ -27,7 +27,7 @@ export const routes = [
             redPieces: redPieces,
             bluePieces: bluePieces},   
     },
-    { path: '/', redirect: '/sign-up'},
+    { path: '/', redirect: '/choose-game'},
     { path: '*', redirect: '/choose-game'}
     
  

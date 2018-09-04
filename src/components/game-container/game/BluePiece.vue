@@ -32,7 +32,7 @@ export default {
  
     methods: {
         selectBlue() {
-            if(this.player.name === this.user.name || this.player.name === 'Local Larry') {
+            if(this.player.name === this.user.name || this.player.name === 'Player 2') {
                 this.position = this.transform;
                 this.posX = this.position.split('(').pop().split(',').shift() - 30;
                 this.posY = this.position.split(',').pop().split(')').shift() - 30;

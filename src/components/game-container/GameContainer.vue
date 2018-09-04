@@ -1,7 +1,7 @@
 <template>
-	<div class="game" style="margin-left:auto;margin-right:auto;margin-top:100px;width: 1800px;">
+	<div class="game">
 		<div class="col-md-1 blank-col el"></div>
-		<game-score-board class="col-md-2 el"
+		<game-score-board class="col-md-2 el game-score-board"
 			:turn="turn"
 			:player1Captures="player1Captures"
 			:player2Captures="player2Captures"
@@ -9,11 +9,12 @@
 			:opponent="opponent"
 			:player2="player2"
 			:player1="player1"
+			:gameStatus="gameStatus"
 			:message="message" 
 			:info="info"
-			style="height:630px;width:300px;border: inset #2d353c 10px;border-radius:10px"></game-score-board>
+			></game-score-board>
 	<div class="col-md-1 blank-col"></div>
-		<game-board class="col-md-5 el"
+		<game-board class="col-md-5 el game-board"
 			:newGame="newGame"
 			:gameStatus="gameStatus"
 			:winnerName="winnerName"
@@ -23,16 +24,16 @@
 			:user="user"
 			:gameBoardTiles="gameBoardTiles"
 			:turn="turn"
-			style="padding:0px 0px;height:630px;width:630px;border: inset #2d353c 15px"></game-board>
+			></game-board>
 	<div class="col-md-1 blank-col"></div>
-		<game-chat v-if="player1.name !== 'Local Larry'
-					&& player2.name !== 'Local Larry'"
+		<game-chat v-if="player1.name !== 'Player 2'
+					&& player2.name !== 'Player 2'"
 					:player2="player2" 
 					:player1="player1" 
 					:user="user"
 					:opponent="opponent"
-					class="col-md-2" 
-					style="height:630px;width:300px;border: inset #2d353c 10px;border-radius:10px"></game-chat>
+					class="col-md-2 game-chat" 
+					></game-chat>
 
 	</div>
 </template>
@@ -91,7 +92,7 @@ export default {
 	},
 	mounted: function() {
 		//Request initial game state on game created (or page refresh)
-		if(this.player1.name !== 'Local Larry' && this.player2.name !== 'Local Larry' 
+		if(this.player1.name !== 'Player 2' && this.player2.name !== 'Player 2' 
 			&& this.player1.name !== 'Computer' && this.player2.name !== 'Computer' ) {
 			let url = window.location.href;
 			let id = url.split('game/').pop();
@@ -148,7 +149,7 @@ export default {
 			}
 
 			//post winner and loser info to game db collection and user db collection(for win/loss stats)
-			if(this.user.id === winnerId) {
+			if(this.user.id === winnerId && this.user.id.length > 0) {
 					this.$http.post(`${baseUrl}newgame/winner`, {
 					gameId: gameId,
 					loserId: loserId,
@@ -232,15 +233,63 @@ export default {
 </script>
 
 <style scoped>
+.game-score-board {
+	height:500px;
+	width:300px;
+	border: inset #2d353c 10px;
+	border-radius:10px
+}
+.game-board {
+	padding:0px 0px;
+	height:500px;
+	width:500px;
+	border: inset #2d353c 15px
+}
+.game-chat {
+	height:500px;
+	width:300px;
+	border: inset #2d353c 10px;
+	border-radius:10px;
+}
 
 #game {
 	transform: translate(-50%, -50%);
 	position: absolute;
 }
+.game {
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:40px;
+	width: 1800px;
+}
 
 @media (min-width: 600px) {
 	.blank-col {
 		width: 10px
+	}
+}
+
+@media only screen and (min-height: 800px) {
+	.game-score-board {
+		height:630px;
+		width:300px;
+		border: inset #2d353c 10px;
+		border-radius:10px
+	}
+	.game-board {
+		padding:0px 0px;
+		height:630px;
+		width:630px;
+		border: inset #2d353c 15px
+	}
+	.game-chat {
+		height:630px;
+		width:300px;
+		border: inset #2d353c 10px;
+		border-radius:10px;
+	}
+	.game {
+		margin-top:80px;
 	}
 }
 

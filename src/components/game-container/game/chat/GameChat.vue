@@ -1,9 +1,9 @@
 <template>
     <div id="container">
-        <div style="height:40px;background-color:#7f0000;color:#FFF">
+        <div style="height:7%;background-color:#7f0000;color:#FFF">
 
         </div>
-            <div id="all-messages" style="height:440px;overflow-x:hidden;overflow-y:auto;">
+            <div id="all-messages" style="height:70%;overflow-x:hidden;overflow-y:auto;">
             <div v-for="(usrMsg, index) in usrMsgs"
                     :key="index">
                 <div v-if="usrMsg[1] !== user.name">
@@ -19,11 +19,11 @@
         </div>
 
         <div>
-            <div style="height:10px;background-color:#4072a0"></div>
+            <div style="height:2%;background-color:#4072a0"></div>
             <new-message :user="user"></new-message>
         </div>
         
-        <div id="base" style="height:40px;background:#34537c;padding-top:7px">
+        <div id="base" style="height:7%;background:#34537c;padding-top:7px">
             <h3 style="margin:0 0 0 0;color:#FFF"> CHAT</h3>
         </div>
     </div>

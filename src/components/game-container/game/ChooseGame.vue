@@ -21,7 +21,11 @@
 								<div class="option" v-if="connectOnline === false">
 									<h2 >Find Player Online</h2>
 								</div>
-								<div v-if="connectOnline === true" class="choose-player" >
+								<div v-if="connectOnline === true && user.id.length === 0">
+									<h2>Sign in to see online players</h2>
+									<button class="reg-btn btn-primary" @click="navigateToSignUp()">Sign In / Sign Up</button>
+								</div>
+								<div v-if="connectOnline === true && user.id.length > 0" class="choose-player" >
 									<h2>Players Online</h2>
 									<hr>
 									<div class="player-box" v-for="(player,index) in onlineUsers" 
@@ -84,11 +88,11 @@ export default {
   },
   data() {
     return {
-	  connectOnline: false,
-	  gameCreated: false,
-	  gameBoardTiles: gameBoardTiles,
-	  onlineUsers: [],
-	  baseUrl: process.env.BASE_URL
+		connectOnline: false,
+		gameCreated: false,
+		gameBoardTiles: gameBoardTiles,
+		onlineUsers: [],
+		baseUrl: process.env.BASE_URL
     }
   },
       mounted: function() {
@@ -165,7 +169,7 @@ export default {
 				this.player2.pieces = this.redPieces;
 				this.player2.color = 'red';
 			}
-			this.player2.name = "Local Larry";
+			this.player2.name = "Player 2";
 			this.player2.avatar = "man.svg";
 			this.player2.email = "larry@larrymail.com";
 			this.newGame.player1 = this.player1;
@@ -237,7 +241,10 @@ export default {
 		},
 		getRandom() {
 			return Math.random();
-		}
+		},
+		navigateToSignUp() {
+			this.$router.push({path: '/signup'})
+		},
 
 	},
 }
@@ -248,7 +255,7 @@ export default {
 .modal-mask {
   position: absolute;
   z-index: 9996;
-  top: 70px;
+  top: 40px;
   padding: 25px 15px;
 	
   left: 0;
@@ -303,6 +310,9 @@ export default {
 	align-items: center;
 
 }
+h2{
+	margin-top: 10px;
+}
 
 .option {
 	height: 100%;
@@ -310,9 +320,24 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	h2{
-		margin-top: 10px;
-	}
+
+}
+.reg-button {
+	color:#FFF;
+    background: #B71C1C;
+	border: 2px solid #7f0000;
+	border-radius: 6px;
+    font-family: 'Audiowide';
+    font-size: 18px;
+	width: 80%;
+}
+
+.reg-button:hover {
+	background-color: #7f0000;
+	color: #FFF;
+}
+.reg-button:focus{
+    outline: none;
 }
 
 .option:hover {
@@ -330,12 +355,7 @@ export default {
 	margin: 0 0;
 	border: #000 solid 3px;
 }
-.computer:hover {
-	background-image: url('../../../assets/under-construction.svg');
-	background-position: center;
-	background-repeat: no-repeat;
 
-}
 .two-local {
 	background-color: #000;
 	height: 50%;

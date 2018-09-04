@@ -9,7 +9,7 @@
 								<form class="col-md-10">
 									<h1>Register</h1>
 									<div class="form-group">
-										<label for="reg-name" style="margin-top:30px;">Name</label>
+										<label for="reg-name" style="margin-top:10px;">Name</label>
 										<input id="reg-name" type="text" class="form-control" style="margin-bottom:10px;">
 										<label for="reg-email">Email</label>
 										<input id="reg-email" type="email" class="form-control" style="margin-bottom:10px;">
@@ -38,12 +38,12 @@
 							<div class="col-md-12 login-box" style="margin: 0 0;" id="login-box">
 
 									<form action="" class="col-md-10">
-										<h1>Log In</h1>
-										<label for="email" style="margin-top:30px;">Email</label>
+										<h1>Sign In</h1>
+										<label for="email" style="margin-top:10px;">Email</label>
 										<input id="login-email" type="email" class="form-control" style="margin-bottom:10px;">
 										<label for="password">Password</label>
 										<input id="login-password" type="password" v-on:keyup.13="validateUser" class="form-control" style="margin-bottom:25px;">
-										<button @click="validateUser" class="login-button" type="button">Log In</button>
+										<button @click="validateUser" class="login-button" type="button">Sign In</button>
 									</form>
 
 							</div>
@@ -60,7 +60,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import user from '../data/UserModel';
 export default {
 	props: {
@@ -87,7 +86,7 @@ export default {
 					console.log(response)
 					const token = response.data.token
 					this.userOnline();
-      				localStorage.setItem('user-token', token) // store the token in localstorage
+					localStorage.setItem('user-token', token) // store the token in localstorage
 					this.navigateToChooseGame();
 				}, error => {
 					console.log(error)
@@ -109,10 +108,10 @@ export default {
 					localStorage.setItem('avatar', this.user.avatar);
 					this.updateUser(response.data.user);
 					this.navigateToChooseGame();
-    				})
-  				.catch(err => {
-    				localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
-  			});
+					})
+				.catch(err => {
+					localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
+			});
 		},
 		updateUser(update) {
 			this.user.name = update.name;
@@ -148,7 +147,7 @@ export default {
 
   position: absolute;
   z-index: 9996;
-  top: 80px;
+  top: 40px;
   left: 0;
     background-image: /* tint image */
                     linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
@@ -167,7 +166,7 @@ export default {
 .login-box,
 .register-box {
 	background-color: #B71C1C;
-	height: 50%;
+	height: 75%;
 	margin: 0 0;
 	border: #000 solid 3px;
 	padding: 40px 15px;
@@ -211,16 +210,10 @@ export default {
     outline: none;
 }
 
-.blank1 {
-	background-color: #000;
-	height: 50%;
-	margin: 0 0;
-	border: #000 solid 3px;
-
-}
+.blank1,
 .blank2 {
 	background-color: #000;
-	height: 50%;
+	height: 25%;
 	margin: 0 0;
 	border: #000 solid 3px;
 
@@ -277,8 +270,29 @@ export default {
   transform: scale(1.1);
 }
 
- 
+@media only screen and (min-height: 900px) {
+	.login-box,
+	.register-box {
+		background-color: #B71C1C;
+		height: 50%;
+		margin: 0 0;
+		border: #000 solid 3px;
+		padding: 40px 15px;
+	}
+	.login-box {
+	background-color: #4072a0;
+	}
 
+	.blank1,
+	.blank2 {
+	background-color: #000;
+	height: 50%;
+	margin: 0 0;
+	border: #000 solid 3px;
+
+	}
+}
+ 
 </style>
 
 

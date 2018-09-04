@@ -1,7 +1,6 @@
 <template>
     
 <div >
-	<h3 style="margin-top:0;margin-bottom:30px">Choose Avatar</h3>
 	<div id="myCarousel" class="carousel slide" interval="false" data-ride="carousel">
     <!-- Indicators -->
 

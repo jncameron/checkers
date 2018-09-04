@@ -1,13 +1,13 @@
 <template>
     <div id="container">
-        <div style="height:40px;padding-top:7px;background-color:#7f0000;color:#FFF">
-            <h3 v-if="player1.color === 'red'" style="margin:0 0 0 0">{{ player1.name }}</h3>
-            <h3 v-else style="margin:0 0 0 0">{{ player2.name }}</h3>
-        </div>
-        <div id="box">
 
+        <div class="box">
+            <div class="red-player-name">
+                <h3 v-if="player1.color === 'red'" style="margin:0 0 0 0">{{ player1.name }}</h3>
+                <h3 v-else style="margin:0 0 0 0">{{ player2.name }}</h3>
+            </div>
             <div v-if="player1.color === 'red'" id="play-red">
-                <player-one :player1="player1" style="height:80px;padding-top:12px;"></player-one>
+                <player-one :player1="player1" class="player-one"></player-one>
                 <div id="player-one-captures">
                 <svg x="0" y="0" height="80" width="155">
                     <player-one-captures v-for="(piece,index) in player1Captures"
@@ -19,7 +19,7 @@
             </div>
 
             <div v-else id="play-red">
-                <player-two :player2="player2" style="height:80px;;padding-top:12px;"></player-two>
+                <player-two :player2="player2" class="player-two"></player-two>
                 <div id="player-two-captures">
                 <svg x="0" y="0" height="80" width="155">
                     <player-two-captures v-for="(piece,index) in player2Captures"
@@ -45,7 +45,7 @@
                         </player-two-captures>
                     </svg>
                 </div>
-              <player-two :player2="player2" style="height:80px;">
+              <player-two :player2="player2" class="player-two">
             </player-two>
             </div>
             <div v-else id="play-blue">
@@ -57,15 +57,16 @@
                         </player-one-captures>
                     </svg>
                 </div>
-              <player-one :player1="player1" style="height:80px;">
+              <player-one :player1="player1" class="player-one">
             </player-one>
+            </div>
+            <div class="blue-player-name">
+                <h3 v-if="player2.color === 'blue'" style="margin:0 0 0 0">{{ player2.name }}</h3>
+                <h3 v-else style="margin:0 0 0 0">{{ player1.name }}</h3>
             </div>
         </div>
 
-        <div style="height:40px;padding-top:5px;background-color:#34537c;color:#FFF">
-            <h3 v-if="player2.color === 'blue'" style="margin:0 0 0 0">{{ player2.name }}</h3>
-            <h3 v-else style="margin:0 0 0 0">{{ player1.name }}</h3>
-        </div>
+
     </div>
 
 </template>
@@ -80,6 +81,7 @@ export default {
   props: {
     turn: String,
     info: String,
+    gameStatus: String,
     opponent: Object,
     user: Object,
     player1: Object,
@@ -108,7 +110,14 @@ export default {
 		"player-one": Player1,
 		"player-two-captures": Player2Captures,
 		"player-one-captures": Player1Captures
-	},
+    },
+    watch: {
+        gameMessage: function(newValue) {
+            if(newValue === 'OVER') {
+                this.setGameMessage('GAME OVER')
+            }
+        }
+    },
 	methods: {
 		
         //move and turn info sent to opponent via socket
@@ -151,15 +160,36 @@ p {
 	margin-bottom: 0;
 	font-family: Roboto;
 }
-
-#box {
-    background-color: #d3d3d3;
+.player-one,
+.player-two {
+    height: 14%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    width: 100%;
 }
 
+.box {
+    background-color: #d3d3d3;
+    width: 100%;
+}
+.red-player-name {
+    height:7%;
+    background-color:#7f0000;
+    color:#FFF;
+    padding-top: 2px;
+}
+.blue-player-name {
+    height:7%;
+    background-color:#34537c;
+    color:#FFF;
+    padding-top: 2px;
+
+}
+
+
 #player-two-captures {
-	height: 95px;
 	background-color: rgba(211,211,211,0.2);
-	margin: 15px 0;
+	margin: 0px 0;
 }
 
 #play-blue {
@@ -171,20 +201,39 @@ p {
 }
 
 #player-one-captures {
-	height: 95px;
 	background-color: rgba(211,211,211,0.2);
-	margin: 15px 0px;
+	margin: 0px 0px;
 }
 
 #container {
 	padding: 0 0;
+    display: flex;
 }
 
 #gameMessages {
-	height: 120px;
+	height: 13%;
 	background-color: #d3d3d3;
 	margin: 15px 0;
-	padding: 10px 10px;
+}
+
+@media only screen and (min-height: 800px) {
+    #player-one-captures,
+    #player-two-captures {
+        height: 100px;
+    }
+    .player-one,
+    .player-two {
+        padding-top: 5%;
+        padding-bottom: 5%;
+    }
+    .red-player-name,
+    .blue-player-name {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    #gameMessages {
+        height: 16.1%
+    }
 }
 </style>
 

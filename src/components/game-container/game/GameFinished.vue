@@ -1,37 +1,37 @@
 <template>
-    <div>
-    <transition name="modal">
-    <div class="modal-mask">
-    	<div class="modal-wrapper">
-			<div class="modal-container">
+	<div>
+		<transition name="modal">
+			<div class="modal-mask">
+				<div class="modal-wrapper">
+					<div class="modal-container">
 
-			<div class="modal-header">
-				<slot name="header">
-				Game Over
-				</slot>
-			</div>
+						<div class="modal-header">
+							<slot name="header">
+								Game Over
+							</slot>
+						</div>
 
-			<div class="modal-body">
-				<slot name="body">
-				{{ winnerName }} Wins
-				</slot>
-			</div>
+						<div class="modal-body">
+							<slot name="body">
+								{{ winnerName }} Wins
+							</slot>
+						</div>
 
-			<div class="modal-footer">
-				<slot name="footer">
-				<button class="btn btn-primary" @click="navigateToProfile()">
-					Game Stats
-				</button>
-				<button class="btn btn-primary" @click="navigateToLobby()">
-					Lobby
-				</button>
-				</slot>
+						<div class="modal-footer">
+							<slot name="footer">
+								<button class="btn btn-primary" @click="navigateToProfile()">
+									Game Stats
+								</button>
+								<button class="btn btn-primary" @click="navigateToLobby()">
+									Lobby
+								</button>
+							</slot>
+						</div>
+					</div>
+				</div>
 			</div>
-			</div>
-      	</div>
-    </div>
-  </transition>
-    </div>
+		</transition>
+	</div>
 </template>
 
 <script>
@@ -46,10 +46,10 @@ export default {
   },
   methods: {
     navigateToProfile() {
-      this.$router.push({path: '/profile'})
+      this.$router.push({path: '/profile/' + this.user.name})
     },
     navigateToLobby() {
-      this.$router.push({path: '/*'})
+      this.$router.push({path: '/choose-game'})
     },
   }
 }
@@ -96,20 +96,20 @@ export default {
 
 .modal-body {
   margin: 0 0;
-  font-family: 'Permanent Marker';
+  font-family: 'Audiowide';
   font-size: 32px;
 }
 
 .modal-footer {
   margin: 0 0;
-  font-family: 'Permanent Marker';
+  font-family: 'Audiowide';
   font-size: 32px;
   align-items: center;
 }
 
 .btn {
     background-color: #B71C1C;
-    font-family: 'Permanent Marker';
+    font-family: 'Audiowide';
     font-size: 18px;
 }
 

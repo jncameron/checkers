@@ -1,6 +1,6 @@
 let user = {
     id: "",
-    name: "",
+    name: "Player 1",
     email: "",
     avatar: "man.svg",
 }

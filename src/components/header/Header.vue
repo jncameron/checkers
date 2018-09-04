@@ -8,15 +8,15 @@
 
         <div class="nav navbar navbar-right"  style="margin-bottom:0;margin-top:10px;">
 
-            <ul class="nav navbar-nav" style="margin-top:7px" v-if="user.name.length > 0">
-                <router-link   :to="'/choose-game'" tag="li" active-class="active"><a class="nav-link">PLAY</a></router-link>
+            <ul class="nav navbar-nav" style="margin-top:7px" v-if="user.id.length > 0">
+                <router-link   :to="'/choose-game'" @click="toPlay" tag="li" active-class="active"><a class="nav-link">PLAY</a></router-link>
             </ul>
             <ul class="nav navbar-nav" style="margin-top:7px" v-else>
                 <router-link   :to="'/signup'" tag="li" active-class="hidden" ><a class="nav-link" style="margin-right:10px;">SIGN IN</a></router-link>
             </ul>
             <div class="nav navbar-nav">
-                <img v-if="user.name.length > 0" class=" nav navbar-brand profile-image"  @click="toProfile" :src="getAvatarLink()" style="margin-top:0px;margin-left:5px;margin-right:15px;">
-                <p style="margin-bottom:0px">{{user.name}}</p>
+                <img v-if="user.id.length > 0" class=" nav navbar-brand profile-image"  @click="toProfile" :src="getAvatarLink()" style="margin-top:0px;margin-left:5px;margin-right:15px;">
+                <p v-if="user.id.length > 0" style="margin-bottom:0px">{{user.name}}</p>
             </div>
 
         </div>
@@ -57,9 +57,9 @@ export default {
         toPlay() {
             this.$router.push('/choose-game');
         },
-        toSignUp() {
-            this.$router.push('/signup');
-        }
+        // toSignUp() {
+        //     this.$router.push('/signup');
+        // }
     }
 }
 </script>
