@@ -1,7 +1,6 @@
 const app = require("./app");
 const debug = require("debug")("node-vue");
 const http = require("http");
-const https = require("https");
 const socket = require("socket.io");
 
 
@@ -63,6 +62,20 @@ io.on("connection", (socket) => {
 	let room = "";
 	console.log('made socket connection', socket.id);
 
+	socket.on('login', (data) => {
+		let unique = true;
+		onlineUsers.forEach(function(user) {
+			if(user['id'] === data['id']) {
+				unique = false;
+			}
+		})
+		if (unique) {
+			onlineUsers.push(data)
+		}
+    	io.sockets.emit('login', onlineUsers);
+    	console.log("EMITTING users")
+	});
+
 	socket.on('joinroom', (data) => {
 		room = data;
 	});
@@ -76,20 +89,6 @@ io.on("connection", (socket) => {
 	socket.on('challenge', (data) => {
 		console.log("challenge data " + JSON.stringify(data))
 		io.sockets.emit('challenge',data)
-	});
-
-	socket.on('login', (data) => {
-		let unique = true;
-		onlineUsers.forEach(function(user) {
-			if(user['id'] === data['_id']) {
-				unique = false;
-			}
-		})
-		if (unique) {
-			onlineUsers.push(data)
-		}
-    io.sockets.emit('login', onlineUsers);
-    console.log("EMITTING users")
 	});
 
     socket.on('gamedata', (data) => {

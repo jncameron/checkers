@@ -1,9 +1,9 @@
 <template>
     <div id="container">
-        <div style="height:7%;background-color:#7f0000;color:#FFF">
+        <div style="height:7%;background-color:#7f0000;color:#FFF;display:flex">
 
         </div>
-            <div id="all-messages" style="height:70%;overflow-x:hidden;overflow-y:auto;">
+            <div id="all-messages">
             <div v-for="(usrMsg, index) in usrMsgs"
                     :key="index">
                 <div v-if="usrMsg[1] !== user.name">
@@ -19,8 +19,9 @@
         </div>
 
         <div>
-            <div style="height:2%;background-color:#4072a0"></div>
-            <new-message :user="user"></new-message>
+            <div id="new-message-box">
+            <new-message id="new-message" :user="user"></new-message>
+            </div>
         </div>
         
         <div id="base" style="height:7%;background:#34537c;padding-top:7px">
@@ -107,10 +108,26 @@ export default {
   padding: 0 0;
 
 }
+#all-messages {
+    height:310px;
+    overflow-x:hidden;
+    overflow-y:auto;
+}
+#new-message-box {
+    height:104px;
+    background-color:#4072a0;
+}
+#new-message {
+    height:90px;
+}
 h1 {
     margin-top: 0px;
     margin-bottom: 0px;
-
+}
+@media only screen and (min-height: 800px) {
+    #all-messages {
+        height:421px;
+    }
 }
 
 </style>

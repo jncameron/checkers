@@ -39,6 +39,8 @@ p {
     margin-top: 10px;
     color: #FFF;
     font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+
 }
 
 .speech-bubble {

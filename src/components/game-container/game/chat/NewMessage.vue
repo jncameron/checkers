@@ -56,8 +56,8 @@ export default {
     background-color: rgba(211,211,211,0.5);
     margin-right: 10px;
     margin-left: 10px;
-    margin-top: 3%;
-    margin-bottom: 3%;
+    margin-top: 15px;
+    margin-bottom: 0px;
     width: 100%;
 
 
@@ -69,11 +69,13 @@ textarea {
     left: 0;
     margin-left: 20px;
     padding-left: 20px;
-    margin-top: 5px;
+    margin-top: 0px;
     overflow: hidden;
     width: 70%;
     background-color: transparent;
     border: none;
+    font-family: Arial;
+    font-size: large;
 }
 textarea:focus{
     outline: none;
@@ -81,7 +83,7 @@ textarea:focus{
 
 
 svg {
-    margin-top: 0px;
+    margin-top: 10px;
     margin-bottom: 0px;
 }
 

@@ -92,32 +92,33 @@ export default {
 	},
 	mounted: function() {
 		//Request initial game state on game created (or page refresh)
-		if(this.player1.name !== 'Player 2' && this.player2.name !== 'Player 2' 
-			&& this.player1.name !== 'Computer' && this.player2.name !== 'Computer' ) {
+		if(this.player2.name !== 'Computer' ) {
 			let url = window.location.href;
 			let id = url.split('game/').pop();
 			console.log("NEW ID " + id)
 			let room = url.split('game/').pop();
 			socket.emit('joinroom', room);
 			console.log("join Room " + room)
-			this.$http.post(`${baseUrl}newgame/board`, {
-				id: id	})
-				.then(response => {
-					console.log(response);
-					this.player1 = response.body.game.player1;
-					this.player2 = response.body.game.player2;
-					this.gameBoardTiles = response.body.game.tiles;
-					this.turn = response.body.game.turn;
-					this.gameStatus = response.body.game.gameStatus;
-					console.log("GETTING OPPONENT")
-					if(this.user.name === this.player1.name){
-						this.opponent = this.player2;
-					} else if(this.user.name === this.player2.name) {
+			if(this.player1.name !== this.user.name) {
+				this.$http.post(`${baseUrl}newgame/board`, {
+					id: id	})
+					.then(response => {
+						console.log(response);
+						this.player1 = response.body.game.player1;
+						this.player2 = response.body.game.player2;
+						this.gameBoardTiles = response.body.game.tiles;
+						this.turn = response.body.game.turn;
+						this.gameStatus = response.body.game.gameStatus;
+						console.log("GETTING OPPONENT")
 						this.opponent = this.player1;
-					}
-				}, error => {
-				console.log(error);
-			});
+					}, error => {
+					console.log(error);
+				});
+			} else {
+			this.opponent = this.player2;
+			this.turn = 'red';
+			};
+
 		} else {
 			this.turn = 'red';
 		}
@@ -160,10 +161,6 @@ export default {
 					console.log(error);
 			});
 			}
-
-			
-			
-
 		},
 		setPlayer1HasCaptured() {
 			let player1Captures = this.player1Captures;
@@ -233,6 +230,11 @@ export default {
 </script>
 
 <style scoped>
+
+.blank-col {
+	width: 0px;
+	padding: 0 0;
+}
 .game-score-board {
 	height:500px;
 	width:300px;
@@ -263,11 +265,7 @@ export default {
 	width: 1800px;
 }
 
-@media (min-width: 600px) {
-	.blank-col {
-		width: 10px
-	}
-}
+
 
 @media only screen and (min-height: 800px) {
 	.game-score-board {
@@ -290,6 +288,20 @@ export default {
 	}
 	.game {
 		margin-top:80px;
+	}
+}
+
+@media (min-width: 1150px) {
+	.blank-col {
+		width: 5px;
+		padding: 0 0;
+	}
+}
+
+@media (min-width: 1200px) {
+	.blank-col {
+		width: 20px;
+		padding: 20px 0;
 	}
 }
 
