@@ -256,7 +256,7 @@ export default {
   position: absolute;
   z-index: 9996;
   top: 40px;
-  padding: 25px 15px;
+  padding: 0px 15px;
 	
   left: 0;
     background-image: /* tint image */
@@ -296,6 +296,7 @@ export default {
 }
 
 .col-md-6 {
+
 	height: 100%;
 	width: 50%;
 	margin: 0 0;
@@ -304,8 +305,9 @@ export default {
 
 .col-md-12 {
 	color: #FFF;
+	min-height: 250px;
 
-	display: flex;
+
 	justify-content: center;
 	align-items: center;
 
@@ -315,6 +317,7 @@ h2{
 }
 
 .option {
+	min-height: 250px;
 	height: 100%;
 	width: 100%;
 	display: flex;
@@ -371,11 +374,14 @@ h2{
 }
 .choose-player {
 	width: 100%;
+	min-height: 200px;
 	height: 100%;
 	color:#FFF;
+	overflow-y: auto;
 }
 .player-box {
-	min-height:40px;
+	height:40px;
+	width: 90%;
 	margin-top:10px;
 	border-bottom: 2px solid #000;
 
@@ -425,6 +431,7 @@ h2{
 .modal-enter .modal-container,
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
   transform: scale(1.1);
 }
 

@@ -170,6 +170,7 @@ export default {
 	margin: 0 0;
 	border: #000 solid 3px;
 	padding: 40px 15px;
+	font-family: Arial, Helvetica, sans-serif;
 }
 .login-box {
 	background-color: #4072a0;
