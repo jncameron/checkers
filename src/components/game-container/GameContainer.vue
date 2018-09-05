@@ -1,7 +1,7 @@
 <template>
 	<div class="game">
-		<div class="col-md-1 blank-col el"></div>
-		<game-score-board class="col-md-2 el game-score-board"
+		<div v-bind:class="blankCol"></div>
+		<game-score-board class="col-md-2 game-score-board"
 			:turn="turn"
 			:player1Captures="player1Captures"
 			:player2Captures="player2Captures"
@@ -13,8 +13,8 @@
 			:message="message" 
 			:info="info"
 			></game-score-board>
-	<div class="col-md-1 blank-col"></div>
-		<game-board class="col-md-5 el game-board"
+	<div v-bind:class="blankCol"></div>
+		<game-board class="col-md-5 game-board"
 			:newGame="newGame"
 			:gameStatus="gameStatus"
 			:winnerName="winnerName"
@@ -25,9 +25,8 @@
 			:gameBoardTiles="gameBoardTiles"
 			:turn="turn"
 			></game-board>
-	<div class="col-md-1 blank-col"></div>
-		<game-chat v-if="player1.name !== 'Player 2'
-					&& player2.name !== 'Player 2'"
+	<div class="col-md-1"></div>
+		<game-chat v-if="player2.name !== 'Player 2' && player2.name !== 'Computer'"
 					:player2="player2" 
 					:player1="player1" 
 					:user="user"
@@ -89,6 +88,16 @@ export default {
 		let room = url.split('game/').pop();
 		socket.emit('joinroom', room);
 		console.log("join Room " + room)
+	},
+	computed: {
+		blankCol() {
+			if(this.player2.name === 'Computer' || this.player2.name === 'Player 2') {
+				return 'col-lg-1'
+			}
+			else {
+				return 'col-md-1'
+			}
+		}
 	},
 	mounted: function() {
 		//Request initial game state on game created (or page refresh)
@@ -201,6 +210,9 @@ export default {
 		setWinner(win) {
 			this.winnerName = win;
 		},
+		setBlankCol(value) {
+			this.blankCol = value;
+		},
 		//board state sent to other player via socket
 		listenForBoardUpdates() {
 			console.log("LISTENING FOR BOARD")
@@ -292,26 +304,26 @@ export default {
 }
 
 @media (min-width: 1150px) {
-	.blank-col {
+	.col-md-1 {
 		width: 5px;
 		padding: 0 0;
 	}
 }
 
 @media (min-width: 1200px) {
-	.blank-col {
+	.col-md-1 {
 		width: 20px;
 		padding: 20px 0;
 	}
 }
 
 @media (min-width: 1500px) {
-	.blank-col {
+	.col-md-1 {
 		width: 60px;
 	}
 }
 @media (min-width: 1650px) {
-	.blank-col {
+	.col-md-1 {
 		width: 140px;
 	}
 }

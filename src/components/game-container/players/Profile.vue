@@ -164,6 +164,7 @@ export default {
 .avatar-box {
 	background-color: #B71C1C;
 	height: 50%;
+	min-height: 210px;
 	margin: auto;
 	border: #000 solid 3px;
 	padding: 10px 15px;
@@ -190,9 +191,8 @@ export default {
 .user-win-loss {
 	background-color: #000;
 	height: 50%;
-
 	border: #000 solid 3px;
-    align-items: center;
+
     width:80%;
 
 }
@@ -277,9 +277,20 @@ export default {
 .col-md-12 {
 	color: #FFF;
 	display: flex;
+	min-height: 210px;
+	height: 50%;
 	justify-content: center;
 	align-items: center;
 
+}
+
+.opponent-record-box:hover,
+.win-loss:hover {
+	z-index: 9999;
+	background-image: url('../../../assets/under-construction.svg');
+	background-position: center;
+	background-repeat: no-repeat;
+	opacity: 0.2;
 }
 
 .modal-enter {
@@ -320,6 +331,10 @@ export default {
 		font-size: 20px;
 		margin-top: 20px;
 	}
+	.avatar-box,
+	.col-md-12 {
+		min-height: 320px;
+	}
 }
 
 @media only screen and (min-height: 950px) {
@@ -342,6 +357,7 @@ export default {
 		font-size: 20px;
 		margin-top: 20px;
 	}
+	
 }
 
 @media only screen and (min-height: 1100px) {
@@ -361,6 +377,11 @@ export default {
 		font-size: 30px;
 		margin-top: 40px;
 	}
+	.avatar-box,
+	.col-md-12 {
+		min-height: 400px;
+	}
+	
 
 }
 

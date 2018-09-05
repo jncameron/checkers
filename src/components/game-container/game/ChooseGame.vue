@@ -21,9 +21,9 @@
 								<div class="option" v-if="connectOnline === false">
 									<h2 >Find Player Online</h2>
 								</div>
-								<div v-if="connectOnline === true && user.id.length === 0">
-									<h2>Sign in to see online players</h2>
-									<button class="reg-btn btn-primary" @click="navigateToSignUp()">Sign In / Sign Up</button>
+								<div class="sign-in" v-if="connectOnline === true && user.id.length === 0">
+									<h2 style="display:block">Sign in to see online players</h2>
+									<button style="display:block" class="reg-btn btn-primary" @click="navigateToSignUp()">Sign In / Sign Up</button>
 								</div>
 								<div v-if="connectOnline === true && user.id.length > 0" class="choose-player" >
 									<h2>Players Online</h2>
@@ -306,8 +306,6 @@ export default {
 .col-md-12 {
 	color: #FFF;
 	min-height: 250px;
-
-
 	justify-content: center;
 	align-items: center;
 
@@ -324,6 +322,15 @@ h2{
 	justify-content: center;
 	align-items: center;
 
+}
+.sign-in {
+	min-height: 250px;
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 .reg-button {
 	color:#FFF;

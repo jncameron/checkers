@@ -19,10 +19,10 @@
 
 						<div class="modal-footer">
 							<slot name="footer">
-								<button class="btn btn-primary" @click="navigateToProfile()">
+								<button class="btn btn-primary" @click="navigateToProfile">
 									Game Stats
 								</button>
-								<button class="btn btn-primary" @click="navigateToLobby()">
+								<button class="btn btn-primary" @click="navigateToLobby">
 									Lobby
 								</button>
 							</slot>
