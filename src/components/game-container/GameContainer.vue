@@ -126,7 +126,7 @@ export default {
 			} else {
 			this.opponent = this.player2;
 			this.turn = 'red';
-			};
+			}
 
 		} else {
 			this.turn = 'red';

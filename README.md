@@ -1,6 +1,8 @@
 # Checkers
 ## UNE COSC560 Project - John Cameron
 
+##Demo:
+http://checkers.ap-southeast-2.elasticbeanstalk.com 
 
 ## Install and Run:
 Run install and start the server
