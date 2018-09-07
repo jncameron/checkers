@@ -1,11 +1,17 @@
 <template>
-    <nav class="navbar navbar-default"  style="margin-bottom:0;padding-bottom:3px;height:87px;">
+    <nav class="navbar navbar-default" >
     <div class="container-fluid">
         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>                        
+      </button>
         <img class=" nav navbar-brand"  src="./checkers-icon.svg" style="margin-left:5px;margin-top:20px">
         <h1 class="navbar-brand" style="color:#FFF;font-size:32px;margin-top:20px">Checkers</h1>
         </div>
 
+        <div class="collapse navbar-collapse" id="myNavbar">
         <div class="nav navbar navbar-right"  style="margin-bottom:0;margin-top:10px;">
 
             <ul class="nav navbar-nav" style="margin-top:7px">
@@ -19,6 +25,7 @@
                 <p v-if="user.id.length > 0" style="margin-bottom:0px">{{user.name}}</p>
             </div>
 
+        </div>
         </div>
 
 
@@ -72,6 +79,9 @@ nav {
     background-color: #4072a0;
     color: #FFF;
     z-index: 9998;
+    margin-bottom:0;
+    padding-bottom:3px;
+    height:87px;
 }
 
 h1 {
@@ -96,6 +106,15 @@ img {
     opacity: 0.8;
 }
 
+.navbar-toggle {
+    margin-top: 25px;
+    background-color: #4072a0;
+}
+.navbar-toggle:focus {
+    margin-top: 25px;
+    background-color: #34537c;
+}
+
 .navbar-default .navbar-nav>li>a {
     color: #d3d3d3;
 }
@@ -107,6 +126,17 @@ img {
     background-color: #34537c;
 }
 
+@media (max-width: 500px) {
+    nav .navbar-nav {
+        width: 100%;
+        margin: 0 auto;
+        background-color: #4072a0
+    }
+    #myNavbar {
+        background-color: #000;
+        padding-bottom: 20px;
+    }
+}
 
 
 

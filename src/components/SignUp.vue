@@ -7,7 +7,9 @@
 						<div class="col-md-6" style="margin: 0 0;">
 							<div class="col-md-12 register-box" id="register-box" >
 								<form class="col-md-10">
-									<h1>Register</h1>
+									<details>
+										<summary><h1 style="font-family:'Audiowide'">Register</h1></summary>
+									
 									<div class="form-group">
 										<label for="reg-name" style="margin-top:10px;">Name</label>
 										<input id="reg-name" type="text" class="form-control" style="margin-bottom:10px;">
@@ -17,13 +19,15 @@
 										<input id="reg-password" type="password" v-on:keyup.13="addUser" class="form-control" style="margin-bottom:25px;">
 									</div>
 									<button @click="addUser" class="reg-button" type="button">Register</button>
+									</details>
+
 								</form>
 							</div>
 
 
 							<div class="col-md-12 blank1" style="margin: 0 0;">
-								<div class="option" style="width:100%">
-									<img :src="`${baseUrl}piece.svg`" style="width:50%" />
+								<div class="blanks">
+									<img :src="`${baseUrl}piece.svg`"/>
 								</div>
 							</div>
 
@@ -31,19 +35,21 @@
 
 						<div class="col-md-6" style="margin: 0 0;" >
 							<div class="col-md-12 blank2">
-								<div class="option" style="width:100%">
-									<img :src="`${baseUrl}piece-red.svg`" style="width:50%" />
+								<div class="blanks">
+									<img :src="`${baseUrl}piece-red.svg`"/>
 								</div>
 							</div>
 							<div class="col-md-12 login-box" style="margin: 0 0;" id="login-box">
 
 									<form action="" class="col-md-10">
-										<h1>Sign In</h1>
-										<label for="email" style="margin-top:10px;">Email</label>
-										<input id="login-email" type="email" class="form-control" style="margin-bottom:10px;">
-										<label for="password">Password</label>
-										<input id="login-password" type="password" v-on:keyup.13="validateUser" class="form-control" style="margin-bottom:25px;">
-										<button @click="validateUser" class="login-button" type="button">Sign In</button>
+										<details>
+											<summary><h1 style="font-family:'Audiowide'">Sign In</h1></summary>
+											<label for="email" style="margin-top:10px;">Email</label>
+											<input id="login-email" type="email" class="form-control" style="margin-bottom:10px;">
+											<label for="password">Password</label>
+											<input id="login-password" type="password" v-on:keyup.13="validateUser" class="form-control" style="margin-bottom:25px;">
+											<button @click="validateUser" class="login-button" type="button">Sign In</button>
+										</details>
 									</form>
 
 							</div>
@@ -144,18 +150,12 @@ export default {
 <style scoped>
 
 .container {
-
+	background-color: #000;
   position: absolute;
   z-index: 9996;
   top: 40px;
   left: 0;
-    background-image: /* tint image */
-                    linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
-                    /* checkered effect */
-                    linear-gradient(to right, rgba(64,114,160) 50%, #d3d3d3 50%),
-                    linear-gradient(to bottom, rgba(64,114,160) 50%, #d3d3d3 50%);
-    background-blend-mode: normal, difference, normal;
-    background-size: 320px 320px;
+
   width: 100%;
   height: 100%;
   /* background-color: rgba(0, 0, 0, .5); */
@@ -174,6 +174,10 @@ export default {
 }
 .login-box {
 	background-color: #4072a0;
+}
+.blanks {
+	height: 0%;
+	width: 0%;
 }
 
 .reg-button {
@@ -214,7 +218,9 @@ export default {
 .blank1,
 .blank2 {
 	background-color: #000;
-	height: 25%;
+	height: 0%;
+	width: 0%;
+	overflow: hidden;
 	margin: 0 0;
 	border: #000 solid 3px;
 
@@ -228,16 +234,12 @@ export default {
 
 .modal-container {
 	height:80%;
-	width: 40%;
-	min-width: 800px;
+	width: 100%;
 	margin: auto;
-	display: flex;
+	display: inline;
 	justify-content: center;
 	align-items: center;
 	padding: 10px 10px;
-	background-color: #000;
-	border-radius: 2px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
 	transition: all .3s ease;
 	font-family: 'Audiowide', cursive;
 
@@ -245,9 +247,13 @@ export default {
 
 .col-md-6 {
 	height: 100%;
-	width: 50%;
+	width: 100%;
 	margin: 0 0;
 	padding: 0 0;
+}
+
+.col-md-10 {
+	width: 95%;
 }
 
 .col-md-12 {
@@ -255,6 +261,7 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	width: 100%;
 
 }
 .modal-enter {
@@ -271,18 +278,74 @@ export default {
   transform: scale(1.1);
 }
 
+summary:focus {
+	outline: none;
+}
+
+@media (min-width: 500px) {
+	.container {
+		top: 40px;
+	background-image: /* tint image */
+					linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
+					/* checkered effect */
+					linear-gradient(to right, rgba(64,114,160) 50%, #d3d3d3 50%),
+					linear-gradient(to bottom, rgba(64,114,160) 50%, #d3d3d3 50%);
+	background-blend-mode: normal, difference, normal;
+	background-size: 320px 320px;
+	}
+	.modal-container {
+		background-color: #000;
+		border-radius: 2px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+	}
+	.blanks {
+		width:100%;
+		height:50%
+	}
+	.modal-container {
+		display: flex;
+		max-width: 800px;
+	}
+	.col-md-6 {
+		width: 50%;
+	}
+	details > summary{
+		list-style: none
+	}
+	details > summary::-webkit-details-marker {
+		display: none;
+	}
+	.blank1,
+	.blank2 {
+	height: 25%;
+	border: #000 solid 3px;
+	}
+	img {
+		width:25%;
+	}
+}
+
+
+
+
+
 @media only screen and (min-height: 900px) {
+
+	details > summary{
+		list-style: none
+	}
+	details > summary::-webkit-details-marker {
+		display: none;
+	}
+
 	.login-box,
 	.register-box {
-		background-color: #B71C1C;
 		height: 50%;
 		margin: 0 0;
 		border: #000 solid 3px;
 		padding: 40px 15px;
 	}
-	.login-box {
-	background-color: #4072a0;
-	}
+
 
 	.blank1,
 	.blank2 {
@@ -290,9 +353,12 @@ export default {
 	height: 50%;
 	margin: 0 0;
 	border: #000 solid 3px;
-
+	}
+	img {
+		width:50%;
 	}
 }
+
  
 </style>
 
