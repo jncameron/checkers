@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img v-if="loaded" :src="avatarLink"  alt="" height="70px" width="70px" >
+        <img v-if="loaded" :src="avatarLink"  alt=""  >
     </div>
     
 </template>
@@ -47,6 +47,22 @@ export default {
 img {
     border: 1px solid black;
     border-radius: 50%;
+    height: 40px;
+    width: 40px;
+}
+
+@media (min-height: 540px) {
+    img {
+        height: 50px;
+        width: 50px;
+    }
+}
+
+@media (min-height: 800px) {
+    img {
+        height: 70px;
+        width: 70px;
+    }
 }
 
 </style>

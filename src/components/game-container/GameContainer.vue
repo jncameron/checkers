@@ -1,7 +1,7 @@
 <template>
 	<div class="game">
 		<div v-bind:class="blankCol"></div>
-		<game-score-board class="col-md-2 game-score-board"
+		<game-score-board v-if="windowWidth > 500" class="col-md-2 game-score-board"
 			:turn="turn"
 			:player1Captures="player1Captures"
 			:player2Captures="player2Captures"
@@ -25,8 +25,10 @@
 			:gameBoardTiles="gameBoardTiles"
 			:turn="turn"
 			></game-board>
-	<div class="col-md-1"></div>
-		<game-chat v-if="player2.name !== 'Player 2' && player2.name !== 'Computer'"
+	<div v-bind:class="blankCol"></div>
+		<game-chat v-if=" windowWidth > 500 
+			&& this.player2.name !== 'Computer' 
+			&& this.player2.name !== 'Player 2'"
 					:player2="player2" 
 					:player1="player1" 
 					:user="user"
@@ -62,6 +64,12 @@ export default {
 		"choose-game": ChooseGame,
 
 	},
+	watch: {
+		windowWidth(newWidth, oldWidth) {
+        console.log("hi " + newWidth)
+        }
+	},
+
 	data() {
 		//Game Container holds most of the game logic - passing props to child components 'GameScoreBoard',
 		//  GameBoard, and GameChat
@@ -81,6 +89,7 @@ export default {
 			turn: "",
 			info: "",
 			message: "",
+			windowWidth: window.innerWidth,
 		};
 	},
 	beforeCreate: function() {
@@ -92,10 +101,10 @@ export default {
 	computed: {
 		blankCol() {
 			if(this.player2.name === 'Computer' || this.player2.name === 'Player 2') {
-				return 'col-lg-1'
+				return 'large-blank-col'
 			}
 			else {
-				return 'col-md-1'
+				return 'small-blank-col'
 			}
 		}
 	},
@@ -131,6 +140,11 @@ export default {
 		} else {
 			this.turn = 'red';
 		}
+		this.$nextTick(() => {
+            window.addEventListener('resize', () => {
+                this.windowWidth = window.innerWidth;
+            });
+        })
 		this.listenForBoardUpdates();
 	}, 
 	methods: {
@@ -248,20 +262,18 @@ export default {
 	padding: 0 0;
 }
 .game-score-board {
-	height:500px;
-	width:300px;
-	border: inset #2d353c 10px;
-	border-radius:10px
+	height:85vw;
+	width:200px;
 }
 .game-board {
 	padding:0px 0px;
-	height:500px;
-	width:500px;
+	height:100vw;
+	width:100vw;
 	border: inset #2d353c 15px
 }
 .game-chat {
-	height:500px;
-	width:300px;
+	height:85vw;
+	width:200px;
 	border: inset #2d353c 10px;
 	border-radius:10px;
 }
@@ -274,57 +286,108 @@ export default {
 	margin-left:auto;
 	margin-right:auto;
 	margin-top:40px;
-	width: 1800px;
+}
+.small-blank-col {
+	width:30px;
+}
+.large-blank-col {
+	width:70px;
+}
+
+@media (min-height: 200px) and (min-width: 500px) {
+	.game {
+		margin-top: 0;
+		display: inline-flex;
+
+	}
+	.game-board {
+		margin-left:auto;
+		margin-right:auto;
+		height: 300px;
+		width: 300px;
+	}
+	.game-score-board {
+		height: 300px;
+		border: inset #2d353c 10px;
+		border-radius:10px
+	}
+	.game-chat {
+		height: 300px;
+		border: inset #2d353c 10px;
+		border-radius:10px
+	}
 }
 
 
-
-@media only screen and (min-height: 800px) {
+@media only screen and (min-height: 300px) and (min-width: 650px){
+	.game {
+		margin-top: 0;
+	}
 	.game-score-board {
-		height:630px;
-		width:300px;
+		height: 300px;
+		width: 250px;
 		border: inset #2d353c 10px;
 		border-radius:10px
 	}
 	.game-board {
 		padding:0px 0px;
-		height:630px;
-		width:630px;
 		border: inset #2d353c 15px
 	}
 	.game-chat {
-		height:630px;
-		width:300px;
+		height: 300px;
+		width: 250px;
 		border: inset #2d353c 10px;
 		border-radius:10px;
 	}
+}
+
+@media (min-height: 540px) and (min-width: 700px) {
 	.game {
-		margin-top:80px;
+		margin-top: 10px;
+	}
+	.game-score-board {
+		height: 450px;
+		width: 250px;
+
+	}
+	.game-board {
+		height: 450px;
+		width: 450px;
+	}
+	.game-chat {
+		height: 450px;
+		width: 250px;
+
 	}
 }
 
-@media (min-width: 1150px) {
-	.col-md-1 {
-		width: 5px;
-		padding: 0 0;
+@media (min-height: 640px) {
+	.game {
+		margin-top: 25px;
 	}
 }
 
-@media (min-width: 1200px) {
-	.col-md-1 {
-		width: 20px;
-		padding: 20px 0;
+@media (min-height: 800px) {
+	.game {
+		margin-top: 50px;
 	}
-}
-
-@media (min-width: 1500px) {
-	.col-md-1 {
-		width: 60px;
+	.game-score-board {
+		height: 585px;
+		width: 250px;
+		border: inset #2d353c 10px;
+		border-radius:10px
 	}
-}
-@media (min-width: 1650px) {
-	.col-md-1 {
-		width: 140px;
+	.game-board {
+		padding:0px 0px;
+		border: inset #2d353c 15px;
+		height: 585px;
+		width: 585px;
+	}
+	.game-chat {
+		height: 585px;
+		width: 250px;
+		border: inset #2d353c 10px;
+		border-radius:10px;
 	}
 }
 </style>

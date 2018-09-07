@@ -124,9 +124,26 @@ h1 {
     margin-top: 0px;
     margin-bottom: 0px;
 }
+
+@media only screen and (min-height: 300px) and (min-width: 650px){
+    #all-messages {
+        height:140px;
+    }
+}
+
+@media (min-height: 540px) and (min-width: 700px) {
+    #all-messages {
+        height:266px;
+    }
+    #base {
+        padding-top:0px;
+        padding-bottom:5px;
+    }
+}
+
 @media only screen and (min-height: 800px) {
     #all-messages {
-        height:421px;
+        height:382px;
     }
 }
 

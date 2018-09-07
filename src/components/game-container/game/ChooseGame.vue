@@ -1,7 +1,7 @@
 <template>
 	<div id="choose-game">
 		<transition name="modal">
-			<div class="modal-mask">
+			<div class="container">
 				<div class="modal-wrapper">
 					<div class="modal-container">
 						<div class="col-md-6" style="margin: 0 0;">
@@ -252,20 +252,14 @@ export default {
 
 
 <style scoped>
-.modal-mask {
+.container {
+	background-color: #000;
   position: absolute;
   z-index: 9996;
   top: 40px;
   padding: 0px 15px;
 	
   left: 0;
-    background-image: /* tint image */
-                    linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
-                    /* checkered effect */
-                    linear-gradient(to right, rgba(64,114,160) 50%, #d3d3d3 50%),
-                    linear-gradient(to bottom, rgba(64,114,160) 50%, #d3d3d3 50%);
-    background-blend-mode: normal, difference, normal;
-    background-size: 320px 320px;
   width: 100%;
   height: 100%;
   /* background-color: rgba(0, 0, 0, .5); */
@@ -280,16 +274,12 @@ export default {
 
 .modal-container {
 	height:80%;
-	width: 40%;
-	min-width: 800px;
+	width: 100%;
 	margin: auto;
-	display: flex;
+	display: inline;
 	justify-content: center;
 	align-items: center;
 	padding: 10px 10px;
-	background-color: #000;
-	border-radius: 2px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
 	transition: all .3s ease;
 	font-family: 'Audiowide', cursive;
 
@@ -298,14 +288,13 @@ export default {
 .col-md-6 {
 
 	height: 100%;
-	width: 50%;
+	width: 100%;
 	margin: 0 0;
 	padding: 0 0;
 }
 
 .col-md-12 {
 	color: #FFF;
-	min-height: 250px;
 	justify-content: center;
 	align-items: center;
 
@@ -315,7 +304,6 @@ h2{
 }
 
 .option {
-	min-height: 250px;
 	height: 100%;
 	width: 100%;
 	display: flex;
@@ -358,27 +346,30 @@ h2{
 .option:active {
 	opacity: 0.5;
 }
-
+.continue,
 .computer {
 	background-color: #B71C1C;
-	height: 50%;
+	height: 150px;
 	margin: 0 0;
 	border: #000 solid 3px;
+	padding: 40px 15px;
 }
 
-.two-local {
-	background-color: #000;
-	height: 50%;
-	margin: 0 0;
-	border: #000 solid 3px;
 
+.two-online,
+.two-local {
+	height: 150px;
+	margin: 0 0;
+	background-color: #4072a0;
+	border: #000 solid 3px;
+}
+.continue{
+	background-color: #4072a0;
 }
 .two-online {
-	background-color: #000;
-	height: 50%;
-	margin: 0 0;
-	border: #000 solid 3px;
+	background-color: #B71C1C;
 }
+
 .choose-player {
 	width: 100%;
 	min-height: 200px;
@@ -409,13 +400,7 @@ h2{
 .play-button:focus{
     outline: none;
 }
-.continue{
-	
-	background-color: #4072a0;
-	height: 50%;
-	margin: 0 0;
-	border: #000 solid 3px;
-}
+
 .continue:hover {
 	background-image: url('../../../assets/under-construction.svg');
 	background-position: center;
@@ -440,6 +425,46 @@ h2{
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   transform: scale(1.1);
+}
+
+@media (min-width: 500px) {
+	.container {
+		top: 40px;
+	background-image: /* tint image */
+					linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
+					/* checkered effect */
+					linear-gradient(to right, rgba(64,114,160) 50%, #d3d3d3 50%),
+					linear-gradient(to bottom, rgba(64,114,160) 50%, #d3d3d3 50%);
+	background-blend-mode: normal, difference, normal;
+	background-size: 320px 320px;
+	}
+	.modal-container {
+		background-color: #000;
+		border-radius: 2px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+		display: flex;
+	}
+	.blanks {
+		width:100%;
+		height:50%
+	}
+	.modal-container {
+		display: flex;
+		max-width: 800px;
+	}
+	.col-md-6 {
+		width: 50%;
+	}
+	.two-local,
+	.two-online {
+		height: 50%;
+		background-color: #000;
+	}
+	.computer,
+	.continue {
+		height: 50%;
+	}
+
 }
 
 </style>

@@ -180,6 +180,10 @@ export default {
 	width: 0%;
 }
 
+img {
+	width: 0%;
+}
+
 .reg-button {
 	color:#FFF;
     background: #B71C1C;
@@ -282,7 +286,9 @@ summary:focus {
 	outline: none;
 }
 
-@media (min-width: 500px) {
+
+
+@media (min-height: 450px) and (min-width: 500px) {
 	.container {
 		top: 40px;
 	background-image: /* tint image */
@@ -297,14 +303,12 @@ summary:focus {
 		background-color: #000;
 		border-radius: 2px;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+		display: flex;
+		max-width: 800px;
 	}
 	.blanks {
 		width:100%;
 		height:50%
-	}
-	.modal-container {
-		display: flex;
-		max-width: 800px;
 	}
 	.col-md-6 {
 		width: 50%;
@@ -325,9 +329,14 @@ summary:focus {
 	}
 }
 
-
-
-
+@media (min-width: 501px) {
+	blank1,
+	blank2,
+	blanks {
+	height: 0%;
+	}
+	
+}
 
 @media only screen and (min-height: 900px) {
 

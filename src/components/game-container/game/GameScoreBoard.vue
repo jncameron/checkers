@@ -8,7 +8,7 @@
             </div>
             <div v-if="player1.color === 'red'" id="play-red">
                 <player-one :player1="player1" class="player-one"></player-one>
-                <div id="player-one-captures">
+                <div v-if="windowHeight > 540" id="player-one-captures">
                 <svg x="0" y="0" height="80" width="155">
                     <player-one-captures v-for="(piece,index) in player1Captures"
                         :key="index"
@@ -20,7 +20,7 @@
 
             <div v-else id="play-red">
                 <player-two :player2="player2" class="player-two"></player-two>
-                <div id="player-two-captures">
+                <div v-if="windowHeight > 540" id="player-two-captures">
                 <svg x="0" y="0" height="80" width="155">
                     <player-two-captures v-for="(piece,index) in player2Captures"
                         :key="index"
@@ -32,12 +32,17 @@
             </div>
 
             <div id="gameMessages">
-                <h4 > {{ gameMessage }} </h4>
-                <h4><strong> {{ turnMessage }}</strong></h4>
+                <div>
+                    <h4 > {{ gameMessage }} </h4>
+                </div>
+                <div>
+                    <h3><strong> {{ turnMessage }}</strong></h3>
+                </div>
+                
             </div>
 
             <div v-if="player2.color === 'blue'" id="play-blue">
-                <div id="player-two-captures">
+                <div v-if="windowHeight > 540" id="player-two-captures">
                     <svg x="0" y="0" height="80" width="155">
                         <player-two-captures v-for="(piece,index) in player2Captures"
                         :key="index"
@@ -49,7 +54,7 @@
             </player-two>
             </div>
             <div v-else id="play-blue">
-                <div id="player-one-captures">
+                <div v-if="windowHeight > 540" id="player-one-captures">
                     <svg x="0" y="0" height="80" width="155">
                         <player-one-captures v-for="(piece,index) in player1Captures"
                         :key="index"
@@ -91,6 +96,9 @@ export default {
 
 
   },
+  watch: {
+
+  },
 	data() {
 		return {
 		gameMessage: "Good Luck!",
@@ -98,13 +106,12 @@ export default {
 		pieceX: [0, 24, 48, 72, 96, 120, 0, 24, 48, 72, 96, 120],
 		pieceY: [0, 0, 0, 0, 0, 0, 40, 40, 40, 40, 40, 40],
 		redCaptured:[],
-		blueCaptured:[],
+        blueCaptured:[],
+        windowHeight: window.innerHeight,
 		};
 	},
 
-    mounted: function() {
-		this.listenForGameMessages();
-	},
+
 	components: {
 		"player-two": Player2,
 		"player-one": Player1,
@@ -116,8 +123,19 @@ export default {
             if(newValue === 'OVER') {
                 this.setGameMessage('GAME OVER')
             }
+        },
+        windowHeight(newHeight, oldHeight) {
+        console.log("hi " + newHeight)
         }
     },
+    mounted() {
+        this.listenForGameMessages();
+        this.$nextTick(() => {
+            window.addEventListener('resize', () => {
+                this.windowHeight = window.innerHeight;
+            });
+        })
+	},
 	methods: {
 		
         //move and turn info sent to opponent via socket
@@ -162,10 +180,19 @@ p {
 }
 .player-one,
 .player-two {
-    height: 14%;
-    padding-top: 1%;
-    padding-bottom: 1%;
+    height: 0%;
+    padding-top: 5%;
+    padding-bottom: 5%;
     width: 100%;
+}
+h4 {
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0 0;
+}
+h3 {
+    font-size: 16px;
+    margin: 0 0;
 }
 
 .box {
@@ -190,6 +217,7 @@ p {
 #player-two-captures {
 	background-color: rgba(211,211,211,0.2);
 	margin: 0px 0;
+    height: 0px;
 }
 
 #play-blue {
@@ -203,23 +231,40 @@ p {
 #player-one-captures {
 	background-color: rgba(211,211,211,0.2);
 	margin: 0px 0px;
+    height: 0px;
 }
 
 #container {
 	padding: 0 0;
-    display: flex;
 }
 
 #gameMessages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 85px;
 	height: 13%;
 	background-color: #d3d3d3;
 	margin: 15px 0;
+    flex-direction: column;
+}
+
+@media only screen and (min-height: 540px) {
+    #player-one-captures,
+    #player-two-captures {
+        height: 85px;
+    }
+    .player-one,
+    .player-two {
+        padding-top: 1%;
+        padding-bottom: 1%;
+    }
 }
 
 @media only screen and (min-height: 800px) {
     #player-one-captures,
     #player-two-captures {
-        height: 100px;
+        height: 105px;
     }
     .player-one,
     .player-two {
