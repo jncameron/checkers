@@ -150,7 +150,7 @@ export default {
 			if(this.player2.name === "Computer") {
 					setTimeout(function(){
 						moveComputer();
-					},1000)
+					},1500)
 			}
 		},
 	},

@@ -22,42 +22,56 @@ router.post('/moves', (req,res,next) => {
         .exec()
         .then(game => {
             console.log("GAME FOUND: ")
-            game.moves.push(oldpos+"-"+newpos)
+            
 
             if(game.player1.color === 'red') {
                 if(pieceName[0] === 'r') {
                     game.set({'player1.pieces': { [pieceName]: { "pos":newpos,"x":newX,"y":newY}}})
+                    if (captured[0] === 'b') {
+                        game.set({'player2.pieces': { [captured]: "CAPTURED"}})
+                        game.moves.push("Red: "+ oldpos+"X"+newpos + " Captured Blue");
+                    }  else if (captured.length === 0)  {
+                        game.moves.push("Red: "+ oldpos+"-"+newpos);
+                    }
+
                 }
                 
                 if(pieceName[0] === 'b') {
                     game.set({'player2.pieces': { [pieceName]: { "pos":newpos,"x":newX,"y":newY}}})
+                    if (captured[0] === 'r') {
+                        game.set({'player1.pieces': { [captured]: "CAPTURED"}})
+                        game.moves.push("Blue: "+ oldpos+"X"+newpos + " Captured Red");
+                    } else if (captured.length === 0) {
+                        game.moves.push("Blue: "+ oldpos+"-"+newpos);
+                    }
                 }
 
-                if (captured[0] === 'b') {
-                        game.set({'player2.pieces': { [captured]: "CAPTURED"}})
-                }
-
-                if (captured[0] === 'r') {
-                    game.set({'player1.pieces': { [captured]: "CAPTURED"}})
-                }
             }
                 
             else if(game.player1.color === 'blue') {
                 if(pieceName[0] === 'r') {
                     game.set({'player2.pieces': { [pieceName]: { "pos":newpos,"x":newX,"y":newY}}})
+                    if (captured[0] === 'b') {
+                        game.set({'player1.pieces': { [captured]: "CAPTURED"}})
+                        game.moves.push("Red: "+ oldpos+"X"+newpos + " Captured Blue");
+                    } else if (captured.length === 0)  {
+                        game.moves.push("Red: "+ oldpos+"-"+newpos);
+                    }
                 }
                 
                 if(pieceName[0] === 'b') {
                     game.set({'player1.pieces': { [pieceName]: { "pos":newpos,"x":newX,"y":newY}}})
+                    if (captured[0] === 'r') {
+                        game.set({'player2.pieces': { [captured]: "CAPTURED"}})
+                        game.moves.push("Blue: "+ oldpos+"X"+newpos + " Captured Red");
+                    } else if (captured.length === 0) {
+                        game.moves.push("Blue: "+ oldpos+"-"+newpos);
+                    }
                 }
 
-                if (captured[0] === 'b') {
-                        game.set({'player1.pieces': { [captured]: "CAPTURED"}})
-                }
 
-                if (captured[0] === 'r') {
-                    game.set({'player2.pieces': { [captured]: "CAPTURED"}})
-                }
+
+
             }
 
 
@@ -152,5 +166,22 @@ router.post('/', (req,res,next) => {
     });
 
 });
+
+router.post('/requestmoves', (req,res,next) => {
+    NewGame.findById({_id: req.body.id})
+
+        .then(game => { 
+            game.save()
+            .then(result => {
+                res.status(200).send({
+                    moves: game.moves
+                });
+            }).catch(err => {
+                res.status(500).json({
+                    error: err
+                })
+            })
+        });
+})
 
 module.exports = router; 

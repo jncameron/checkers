@@ -1,5 +1,5 @@
 let player2 = {
-    name: "Player 2",
+    name: "Two",
     email: String,
     avatar: "user-5.svg",
     pieces: Object

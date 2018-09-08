@@ -246,8 +246,6 @@ export default {
 				setGameBoardTiles(data.tiles);
 				setPlayer1HasCaptured();
 				setPlayer2HasCaptured();
-
-				
 			});
 		},
 

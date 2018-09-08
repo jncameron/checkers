@@ -6,7 +6,10 @@
             <div id="all-messages">
             <div v-for="(usrMsg, index) in usrMsgs"
                     :key="index">
-                <div v-if="usrMsg[1] !== user.name">
+                <div v-if="usrMsg[1] === 'info'">
+                    <info-message :usrMsg="usrMsg[0]" ></info-message>
+                </div>
+                <div v-if="usrMsg[1] !== user.name && usrMsg[1] !== 'info'">
                     <red-player-opponent-message v-if="opponent.color === 'red'" :usrMsg="usrMsg[0]" :opponent="opponent"></red-player-opponent-message>
                     <blue-player-opponent-message v-if="opponent.color === 'blue'" :usrMsg="usrMsg[0]" :opponent="opponent"></blue-player-opponent-message>                
                 </div>
@@ -40,6 +43,7 @@ import RedPlayerUserMessage from './RedPlayerUserMessage.vue';
 import BluePlayerOpponentMessage from './BluePlayerOpponentMessage.vue';
 import RedPlayerOpponentMessage from './RedPlayerOpponentMessage.vue';
 import NewMessage from './NewMessage.vue';
+import InfoMessage from './InfoMessage.vue';
 
 export default {
     props: {
@@ -52,6 +56,7 @@ export default {
         return {
             usrMsg: [],
             usrMsgs: [],
+            baseUrl: process.env.BASE_URL,
             
         }
     },
@@ -60,7 +65,8 @@ export default {
         'red-player-user-message': RedPlayerUserMessage,
         'blue-player-opponent-message': BluePlayerOpponentMessage,
         'red-player-opponent-message': RedPlayerOpponentMessage,
-        'new-message': NewMessage
+        'new-message': NewMessage,
+        'info-message': InfoMessage
     }, methods: {
         scrollToEnd() {
             let allMessages = this.$el.querySelector("#all-messages");
@@ -71,13 +77,27 @@ export default {
             let usrMsg = this.usrMsg;
             let scrollToEnd = this.scrollToEnd;
             let url = window.location.href;
-			let room = url.split('game/').pop();
+            let room = url.split('game/').pop();
+            let $http = this.$http;
 
             socket.on('chat', function(data) {
 
-                usrMsg = data.msg
+                usrMsg = data.msg.slice(0, -1)
                 let usr = data.usr
-                if (usrMsg) {
+                let moves = "";
+                if (usrMsg === "/printmoves"){
+                    console.log("IN USRMSG")
+                    let id = url.split('game/').pop();
+                    $http.post(`newgame/requestmoves`, {id: id})
+                    .then(response => {
+                        moves = moves + response.body.moves;
+                        usrMsgs.push([moves,'info']);
+                    }, error => {
+                        console.log(error);
+                    });
+                    
+                }
+                if (usrMsg[0] !== "/") {
                     usrMsgs.push([usrMsg,usr])
                     scrollToEnd();
                     console.log("IN ROOM " + room + " DATA: " + usrMsg + usr);
