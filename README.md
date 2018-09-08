@@ -45,7 +45,6 @@ Run the server
 
 
 ## TODOS - CLIENT
-* Make Profile, Signup, and ChooseGame UI compatible with Edge and Firefox (fine on Chrome)
 
 Signup: 
 * Use local storage to keep users logged in on refresh (if token not expired)
@@ -56,8 +55,8 @@ Profile:
 * User can see total win/loss record
 * User can see best win/loss and worst win/loss opponent records
 
-GameChat: 
-* Does not scroll all the way to the bottom on new message
+GamePlay:
+* Give user the option to choose game with/without mandatory jumps 
 
 
 
