@@ -51,6 +51,7 @@ export default {
         player2: {type: Object},
         user: {type: Object},
         opponent: {type: Object},
+        showTileNumbers: {type: Boolean}
     },
     data(){
         return {
@@ -68,25 +69,19 @@ export default {
         'new-message': NewMessage,
         'info-message': InfoMessage
     }, methods: {
-        scrollToEnd() {
-            let allMessages = this.$el.querySelector("#all-messages");
-            allMessages.scrollTop = allMessages.scrollHeight;
-        },
         listenForMessages() {
             let usrMsgs = this.usrMsgs;
             let usrMsg = this.usrMsg;
-            let scrollToEnd = this.scrollToEnd;
             let url = window.location.href;
             let room = url.split('game/').pop();
             let $http = this.$http;
 
-            socket.on('chat', function(data) {
+            socket.on('chat', (data) => {
 
                 usrMsg = data.msg.slice(0, -1)
                 let usr = data.usr
                 let moves = "";
                 if (usrMsg === "/printmoves"){
-                    console.log("IN USRMSG")
                     let id = url.split('game/').pop();
                     $http.post(`newgame/requestmoves`, {id: id})
                     .then(response => {
@@ -97,9 +92,12 @@ export default {
                     });
                     
                 }
+                if (usrMsg === "/toggletiles"){
+                    this.$emit('requestTileNumbers', !this.showTileNumbers )
+                }
+
                 if (usrMsg[0] !== "/") {
                     usrMsgs.push([usrMsg,usr])
-                    scrollToEnd();
                     console.log("IN ROOM " + room + " DATA: " + usrMsg + usr);
                 }
 
@@ -111,13 +109,9 @@ export default {
     mounted: function() {
         this.listenForMessages();
     },
-    watch:{
-        usrMsgs: {
-            handler: function() {
-                this.scrollToEnd()
-            },
-            deep: true
-        }
+    updated() {
+        { var el = document.getElementById('all-messages'); 
+            el.scrollTop = el.scrollHeight; }
     }
 }
 </script>

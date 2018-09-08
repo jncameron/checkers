@@ -24,6 +24,7 @@
 			:user="user"
 			:gameBoardTiles="gameBoardTiles"
 			:turn="turn"
+			:showTileNumbers="showTileNumbers"
 			></game-board>
 	<div v-bind:class="blankCol"></div>
 		<game-chat v-if=" windowWidth > 500 
@@ -33,7 +34,9 @@
 					:player1="player1" 
 					:user="user"
 					:opponent="opponent"
-					class="col-md-2 game-chat" 
+					:showTileNumbers="showTileNumbers"
+					class="col-md-2 game-chat"
+					@requestTileNumbers="setShowTileNumbers($event)"
 					></game-chat>
 
 	</div>
@@ -90,6 +93,7 @@ export default {
 			info: "",
 			message: "",
 			windowWidth: window.innerWidth,
+			showTileNumbers: false
 		};
 	},
 	beforeCreate: function() {
@@ -226,6 +230,9 @@ export default {
 		},
 		setBlankCol(value) {
 			this.blankCol = value;
+		},
+		setShowTileNumbers(tf) {
+			this.showTileNumbers = tf;
 		},
 		//board state sent to other player via socket
 		listenForBoardUpdates() {

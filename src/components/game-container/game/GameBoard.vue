@@ -20,6 +20,8 @@
 				:key="index"
 				:x="gameBoardTiles[(index)]['x']"
 				:y="gameBoardTiles[(index)]['y']"
+				:pos="gameBoardTiles[(index)]['pos']"
+				:showTileNumbers="showTileNumbers"
 				:turn="turn"
 				:occupied="tile.occupied"
 				:allowedJumps="allowedJumps"
@@ -97,7 +99,8 @@ export default {
 		player2: {type: Object},
 		gameBoardTiles: {type: Object},
 		turn: {type: String},
-		user: {type: Object}
+		user: {type: Object},
+		showTileNumbers: {type: Boolean}
 	},
 	data() {
 			return {

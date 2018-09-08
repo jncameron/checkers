@@ -5,6 +5,7 @@
     </defs>
     <g class="column">
         <rect v-on:click="dropPiece()" x=0 y=0 width="100" height="100" fill="dimgray" />
+		<text v-if="showTileNumbers" x=20 y=70 style="font:bold 60px arial"> {{pos}} </text>
 
         <rect v-if="selectedPieceXY.length === 2
 			&& selectedPieceXY[0] === x 
@@ -59,7 +60,9 @@ props:
 	turn: {type: String},
 	occupied: {type: String},
 	allowedJumps: {type: Array},
-	availableJumps: {type: Boolean}
+	availableJumps: {type: Boolean},
+	pos: {type: Number},
+	showTileNumbers: {type: Boolean}
 },
 
 data() {
