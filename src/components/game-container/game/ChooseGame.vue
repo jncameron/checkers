@@ -457,11 +457,13 @@ h2{
 	}
 	.two-local,
 	.two-online {
+		min-height: 150px;
 		height: 50%;
 		background-color: #000;
 	}
 	.computer,
 	.continue {
+		min-height: 150px;
 		height: 50%;
 	}
 

@@ -152,7 +152,7 @@ export default {
 						moveComputer();
 					},1000)
 			}
-		}
+		},
 	},
 	methods: {
 		// one of the two main methods in GameBoard.vue
@@ -188,6 +188,7 @@ export default {
 			let opponentColor = "";
 			let newMovePosition = this.computerMoves[randomMove][1];
 			let computerJumps = this.computerJumps;
+			let jumpAgain = this.jumpAgain;
 			if(color === 'red') {
 				opponentColor = 'blue'
 			} else if (color === 'blue') {
@@ -199,8 +200,8 @@ export default {
 					let jumpY = this.computerJumps[0][0]['y'];
 					let newJumpPosition = computerJumps[0][1];
 					this.selectPiece([jumpX,jumpY],color,opponentColor);
-					this.dropPiece([newJumpPosition['x'],newJumpPosition['y']])
-
+					this.dropPiece([newJumpPosition['x'],newJumpPosition['y']]);
+					
 				}else {
 					this.selectPiece([moveX,moveY],color,opponentColor);
 					console.log(newMovePosition)

@@ -307,7 +307,27 @@ export default {
   transform: scale(1.1);
 }
 
-@media only screen and (min-height: 750px) {
+@media only screen and (min-height: 700px) {
+	.container {
+		height: 100%;
+	}
+	.avatar-image {
+		width:45%;
+		padding: auto;
+	}
+	.user-win-loss {
+		margin: auto;
+		margin-top: 10px;
+		width: 55%
+	}
+	.opponent-record-box {
+		margin-top: 20px;
+		padding-top: 20px;
+		min-height: 240px;
+	}
+}
+
+@media only screen and (min-height: 820px) {
 	.container {
 		height: 100%;
 	}

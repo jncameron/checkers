@@ -11,7 +11,7 @@
 										<summary><h1 style="font-family:'Audiowide'">Register</h1></summary>
 									
 									<div class="form-group">
-										<label for="reg-name" style="margin-top:10px;">Name</label>
+										<label for="reg-name" style="margin-top:10px;">Nickname</label>
 										<input id="reg-name" type="text" class="form-control" style="margin-bottom:10px;">
 										<label for="reg-email">Email</label>
 										<input id="reg-email" type="email" class="form-control" style="margin-bottom:10px;">
