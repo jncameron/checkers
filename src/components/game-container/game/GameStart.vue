@@ -13,13 +13,8 @@
 
 						<div class="modal-body">
 							<slot name="body">
-                <ul>
-                  <li>Uncrowned pieces step diagonally forwards</li>
-                  <li>An opponent's piece is captured by jumping over the piece in the same line</li>
-                  <li>After a jump, if another jump is available, the piece jumps again</li>
-                  <li>When a piece reaches the other end of the board, it is crowned</li>
-                  <li>Crowned pieces can move diagonally forwards or backwards</li>
-                  <li><strong>If a jump is available, you MUST jump</strong></li>
+                <ul >
+                  <li v-for="(rule,index) in rules" :key="index"> {{rule}} </li>
                 </ul>
 							</slot>
 						</div>
@@ -41,12 +36,17 @@
 <script>
 export default {
   props: {
-    winnerName: {type: String}
+    winnerName: {type: String},
+    rulesString: {type: String}
   },
   data() {
     return {
-      
+      rules: [],
     }
+  },
+  mounted: function() {
+    this.rules = this.rulesString.split("\n")
+    console.log(this.moves)
   },
   methods: {
     startGame() {

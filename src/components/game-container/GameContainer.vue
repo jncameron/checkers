@@ -25,6 +25,7 @@
 			:gameBoardTiles="gameBoardTiles"
 			:turn="turn"
 			:showTileNumbers="showTileNumbers"
+			:rulesString="rulesString"
 			></game-board>
 	<div v-bind:class="blankCol"></div>
 		<game-chat v-if=" windowWidth > 500 
@@ -35,6 +36,7 @@
 					:user="user"
 					:opponent="opponent"
 					:showTileNumbers="showTileNumbers"
+					:rulesString="rulesString"
 					class="col-md-2 game-chat"
 					@requestTileNumbers="setShowTileNumbers($event)"
 					></game-chat>
@@ -93,7 +95,13 @@ export default {
 			info: "",
 			message: "",
 			windowWidth: window.innerWidth,
-			showTileNumbers: false
+			showTileNumbers: false,
+			rulesString: `Uncrowned pieces step diagonally forwards
+					An opponent's piece is captured by jumping over the piece in the same line,
+					After a jump, if another jump is available, the piece jumps again,
+					When a piece reaches the other end of the board, it is crowned
+					Crowned pieces can move diagonally forwards or backwards
+                	If a jump is available, you MUST jump`
 		};
 	},
 	beforeCreate: function() {

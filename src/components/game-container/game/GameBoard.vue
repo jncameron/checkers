@@ -1,6 +1,6 @@
 <template>
     <div>
-	<game-start v-if="gameStatus === 'START'"></game-start>
+	<game-start v-if="gameStatus === 'START'" :rulesString="rulesString"></game-start>
 	<game-finished v-if="gameStatus === 'OVER'" :winnerName="winnerName" @close="showModal = false">
     </game-finished>
     <svg viewBox="0 0 800 800" 
@@ -102,7 +102,8 @@ export default {
 		gameBoardTiles: {type: Object},
 		turn: {type: String},
 		user: {type: Object},
-		showTileNumbers: {type: Boolean}
+		showTileNumbers: {type: Boolean},
+		rulesString: {type: String}
 	},
 	data() {
 			return {

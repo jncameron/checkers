@@ -4,12 +4,16 @@
 
         </div>
             <div id="all-messages">
+                <welcome-message></welcome-message>
             <div v-for="(usrMsg, index) in usrMsgs"
                     :key="index">
                 <div v-if="usrMsg[1] === 'info'">
-                    <info-message :usrMsg="usrMsg[0]" ></info-message>
+                    <moves-message :usrMsg="usrMsg[0]" ></moves-message>
                 </div>
-                <div v-if="usrMsg[1] !== user.name && usrMsg[1] !== 'info'">
+                <div v-if="usrMsg[1] === 'rules'">
+                    <rules-message :usrMsg="usrMsg[0]" ></rules-message>
+                </div>
+                <div v-if="usrMsg[1] !== user.name && usrMsg[1] !== 'info' && usrMsg[1] !== 'rules'">
                     <red-player-opponent-message v-if="opponent.color === 'red'" :usrMsg="usrMsg[0]" :opponent="opponent"></red-player-opponent-message>
                     <blue-player-opponent-message v-if="opponent.color === 'blue'" :usrMsg="usrMsg[0]" :opponent="opponent"></blue-player-opponent-message>                
                 </div>
@@ -43,7 +47,10 @@ import RedPlayerUserMessage from './RedPlayerUserMessage.vue';
 import BluePlayerOpponentMessage from './BluePlayerOpponentMessage.vue';
 import RedPlayerOpponentMessage from './RedPlayerOpponentMessage.vue';
 import NewMessage from './NewMessage.vue';
-import InfoMessage from './InfoMessage.vue';
+import MovesMessage from './MovesMessage.vue';
+import RulesMessage from './RulesMessage.vue';
+import WelcomeMessage from './WelcomeMessage.vue';
+
 
 export default {
     props: {
@@ -51,7 +58,8 @@ export default {
         player2: {type: Object},
         user: {type: Object},
         opponent: {type: Object},
-        showTileNumbers: {type: Boolean}
+        showTileNumbers: {type: Boolean},
+        rulesString: {type: String}
     },
     data(){
         return {
@@ -67,7 +75,9 @@ export default {
         'blue-player-opponent-message': BluePlayerOpponentMessage,
         'red-player-opponent-message': RedPlayerOpponentMessage,
         'new-message': NewMessage,
-        'info-message': InfoMessage
+        'moves-message': MovesMessage,
+        'rules-message': RulesMessage,
+        'welcome-message': WelcomeMessage,
     }, methods: {
         listenForMessages() {
             let usrMsgs = this.usrMsgs;
@@ -75,13 +85,14 @@ export default {
             let url = window.location.href;
             let room = url.split('game/').pop();
             let $http = this.$http;
+            let rulesString = this.rulesString;
 
             socket.on('chat', (data) => {
 
                 usrMsg = data.msg.slice(0, -1)
                 let usr = data.usr
                 let moves = "";
-                if (usrMsg === "/printmoves"){
+                if (usrMsg === "/moves"){
                     let id = url.split('game/').pop();
                     $http.post(`newgame/requestmoves`, {id: id})
                     .then(response => {
@@ -94,6 +105,10 @@ export default {
                 }
                 if (usrMsg === "/toggletiles"){
                     this.$emit('requestTileNumbers', !this.showTileNumbers )
+                }
+
+                if (usrMsg === "/rules"){
+                        usrMsgs.push([rulesString,'rules']);
                 }
 
                 if (usrMsg[0] !== "/") {
