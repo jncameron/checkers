@@ -98,7 +98,7 @@ h1 {
     padding-left: 20px;
     margin-top: 0px;
     margin-bottom: 5px;
-    font-size: 24px;
+
 
 }
 
@@ -123,7 +123,7 @@ p {
 
 .navbar-brand {
     color:#FFF;
-    font-size:32px;
+    font-size: 22px;
     margin-top:5px
 }
 
@@ -157,6 +157,9 @@ nav .navbar-nav ul {
 }
 
 @media (min-width: 768px) {
+    .navbar-brand {
+        font-size: 32px;
+    }
     .nav-link {
         background-color: #4072a0
     }

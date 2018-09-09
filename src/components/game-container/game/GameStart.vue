@@ -1,29 +1,33 @@
 <template>
 	<div>
 		<transition name="modal">
-			<div class="modal-mask">
+			<div class="modal-mask" id="modal-mask">
 				<div class="modal-wrapper">
 					<div class="modal-container">
 
 						<div class="modal-header">
 							<slot name="header">
-								Game Over
+								Rules of Checkers
 							</slot>
 						</div>
 
 						<div class="modal-body">
 							<slot name="body">
-								{{ winnerName }} Wins
+                <ul>
+                  <li>Uncrowned pieces step diagonally forwards</li>
+                  <li>An opponent's piece is captured by jumping over the piece in the same line</li>
+                  <li>After a jump, if another jump is available, the piece jumps again</li>
+                  <li>When a piece reaches the other end of the board, it is crowned</li>
+                  <li>Crowned pieces can move diagonally forwards or backwards</li>
+                  <li><strong>If a jump is available, you MUST jump</strong></li>
+                </ul>
 							</slot>
 						</div>
 
 						<div class="modal-footer">
 							<slot name="footer">
-								<button class="btn btn-primary" @click="navigateToProfile">
-									Game Stats
-								</button>
-								<button class="btn btn-primary" @click="navigateToLobby">
-									Lobby
+								<button class="btn btn-primary" @click="startGame">
+									Start Game
 								</button>
 							</slot>
 						</div>
@@ -45,11 +49,9 @@ export default {
     }
   },
   methods: {
-    navigateToProfile() {
-      this.$router.push({path: '/profile/' + this.user.name})
-    },
-    navigateToLobby() {
-      this.$router.push({path: '/choose-game'})
+    startGame() {
+      let modal = document.getElementById('modal-mask');
+      modal.style.display = "none";
     },
   }
 }
@@ -75,7 +77,7 @@ export default {
 }
 
 .modal-container {
-  width: 370px;
+  width: 95%;
   margin: 0px auto;
   padding: 10px 10px;
   background-color: rgba(204,204,204,0.8);
@@ -83,27 +85,32 @@ export default {
   border: 2px solid black;
   box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
   transition: all .3s ease;
-  font-family: sans-serif
+  font-family: sans-serif;
   
 }
 
 .modal-header {
   margin: 0, 0;
+  padding-top: 0px;
+  padding-bottom: 0px;
   font-family: 'Audiowide', cursive;
-  font-size: 48px;
+  font-size: 18px;
   color: #B71C1C;
 }
 
 .modal-body {
   margin: 0 0;
-  font-family: 'Audiowide';
-  font-size: 32px;
+  font-family: sans-serif;
+  font-size: 10px;
+  text-align: left;
 }
 
 .modal-footer {
   margin: 0 0;
+  padding-top: 5px;
+  padding-bottom: 0;
   font-family: 'Audiowide';
-  font-size: 32px;
+  font-size: 14px;
   align-items: center;
   text-align: center;
 }
@@ -111,7 +118,11 @@ export default {
 .btn {
     background-color: #B71C1C;
     font-family: 'Audiowide';
-    font-size: 18px;
+    font-size: 12px;
+}
+ul {
+  padding-left: 10px;
+  padding-bottom: 0px;
 }
 
 .modal-enter {
@@ -126,6 +137,26 @@ export default {
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
+}
+@media (min-height: 540px) and (min-width: 700px) {
+
+}
+@media (min-height: 640px) {
+
+}
+@media (min-height: 840px) {
+  .modal-header {
+    font-size: 32px;
+    color: #B71C1C;
+  }
+
+  .modal-body {
+    font-size: 16px;
+  }
+
+  .modal-footer {
+    font-size: 32px;
+  }
 }
 
 </style>

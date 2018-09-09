@@ -77,7 +77,7 @@ export default {
 		//Game Container holds most of the game logic - passing props to child components 'GameScoreBoard',
 		//  GameBoard, and GameChat
 		return {
-			gameStatus: "PLAYING",
+			gameStatus: "START",
 			winnerId: "",
 			winnerName: "",
 			loserId: "",
@@ -372,7 +372,7 @@ export default {
 	}
 }
 
-@media (min-height: 800px) {
+@media (min-height: 840px) {
 	.game {
 		margin-top: 50px;
 	}

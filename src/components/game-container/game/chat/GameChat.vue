@@ -155,7 +155,7 @@ h1 {
     }
 }
 
-@media only screen and (min-height: 800px) {
+@media only screen and (min-height: 840px) {
     #all-messages {
         height:382px;
     }

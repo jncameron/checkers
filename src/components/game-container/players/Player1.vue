@@ -58,7 +58,7 @@ img {
     }
 }
 
-@media (min-height: 800px) {
+@media (min-height: 840px) {
     img {
         height: 70px;
         width: 70px;

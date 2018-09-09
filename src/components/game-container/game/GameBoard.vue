@@ -1,5 +1,6 @@
 <template>
     <div>
+	<game-start v-if="gameStatus === 'START'"></game-start>
 	<game-finished v-if="gameStatus === 'OVER'" :winnerName="winnerName" @close="showModal = false">
     </game-finished>
     <svg viewBox="0 0 800 800" 
@@ -83,6 +84,7 @@
 <script>
 
 import GameFinished from './GameFinished.vue';
+import GameStart from './GameStart.vue';
 import Tile from './Tile.vue';
 import RedPiece from './RedPiece.vue';
 import BluePiece from './BluePiece.vue';
@@ -133,6 +135,7 @@ export default {
 			'red-piece': RedPiece,
 			'blue-piece': BluePiece,
 			'game-finished': GameFinished,
+			'game-start': GameStart,
 	},
 	watch: {
 		turn: function(newValue, oldValue) {
@@ -553,16 +556,17 @@ export default {
 			let justCrowned = false;
 			console.log("Piece Crown : " + piece['crown'])
 			console.log("Piece Pos : " + piece['pos'])
+			console.log("PIECE" + JSON.stringify(piece))
 
 
-			if (piece['crown'] === false && this.turn === 'red') {
+			if ((piece['crown'] === false || piece['crown'] == null) && this.turn === 'red') {
 				if (piece['pos'] === 29 || piece['pos'] === 30 || piece['pos'] === 31 || piece['pos'] === 32) {
 					piece['crown'] = true;
 					justCrowned = true;		
 					console.log("Piece Crown : " + piece['crown'])		
 				}
 			}
-			else if (piece['crown'] === false && this.turn === 'blue') {
+			else if ((piece['crown'] === false || piece['crown'] == null) && this.turn === 'blue') {
 				if (piece['pos'] === 1 || piece['pos'] === 2 || piece['pos'] === 3 || piece['pos'] === 4) {
 					piece['crown'] = true;
 					justCrowned = true;
