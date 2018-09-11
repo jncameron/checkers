@@ -50,13 +50,26 @@ Signup:
 * Use local storage to keep users logged in on refresh (if token not expired)
 * Redirect to signup if player logged out(and no token / token expired)
 
+Choose Game:
+* Fix players online array
+* start new game after completed (clear game id?)
+* Log out - update online users
+
 Profile: 
 * Update user password
+* On updates (user, email, avatar) - update online users array
 * User can see total win/loss record
 * User can see best win/loss and worst win/loss opponent records
 
 GamePlay:
 * Give user the option to choose game with/without mandatory jumps 
+
+Analytics Page
+* admin portal signup (protected route)
+* Total users online
+* Users this month
+* Total games played day / week / month
+
 
 
 

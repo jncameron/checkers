@@ -21,12 +21,24 @@ exports.user_signup = (req, res, next) => {
 					error: err
 					});
 				} else {
+				const token = jwt.sign(
+					{
+						email: req.body.email,
+						userId: req.body._id,
+						hmm: "hmmm!"
+					},
+						'secret_this_should_be_longer',
+					{
+						expiresIn: 3600,
+					}
+						);
 				const user = new User({
 					_id: new mongoose.Types.ObjectId(),
 					email: req.body.email,
 					name: req.body.name,
 					avatar: req.body.avatar,
-					password: hash
+					password: hash,
+					refreshtoken: token
 				});
 				console.log(hash)
 				user
@@ -35,13 +47,14 @@ exports.user_signup = (req, res, next) => {
 						console.log(result);
 						res.status(201).json({
 							id: user.id,
+							token: token,
 							message: "User created"
 						});
 					})
 					.catch(err => {
 						console.log(err);
 						res.status(500).json({
-						error: err
+						error: "signup error " + err
 						});
 					});
 				}
@@ -54,6 +67,7 @@ exports.user_update = (req, res, next) => {
 	User.findByIdAndUpdate({ _id: req.body.id })
 	.exec()
 	.then(user => {
+		
 		console.log("USER FOUND: ")
 		user.set({'name': req.body.name})
 		user.set({'email': req.body.email})
@@ -92,10 +106,13 @@ exports.user_updateav = (req, res, next) => {
 };
 
 exports.user_login = (req, res, next) => {
+	let id = "";
+	let token = "";
+	let fetchedUser = {};
 	User.find({ email: req.body.email })
 		.exec()
 		.then(user => {
-		let id = user._id
+		
 		if (user.length < 1) {
 			return res.status(401).json({
 			message: "Auth failed, muchacho"
@@ -108,16 +125,18 @@ exports.user_login = (req, res, next) => {
 			});
 		}
 		if (result) {
-			const token = jwt.sign(
+			console.log(user[0])
+			id = user[0]['_id']
+			token = jwt.sign(
 			{
-				email: user.email,
-				userId: user._id,
+				email: user[0].email,
+				userId: user[0]._id,
 			},
 				'secret_this_should_be_longer',
 			{
 				expiresIn: 3600
 			}
-			);
+			);			
 			return res.status(200).json({
 				user: user[0],
 				token: token,
@@ -132,10 +151,30 @@ exports.user_login = (req, res, next) => {
     .catch(err => {
       console.log(err);
       res.status(500).json({
-        error: err
+        error: "this error " + err
       });
-    });
+	});
+
+	
 };
+
+exports.user_refresh_login = (req, res, next) => {
+	let refreshedUser = jwt.verify(req.body.usertoken, 'secret_this_should_be_longer');
+	console.log("Req.body " + JSON.stringify(req.body.usertoken))
+	User.find({ email: refreshedUser.email })
+	.exec()
+	.then(user => {
+
+		res.status(200).json({
+			user: user[0],
+		})
+		err => {
+			res.status(500).json({
+				error: "refreshtoken error" + err
+			})
+		};
+	});
+}
 
 exports.user_delete = (req, res, next) => {
 	User.remove({ _id: req.params.userId })

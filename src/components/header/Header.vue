@@ -17,12 +17,12 @@
             <ul class="nav navbar-nav">
                 <router-link data-toggle="collapse" data-target=".navbar-collapse.in"  :to="'/choose-game'" @click="toPlay" tag="li" active-class="hidden"><a class="nav-link">PLAY</a></router-link>
             </ul>
-            <ul class="nav navbar-nav" v-if="user.id.length === 0">
+            <ul class="nav navbar-nav" v-if="user._id.length === 0">
                 <router-link data-toggle="collapse" data-target=".navbar-collapse.in"  :to="'/signup'" tag="li" active-class="hidden" ><a class="nav-link">SIGN IN</a></router-link>
             </ul>
             <div class="nav navbar-nav">
-                <img v-if="user.id.length > 0" data-toggle="collapse" data-target=".navbar-collapse.in" class=" nav navbar-brand profile-image"  @click="toProfile" :src="getAvatarLink()">
-                <p v-if="user.id.length > 0">{{user.name}}</p>
+                <img v-if="user._id.length > 0" data-toggle="collapse" data-target=".navbar-collapse.in" class=" nav navbar-brand profile-image"  @click="toProfile" :src="getAvatarLink()">
+                <p v-if="user._id.length > 0">{{user.name}}</p>
             </div>
 
         </div>
@@ -49,12 +49,6 @@ export default {
     },
 
     methods: {
-        setUser(user) {
-            if(this.userName.length > 0) {
-                this.signedIn = true;
-            }
-
-        },
         getAvatarLink() {
             return this.user.avatar;
         },

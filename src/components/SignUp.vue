@@ -88,11 +88,11 @@ export default {
 			this.user.password= document.getElementById('reg-password').value;
 			this.$http.post(`${this.baseUrl}user/signup`, this.user)
 				.then(response => {
-					this.user.id = response.body.id
+					this.user._id = response.body.id
 					console.log(response)
 					const token = response.data.token
 					this.userOnline();
-					localStorage.setItem('user-token', token) // store the token in localstorage
+					localStorage.setItem('usertoken', token) // store the token in localstorage
 					this.navigateToChooseGame();
 				}, error => {
 					console.log(error)
@@ -107,41 +107,41 @@ export default {
 			this.$http.post(`${this.baseUrl}user/login`, validUser)
 				.then(response => {
 					console.log(response)
-					const token = response.data.token
-					localStorage.setItem('user-token', token) // store the token in localstorage
-					localStorage.setItem('name', this.user.name); //TODO - remain signed in on refresh if token not expired
-					localStorage.setItem('email', this.user.email);
-					localStorage.setItem('avatar', this.user.avatar);
-					this.updateUser(response.data.user);
-					this.navigateToChooseGame();
-					})
+					const token = response.data.token;
+					this.user = response.body.user;
+					localStorage.setItem('usertoken', token) // store the token in localstorage
+					if (this.user.name === 'admin') {
+						this.navigateToDashboard();
+					} else if(this.user.name !== 'admin') {
+						localStorage.setItem('avatar', this.user.avatar);
+						this.updateUser(response.data.user);
+						this.navigateToChooseGame();
+					}
+				})
 				.catch(err => {
-					localStorage.removeItem('user-token') // if the request fails, remove any possible user token if possible
+					localStorage.removeItem('usertoken') // if the request fails, remove any possible user token if possible
 			});
 		},
 		updateUser(update) {
 			this.user.name = update.name;
 			this.user.email = update.email;
 			this.user.avatar = update.avatar;
-			this.user.id = update._id;
-			this.userOnline();
+			this.user._id = update._id;
+			//this.userOnline();
 			this.$emit('update-user', this.user)
 
 		},
-		userOnline() {
-			socket.emit('login', {
-				name: this.user.name,
-				email: this.user.email,
-				avatar: this.user.avatar,
-				id: this.user.id
-			});
-		},
+		
 		navigateToChooseGame() {
 			this.$router.push('/choose-game');
 		},
 		navigateToProfile() {
 			this.$router.push('/profile');
+		},
+		navigateToDashboard() {
+			this.$router.push('/dashboard')
 		}
+
     }
 }
 </script>

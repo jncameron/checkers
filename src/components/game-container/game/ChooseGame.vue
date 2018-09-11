@@ -21,11 +21,11 @@
 								<div class="option" v-if="connectOnline === false">
 									<h2 >Find Player Online</h2>
 								</div>
-								<div class="sign-in" v-if="connectOnline === true && user.id.length === 0">
+								<div class="sign-in" v-if="connectOnline === true && user._id.length === 0">
 									<h2 style="display:block">Sign in to see online players</h2>
 									<button style="display:block" class="reg-btn btn-primary" @click="navigateToSignUp()">Sign In / Sign Up</button>
 								</div>
-								<div v-if="connectOnline === true && user.id.length > 0" class="choose-player" >
+								<div v-if="connectOnline === true && user._id.length > 0" class="choose-player" >
 									<h2>Players Online</h2>
 									<hr>
 									<div class="player-box" v-for="(player,index) in onlineUsers" 
@@ -83,6 +83,7 @@ export default {
 		redPieces: {type: Object},
 		bluePieces: {type: Object},
 		newGame: {type: Object},
+		onlineUsers: {type: Array}
 
 
   },
@@ -91,21 +92,10 @@ export default {
 		connectOnline: false,
 		gameCreated: false,
 		gameBoardTiles: gameBoardTiles,
-		onlineUsers: [],
 		baseUrl: process.env.BASE_URL
     }
   },
-      mounted: function() {
-        this.listenForUsers();
-    },
-
 	methods: {
-		listenForUsers() {
-			let updateOnlineUsers = this.updateOnlineUsers;
-			socket.on('login', function(data) {
-				updateOnlineUsers(data);
-			});
-		},
 		playOnline() {
 			this.connectOnline = true;
 		},
@@ -200,7 +190,7 @@ export default {
 			this.player1.name = this.user.name;
 			this.player1.avatar = this.user.avatar;
 			this.player1.email = this.user.email;
-			this.player1.id = this.user.id;
+			this.player1.id = this.user._id;
 			let assignColor = this.getRandom();
 			console.log("ASSIGNCOLOR: " + assignColor);
 			if(assignColor <= 0.5) {
@@ -217,7 +207,7 @@ export default {
 			this.player2.name = this.onlineUsers[button]['name'];
 			this.player2.avatar = this.onlineUsers[button]['avatar'];
 			this.player2.email = this.onlineUsers[button]['email'];
-			this.player2.id = this.onlineUsers[button]['id'];
+			this.player2.id = this.onlineUsers[button]['_id'];
 			this.newGame.player1 = this.player1;
 			this.newGame.player2 = this.player2;
 			this.newGame.turn = 'red';

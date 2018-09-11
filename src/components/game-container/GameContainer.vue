@@ -50,7 +50,7 @@ import GameScoreBoard from "./game/GameScoreBoard.vue";
 import GameChat from "./game/chat/GameChat.vue";
 import ChooseGame from './game/ChooseGame.vue';
 import redPieces from '../../data/RedPlayerModel';
-import user from '../../data/UserModel';
+// import user from '../../data/UserModel';
 import player1 from '../../data/Player1Model';
 import player2 from '../../data/Player2Model';
 import gameBoardTiles from '../../data/GameBoardModel.js'
@@ -60,7 +60,8 @@ const baseUrl = process.env.BASE_URL;
 export default {
 	props: {
 		onlineUsers: {type: Object},
-		newGame: {type: Object}
+		newGame: {type: Object},
+		user: {type: Object}
 	},
 	components: {
 		"game-board": GameBoard,
@@ -88,7 +89,7 @@ export default {
 			player2Captures: [],
 			player1: player1,
 			player2: player2,
-			user: user,
+			// user: user,
 			opponent: {},
 			gameBoardTiles: gameBoardTiles,
 			turn: "",
@@ -172,20 +173,20 @@ export default {
 
 			if (this.player1Captures.length === 12) {
 				setGameStatus('OVER');
-				winnerId = this.player1.id;
-				loserId = this.player2.id;
+				winnerId = this.player1._id;
+				loserId = this.player2._id;
 				winnerName = this.player1.name;
 				setWinner(winnerName);
 			} else if (this.player2Captures.length === 12) {
 				setGameStatus('OVER');
-				winnerId = this.player2.id;
-				loserId = this.player1.id;
+				winnerId = this.player2._id;
+				loserId = this.player1._id;
 				winnerName = this.player2.name;
 				setWinner(winnerName);
 			}
 
 			//post winner and loser info to game db collection and user db collection(for win/loss stats)
-			if(this.user.id === winnerId && this.user.id.length > 0) {
+			if(this.user._id === winnerId && this.user._id.length > 0) {
 					this.$http.post(`${baseUrl}newgame/winner`, {
 					gameId: gameId,
 					loserId: loserId,

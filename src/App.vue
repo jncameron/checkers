@@ -10,7 +10,14 @@
 				<button class="btn-danger" @click="declineChallenge">DECLINE</button>
 			</div>
 		</div>
-		<router-view @update-user="updateUser($event)"></router-view>
+		<router-view @update-user="updateUser($event)" 
+			:user="user"
+			:onlineUsers="onlineUsers"
+            :newGame="newGame"
+            :player1="player1"
+            :player2="player2"
+            :redPieces="redPieces"
+            :bluePieces="bluePieces"></router-view>
 	</div>
 </template>
 
@@ -25,6 +32,8 @@ import player1 from './data/Player1Model';
 import player2 from './data/Player2Model';
 import onlineUsers from './data/OnlineUsers';
 import newGame from './data/NewGameModel';
+import redPieces from './data/RedPlayerModel';
+import bluePieces from './data/BluePlayerModel';
 
 const baseUrl = process.env.BASE_URL;
 
@@ -34,25 +43,38 @@ export default {
 		return {
 			user: user,
 			onlineUsers: onlineUsers,
+			player1: player1,
+			player2: player2,
+			newGame: newGame,
+			redPieces: redPieces,
+			bluePieces: bluePieces,
 			challengeUrl: "",
 			challenged: false,
 			challenger: "",
 			gameId: "",
 
 		}
-  	},
-  
-
+	},
   	components: {
     	'app-header': Header,
 		GameContainer,
-  	},
+	},
+	mounted: function() {
+        this.listenForUsers();
+		this.listenForChallenges();
+		this.logInOnRefreshWithToken();
+	},
+	watch: {
+		user: function() {
+			this.userOnline();
+		}
+	},
 
   	methods: {
 		listenForUsers() {
 			let updateOnlineUsers = this.updateOnlineUsers;
 			socket.on('login', function(data) {
-			updateOnlineUsers(data);
+				updateOnlineUsers(data);
 			});
 		},
 		listenForChallenges() {
@@ -87,6 +109,17 @@ export default {
 		setGameId(id) {
 			this.gameId = id;
 		},
+		userOnline() {
+			if(this.user.name !== 'admin') {
+				socket.emit('login', {
+					name: this.user.name,
+					email: this.user.email,
+					avatar: this.user.avatar,
+					_id: this.user._id
+				});
+			}
+
+		},
 		updateOnlineUsers(userList) {
 			this.onlineUsers.length = 0;
 			userList.forEach(user => {
@@ -96,12 +129,29 @@ export default {
 		},
 		updateUser(usr) {
 			this.user = usr;
+		},
+		logInOnRefreshWithToken() {
+			//IF token exists in local storage and hasn't expired
+			if(	this.user._id.length === 0 && localStorage.getItem("usertoken") !== null
+				) {
+				let token = JSON.stringify(localStorage["usertoken"]);
+				console.log(typeof token)
+				console.log(token)
+				this.$http.post('/user/refreshlogin/', localStorage)
+				.then(response => {
+					this.user = response.body.user;
+					this.userOnline();
+					this.listenForUsers();
+					this.listenForChallenges();
+
+				}, error => {
+					console.log(error);
+			});
+			}
+			
 		}
 	},
-    mounted: function() {
-        this.listenForUsers();
-        this.listenForChallenges();
-    },
+
 }
 </script>
 
