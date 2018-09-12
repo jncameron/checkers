@@ -1,7 +1,7 @@
 <template>
 
 	<div id="app" style="margin-left:auto;margin-right:auto;">
-		<app-header :user="user" style="z-index:9998"></app-header>
+		<app-header :user="user" @signout="signout" style="z-index:9998"></app-header>
 		<div class="col-sm-12" id="if-challenged" v-if="challenged">
 			<div class="col-md-3"></div>
 			<div class="col-sm-4"><h2>{{ challenger }} has challenged you</h2></div>
@@ -36,6 +36,7 @@ import redPieces from './data/RedPlayerModel';
 import bluePieces from './data/BluePlayerModel';
 
 const baseUrl = process.env.BASE_URL;
+const defaultUser = user;
 
 export default {
 	name: 'app',
@@ -66,6 +67,7 @@ export default {
 	},
 	watch: {
 		user: function() {
+            console.log(this.user._id.length)
 			this.userOnline();
 		}
 	},
@@ -149,6 +151,11 @@ export default {
 			});
 			}
 			
+		},
+		signout() {
+			this.user = defaultUser;
+			localStorage.removeItem('usertoken')
+			this.$router.push({path: '/signup'})
 		}
 	},
 

@@ -59,7 +59,7 @@ const baseUrl = process.env.BASE_URL;
 
 export default {
 	props: {
-		onlineUsers: {type: Object},
+		onlineUsers: {type: Array},
 		newGame: {type: Object},
 		user: {type: Object}
 	},
