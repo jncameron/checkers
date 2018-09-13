@@ -8,43 +8,43 @@
 							<div class="col-md-12 user-signups" >
 								<div class="option" id="signup-chart">
 									<h3>User Signups</h3>
-                                    <svg width="400" height="250">
-                                        <g style="transform: translate(0, 10px)">
-                                        <path :d="line" />
-                                        </g>
-                                    </svg>
+									<svg width="400" height="250">
+										<g style="transform: translate(0, 10px)">
+										<path :d="line" />
+										</g>
+									</svg>
 								</div>
 							</div>
 							<div class="col-md-12 user-signins" style="margin: 0 0;">
-                                <div >
-                                    <h3>User Signins</h3>
-                                    <svg width="400" height="250">                                    
-                                        <g style="transform: translate(0, 10px)">
-                                        <path :d="line" />
-                                        </g>
-                                    </svg>
-                                </div>
+								<div >
+									<h3>User Signins</h3>
+									<svg width="400" height="250">                                    
+										<g style="transform: translate(0, 10px)">
+										<path :d="line" />
+										</g>
+									</svg>
+								</div>
 							</div>
 						</div>
 						<div class="col-md-6" style="margin: 0 0;" >
 							<div class="col-md-12 games-played" style="margin: 0 0;">
 								<div class="option">
 									<h3 >Games Played</h3>
-                                    <svg width="400" height="250">
-                                        <g style="transform: translate(0, 10px)">
-                                        <path :d="line" />
-                                        </g>
-                                    </svg>
+									<svg width="400" height="250">
+										<g style="transform: translate(0, 10px)">
+										<path :d="line" />
+										</g>
+									</svg>
 								</div>
 							</div>
 							<div class="col-md-12 messages-sent" style="margin: 0 0;">
 								<div class="option">
 									<h3>Chat Messages Sent</h3>
-                                    <svg width="400" height="250">
-                                        <g style="transform: translate(0, 10px)">
-                                        <path :d="line" />
-                                        </g>
-                                    </svg>
+									<svg width="400" height="250">
+										<g style="transform: translate(0, 10px)">
+										<path :d="line" />
+										</g>
+									</svg>
 								</div>
 							</div>
 						</div>
@@ -53,75 +53,75 @@
 			</div>
 		</transition>
 	</div>
-    
+	
 </template>
 
 <script>
 import * as d3 from 'd3';
 export default {
-    name: 'vue-line-chart',
-    data() {
-        return {
-        data: [{signin: 25, time: 1}, 
-                {signin: 150, time: 2},
-                {signin: 43, time: 3},
-                {signin: 87, time: 4},
-                {signin: 12, time: 5},
-                {signin: 14, time: 6},
-                {signin: 138, time: 7}],
-        line: '',
-        createdGames: [],
-        };
-    },
+	name: 'vue-line-chart',
+	data() {
+		return {
+		data: [{signin: 25, time: 1}, 
+				{signin: 150, time: 2},
+				{signin: 43, time: 3},
+				{signin: 87, time: 4},
+				{signin: 12, time: 5},
+				{signin: 14, time: 6},
+				{signin: 138, time: 7}],
+		line: '',
+		createdGames: [],
+		};
+	},
   mounted() {
 
-    this.getSignups();
+	this.getSignups();
   },
-    methods: {
+	methods: {
 
-        getSignups() {
+		getSignups() {
 
-        },
-        appendY() {
+		},
+		appendY() {
 
-        },
-        getSignups() {
+		},
+		getSignups() {
 
-            let width = 400;
-            let height = 250;
-            let barPadding = 10;
+			let width = 400;
+			let height = 250;
+			let barPadding = 10;
 
-            let yScale = d3.scaleLinear()
-                .domain(d3.extent(this.data))
-                .range([height, 0])
+			let yScale = d3.scaleLinear()
+				.domain(d3.extent(this.data))
+				.range([height, 0])
 
-            let xScale = d3.scaleLinear()
-                .domain(d3.extent(this.data
-                    , d => d.time))
-                .range([0 + barPadding, width])
-            
-            let xAxis = d3.axisBottom(xScale)
-                
+			let xScale = d3.scaleLinear()
+				.domain(d3.extent(this.data
+					, d => d.time))
+				.range([0 + barPadding, width])
+			
+			let xAxis = d3.axisBottom(xScale)
+				
 
 
-            d3.select("signup-chart")
+			d3.select("signup-chart")
 
-            d3.select("svg")
-            .append("g")
-                .attr("transform", "translate(0,"+ (height - 20) + ")")
-            .call(xAxis)
+			d3.select("svg")
+			.append("g")
+				.attr("transform", "translate(0,"+ (height - 20) + ")")
+			.call(xAxis)
 
-            d3.select("svg")
-            .selectAll("rect")
-            .data(this.data)
-            .enter()
-            .append("rect")
-                .attr("width", 20)
-                .attr("height", (d) => (height - 40))
-                .attr("y", (d) => (height - d))
-                .attr("x", (d,i) => (50 + barPadding) * i)
-        }
-    },
+			d3.select("svg")
+			.selectAll("rect")
+			.data(this.data)
+			.enter()
+			.append("rect")
+				.attr("width", 20)
+				.attr("height", (d) => (height - 40))
+				.attr("y", (d) => (height - d))
+				.attr("x", (d,i) => (50 + barPadding) * i)
+		}
+	},
 
 }
 
@@ -129,12 +129,12 @@ export default {
 
 <style scoped>
 svg {
-    margin: 25px;
+	margin: 25px;
 }
 path {
-    fill: none;
-    stroke: #76BF8A;
-    stroke-width: 3px;
+	fill: none;
+	stroke: #76BF8A;
+	stroke-width: 3px;
 }
 .container {
 	background-color: #000;
@@ -189,11 +189,11 @@ h2{
 
 .reg-button {
 	color:#FFF;
-    background: #B71C1C;
+	background: #B71C1C;
 	border: 2px solid #7f0000;
 	border-radius: 6px;
-    font-family: 'Audiowide';
-    font-size: 18px;
+	font-family: 'Audiowide';
+	font-size: 18px;
 	width: 80%;
 }
 
@@ -202,7 +202,7 @@ h2{
 	color: #FFF;
 }
 .reg-button:focus{
-    outline: none;
+	outline: none;
 }
 
 
@@ -239,16 +239,16 @@ h2{
 }
 .play-button {
 	color:#FFF;
-    background: #4072a0;
+	background: #4072a0;
 	border: 2px solid #34537c;
 	border-radius: 6px;
-    font-family: 'Audiowide';
-    font-size: 18px;
+	font-family: 'Audiowide';
+	font-size: 18px;
 
 }
 
 .play-button:focus{
-    outline: none;
+	outline: none;
 }
 
 .continue:hover {
@@ -301,9 +301,9 @@ h2{
 		display: flex;
 		width: 1000px;
 	}
-    .col-md-12 {
-        width:500px;
-    }
+	.col-md-12 {
+		width:500px;
+	}
 	.col-md-6 {
 		width: 50%;
 	}
