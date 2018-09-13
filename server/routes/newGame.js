@@ -169,7 +169,6 @@ router.post('/', (req,res,next) => {
 
 router.post('/requestmoves', (req,res,next) => {
     NewGame.findById({_id: req.body.id})
-
         .then(game => { 
             game.save()
             .then(result => {
@@ -182,6 +181,27 @@ router.post('/requestmoves', (req,res,next) => {
                 })
             })
         });
+})
+
+router.get('/stats', (req,res) => {
+    const date = Date.now();
+    console.log("date " + date)
+    let oneHour = 3600000;
+    let oneDay = oneHour * 24;
+    let oneWeek = oneDay * 7;
+    console.log(date - oneHour);
+
+    NewGame.find({createdAt: { $gte: date - oneDay }}, (err, games) => {
+        console.log(games)
+        if(err) {
+            res.status(500).json({
+                error: err
+            });
+        }
+        res.status(200).send({
+            games: games
+        })
+    })
 })
 
 module.exports = router; 

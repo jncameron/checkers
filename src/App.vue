@@ -112,14 +112,12 @@ export default {
 			this.gameId = id;
 		},
 		userOnline() {
-			if(this.user.name !== 'admin') {
-				socket.emit('login', {
-					name: this.user.name,
-					email: this.user.email,
-					avatar: this.user.avatar,
-					_id: this.user._id
-				});
-			}
+			socket.emit('login', {
+				name: this.user.name,
+				email: this.user.email,
+				avatar: this.user.avatar,
+				_id: this.user._id
+			});
 
 		},
 		updateOnlineUsers(userList) {

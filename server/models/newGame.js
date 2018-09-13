@@ -10,6 +10,6 @@ const newGameSchema = mongoose.Schema({
     turn: String,
     tiles: Object,
     winner: String,
-}); 
+}, {timestamps: {createdAt: 'createdAt'}}); 
 
 module.exports = mongoose.model('NewGame', newGameSchema);
