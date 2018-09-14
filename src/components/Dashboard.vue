@@ -8,21 +8,14 @@
                             <div class="col-md-12 user-signups" >
                                 <div class="option" id="signup-chart">
                                     <h3>User Signups</h3>
-                                    <svg width="400" height="250">
-                                        <g style="transform: translate(0, 10px)">
-                                        <path :d="line" />
-                                        </g>
-                                    </svg>
+                                    <svg id="signup-svg"></svg>
                                 </div>
                             </div>
                             <div class="col-md-12 user-signins" style="margin: 0 0;">
-                                <div >
+                                <div id="signin-chart">
                                     <h3>User Signins</h3>
-                                    <svg width="400" height="250">                                    
-                                        <g style="transform: translate(0, 10px)">
-                                        <path :d="line" />
-                                        </g>
-                                    </svg>
+                                    <svg id="signin-svg"></svg>
+
                                 </div>
                             </div>
                         </div>
@@ -30,10 +23,7 @@
                             <div class="col-md-12 games-played" style="margin: 0 0;">
                                 <div class="option">
                                     <h3 >Games Played</h3>
-                                    <svg width="400" height="250">
-                                        <g style="transform: translate(0, 10px)">
-                                        <path :d="line" />
-                                        </g>
+                                    <svg id="games-played-svg">
                                     </svg>
                                 </div>
                             </div>
@@ -62,13 +52,13 @@ export default {
     name: 'vue-line-chart',
     data() {
         return {
-        data: [{signin: 25, time: 1}, 
-                {signin: 150, time: 2},
-                {signin: 43, time: 3},
-                {signin: 87, time: 4},
-                {signin: 12, time: 5},
-                {signin: 14, time: 6},
-                {signin: 138, time: 7}],
+        data: [{signups: 25, time: 1}, 
+                {signups: 6, time: 2},
+                {signups: 43, time: 3},
+                {signups: 87, time: 4},
+                {signups: 12, time: 5},
+                {signups: 14, time: 6},
+                {signups: 32, time: 7}],
         line: '',
         createdGames: [],
         };
@@ -76,54 +66,168 @@ export default {
   mounted() {
 
     this.getSignups();
+    this.getSignins();
+    this.getGamesPlayed();
   },
     methods: {
 
-        getSignups() {
+    getSignins() {
+        var margin = {top: 20, right: 20, bottom: 30, left: 40},
+            width = 350 - margin.left - margin.right,
+            height = 250 - margin.top - margin.bottom;
 
-        },
-        appendY() {
-
-        },
-        getSignups() {
-
-            let width = 400;
-            let height = 250;
-            let barPadding = 10;
-
-            let yScale = d3.scaleLinear()
-                .domain(d3.extent(this.data))
-                .range([height, 0])
-
-            let xScale = d3.scaleLinear()
-                .domain(d3.extent(this.data
-                    , d => d.time))
-                .range([0 + barPadding, width])
-            
-            let xAxis = d3.axisBottom(xScale)
+        // set the ranges
+        var x = d3.scaleBand()
+                .range([0, width])
+                .padding(0.1);
+        var y = d3.scaleLinear()
+                .range([height, 0]);
                 
+        // append a 'group' element to 'svg'
+        // moves the 'group' element to the top left margin
+        var svg = d3.select("#signin-svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform", 
+                "translate(" + margin.left + "," + margin.top + ")");
+
+        // get the data
+        let data = this.data;
+
+        // Scale the range of the data in the domains
+        x.domain(data.map(function(d) { return d.time; }));
+        y.domain([0, d3.max(data, function(d) { return d.signups; })]);
+
+        // append the rectangles for the bar chart
+        svg.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .style("fill", "#B71C1C")
+            .attr("x", function(d) { return x(d.time); })
+            .attr("width", x.bandwidth())
+            .attr("y", function(d) { return y(d.signups); })
+            .attr("height", function(d) { return height - y(d.signups); });
+
+        // add the x Axis
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        // add the y Axis
+        svg.append("g")
+            .call(d3.axisLeft(y));
 
 
-            d3.select("signup-chart")
-
-            d3.select("svg")
-            .append("g")
-                .attr("transform", "translate(0,"+ (height - 20) + ")")
-            .call(xAxis)
-
-            d3.select("svg")
-            .selectAll("rect")
-            .data(this.data)
-            .enter()
-            .append("rect")
-                .attr("width", 20)
-                .attr("height", (d) => (height - 40))
-                .attr("y", (d) => (height - d))
-                .attr("x", (d,i) => (50 + barPadding) * i)
-        }
     },
 
+    getSignups() {
+
+        var margin = {top: 20, right: 20, bottom: 30, left: 40},
+            width = 350 - margin.left - margin.right,
+            height = 250 - margin.top - margin.bottom;
+
+        // set the ranges
+        var x = d3.scaleBand()
+                .range([0, width])
+                .padding(0.1);
+        var y = d3.scaleLinear()
+                .range([height, 0]);
+                
+        // append a 'group' element to 'svg'
+        // moves the 'group' element to the top left margin
+        var svg = d3.select("#signup-svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform", 
+                "translate(" + margin.left + "," + margin.top + ")");
+
+        // get the data
+        let data = this.data;
+
+        // Scale the range of the data in the domains
+        x.domain(data.map(function(d) { return d.time; }));
+        y.domain([0, d3.max(data, function(d) { return d.signups; })]);
+
+        // append the rectangles for the bar chart
+        svg.selectAll(".bar")
+            .data(data)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .style("fill", "#000")
+            .attr("x", function(d) { return x(d.time); })
+            .attr("width", x.bandwidth())
+            .attr("y", function(d) { return y(d.signups); })
+            .attr("height", function(d) { return height - y(d.signups); });
+
+        // add the x Axis
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        // add the y Axis
+        svg.append("g")
+            .call(d3.axisLeft(y));
+    },
+    getGamesPlayed() {
+        var margin = {top: 20, right: 20, bottom: 30, left: 50},
+            width = 350 - margin.left - margin.right,
+            height = 250 - margin.top - margin.bottom;
+
+        // parse the date / time
+        var parseTime = d3.timeParse("%d-%b-%y");
+
+        // set the ranges
+        var x = d3.scaleLinear().range([0, width]);
+        var y = d3.scaleLinear().range([height, 0]);
+
+        // define the line
+        var valueline = d3.line()
+            .x(function(d) { return x(d.time); })
+            .y(function(d) { return y(d.signups); });
+
+        // append the svg obgect to the body of the page
+        // appends a 'group' element to 'svg'
+        // moves the 'group' element to the top left margin
+        var svg = d3.select("#games-played-svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")")
+                
+
+        // Get the data
+        let data = this.data;
+
+        // format the data
+
+        // Scale the range of the data
+        x.domain(d3.extent(data, function(d) { return d.time; }));
+        y.domain([0, d3.max(data, function(d) { return d.signups; })]);
+
+        // Add the valueline path.
+        svg.append("path")
+            .data([data])
+            .attr("class", "line")
+            .attr("d", valueline)
+            .style("stroke", "#4072a0");
+
+        // Add the X Axis
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+
+        // Add the Y Axis
+        svg.append("g")
+            .call(d3.axisLeft(y));
+        }
+    }
+        
 }
+
 
 </script>
 
@@ -136,6 +240,7 @@ path {
     stroke: #76BF8A;
     stroke-width: 3px;
 }
+
 .container {
     background-color: #000;
   position: absolute;
