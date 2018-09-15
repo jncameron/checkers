@@ -12,7 +12,7 @@ export const routes = [
     { path: '/choose-game', component: ChooseGame,  props: true },
     { path: '/', redirect: '/choose-game'},
     { path: '*', redirect: '/choose-game'},
-    { path: '/dashboard', component: Dashboard}
+    { path: '/dashboard', component: Dashboard, props: true}
     
  
 ]

@@ -191,15 +191,19 @@ router.get('/stats', (req,res) => {
     let oneWeek = oneDay * 7;
     console.log(date - oneHour);
 
-    NewGame.find({createdAt: { $gte: date - oneDay }}, (err, games) => {
-        console.log(games)
+    NewGame.find({createdAt: { $lte: date }}, (err, games) => {
+        let gameCreated = [];
+        games.forEach(el => {
+            gameCreated.push(el['createdAt'])
+        })
+        console.trace(games[0]['createdAt'])
         if(err) {
             res.status(500).json({
                 error: err
             });
         }
         res.status(200).send({
-            games: games
+            games: gameCreated
         })
     })
 })

@@ -118,12 +118,13 @@ export default {
 				avatar: this.user.avatar,
 				_id: this.user._id
 			});
-
 		},
 		updateOnlineUsers(userList) {
 			this.onlineUsers.length = 0;
 			userList.forEach(user => {
-				this.onlineUsers.push(user);
+				if(user.name !== 'admin' && user.name !== 'Player 1') {
+					this.onlineUsers.push(user);
+				}
 			});
 			console.log("Online Users " + JSON.stringify(this.onlineUsers));
 		},

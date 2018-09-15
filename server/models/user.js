@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    refreshtoken: {type: String},
     name: {type: String, required: true },
     email: { 
         type: String, 
@@ -14,6 +13,6 @@ const userSchema = mongoose.Schema({
     avatar: {type: String},
     gamesCompleted: []
     
-});
+}, {timestamps: {createdAt: 'createdAt'}});
 
 module.exports = mongoose.model('User', userSchema);

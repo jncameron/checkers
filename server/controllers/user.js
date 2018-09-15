@@ -38,7 +38,6 @@ exports.user_signup = (req, res, next) => {
 					name: req.body.name,
 					avatar: req.body.avatar,
 					password: hash,
-					refreshtoken: token
 				});
 				console.log(hash)
 				user
@@ -86,7 +85,7 @@ exports.user_update = (req, res, next) => {
 };
 
 exports.user_updateav = (req, res, next) => {
-	User.findByIdAndUpdate({ _id: req.body.id })
+	User.findByIdAndUpdate({ _id: req.body._id })
 	.exec()
 	.then(user => {
 		console.log("USER FOUND: ")
@@ -170,10 +169,35 @@ exports.user_refresh_login = (req, res, next) => {
 		})
 		err => {
 			res.status(500).json({
-				error: "refreshtoken error" + err
+				error: err
 			})
 		};
 	});
+}
+
+exports.user_stats = (req,res) => {
+    const date = Date.now();
+    console.log("date " + date)
+    let oneHour = 3600000;
+    let oneDay = oneHour * 24;
+    let oneWeek = oneDay * 7;
+    console.log(date - oneHour);
+
+    User.find({createdAt: { $lte: date }}, (err, users) => {
+        let userCreated = [];
+        users.forEach(el => {
+            userCreated.push(el['createdAt'])
+        })
+        console.trace(users[0]['createdAt'])
+        if(err) {
+            res.status(500).json({
+                error: err
+            });
+        }
+        res.status(200).send({
+            users: userCreated
+        })
+    })
 }
 
 exports.user_delete = (req, res, next) => {

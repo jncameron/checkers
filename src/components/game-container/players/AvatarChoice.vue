@@ -117,7 +117,7 @@ export default {
         confirmAvatar() {
             let activeImageDiv = document.getElementsByClassName('active')[0];
             //TODO: WILL NEED TO UPDATE THE SPLIT TO .split('.com/') for PROD
-            let activeImage = activeImageDiv.children[0].src.split('.3000/').pop();
+            let activeImage = activeImageDiv.children[0].src.split('3000/').pop();
             this.user.avatar = activeImage;
 
 
