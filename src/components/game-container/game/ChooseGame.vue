@@ -133,8 +133,8 @@ export default {
 
 			this.$http.post(`${this.baseUrl}newgame/`, this.newGame)
 				.then(response => {
-					gameId = response.body.id
-					this.newGame.id = gameId;
+					gameId = response.body._id
+					this.newGame._id = gameId;
 					console.log(this.newGame);
 					this.$router.push({path: '/game/' + gameId, params: { gameId: this.$route.params.gameId }})
 				}, error => {
@@ -173,8 +173,8 @@ export default {
 
 			this.$http.post(`${this.baseUrl}newgame/`, this.newGame)
 				.then(response => {
-					gameId = response.body.id
-					this.newGame.id = gameId;
+					gameId = response.body._id
+					this.newGame._id = gameId;
 					console.log(this.newGame);
 					this.$router.push({path: '/game/' + gameId, params: { gameId: this.$route.params.gameId }})
 				}, error => {
@@ -190,7 +190,7 @@ export default {
 			this.player1.name = this.user.name;
 			this.player1.avatar = this.user.avatar;
 			this.player1.email = this.user.email;
-			this.player1.id = this.user._id;
+			this.player1._id = this.user._id;
 			let assignColor = this.getRandom();
 			console.log("ASSIGNCOLOR: " + assignColor);
 			if(assignColor <= 0.5) {
@@ -207,7 +207,7 @@ export default {
 			this.player2.name = this.onlineUsers[button]['name'];
 			this.player2.avatar = this.onlineUsers[button]['avatar'];
 			this.player2.email = this.onlineUsers[button]['email'];
-			this.player2.id = this.onlineUsers[button]['_id'];
+			this.player2._id = this.onlineUsers[button]['_id'];
 			this.newGame.player1 = this.player1;
 			this.newGame.player2 = this.player2;
 			this.newGame.turn = 'red';
@@ -218,8 +218,8 @@ export default {
 
 			this.$http.post(`${this.baseUrl}newgame/`, this.newGame)
 				.then(response => {
-					gameId = response.body.id
-					this.newGame.id = gameId;
+					gameId = response.body._id
+					this.newGame._id = gameId;
 					console.log(this.newGame);
 					socket.emit('challenge', this.newGame);
 					this.$router.push({path: '/game/' + gameId, params: { gameId: this.$route.params.gameId }})

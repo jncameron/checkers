@@ -125,14 +125,14 @@ export default {
 		//Request initial game state on game created (or page refresh)
 		if(this.player2.name !== 'Computer' ) {
 			let url = window.location.href;
-			let id = url.split('game/').pop();
-			console.log("NEW ID " + id)
+			let _id = url.split('game/').pop();
+			console.log("NEW ID " + _id)
 			let room = url.split('game/').pop();
 			socket.emit('joinroom', room);
 			console.log("join Room " + room)
 			if(this.player1.name !== this.user.name) {
 				this.$http.post(`${baseUrl}newgame/board`, {
-					id: id	})
+					_id: _id	})
 					.then(response => {
 						console.log(response);
 						this.player1 = response.body.game.player1;

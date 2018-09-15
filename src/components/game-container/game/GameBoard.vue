@@ -407,7 +407,7 @@ export default {
 			let getJustCrowned = this.getJustCrowned;
 			let setJustCrowned = this.setJustCrowned;
 			let postMove = this.postMove;
-			let gameId = this.newGame.id;
+			let gameId = this.newGame._id;
 			let pieceName = this.pieceName;
 			let getPieceName = this.getPieceName;
 			let updateGameBoardTile = this.updateGameBoardTile;

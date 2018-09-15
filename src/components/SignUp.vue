@@ -88,7 +88,7 @@ export default {
             this.user.password= document.getElementById('reg-password').value;
             this.$http.post(`${this.baseUrl}user/signup`, this.user)
                 .then(response => {
-                    this.user._id = response.body.id
+                    this.user._id = response.body._id
                     console.log(response)
                     const token = response.data.token
                     this.userOnline();

@@ -93,7 +93,7 @@ router.post('/moves', (req,res,next) => {
 });
 
 router.post('/board', (req,res,next) => {
-    NewGame.findById({_id: req.body.id})
+    NewGame.findById({_id: req.body._id})
 
         .then(game => { 
             console.log("fetching board " + game._id)
@@ -162,13 +162,13 @@ router.post('/', (req,res,next) => {
     });
     res.status(200).json({
         message: "New Game Created ",
-        id: newGame.id
+        _id: newGame._id
     });
 
 });
 
 router.post('/requestmoves', (req,res,next) => {
-    NewGame.findById({_id: req.body.id})
+    NewGame.findById({_id: req.body._id})
         .then(game => { 
             game.save()
             .then(result => {

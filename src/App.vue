@@ -4,8 +4,8 @@
 		<app-header :user="user" @signout="signout" style="z-index:9998"></app-header>
 		<div class="col-sm-12" id="if-challenged" v-if="challenged">
 			<div class="col-md-3"></div>
-			<div class="col-sm-4"><h2>{{ challenger }} has challenged you</h2></div>
-			<div class="col-sm-2" style="vertical-align:middle">
+			<div class="col-sm-4"><h3 style="color: #FFF">{{ challenger }} has challenged you</h3></div>
+			<div class="col-sm-2" style="vertical-align:middle;">
 				<button class="btn-primary" @click="acceptChallenge">ACCEPT</button>
 				<button class="btn-danger" @click="declineChallenge">DECLINE</button>
 			</div>
@@ -86,12 +86,21 @@ export default {
 			let setChallenged = this.setChallenged;
 			let setChallenger = this.setChallenger;
 			let setGameId = this.setGameId;
+			let getUser = this.getUser;
 			socket.on('challenge', function(data) {
-				this.challengeUrl = `${baseUrl}#/game/${data.id}`
-				setGameId(data.id)
+				console.log("Listening for Challenges")
+				
+				this.challengeUrl = `${baseUrl}#/game/${data._id}`
+				console.log(this.challengeUrl)
+				console.log(user.name)
+				console.log(data.player2.name)
+
+				setGameId(data._id)
+				user = getUser();
 				if(user.name === data.player2.name) {
-				setChallenger(data.player1.name)
-				setChallenged(true);
+					setChallenger(data.player1.name)
+					setChallenged(true);
+				
 				}
 			});
 		},
@@ -131,19 +140,24 @@ export default {
 		updateUser(usr) {
 			this.user = usr;
 		},
+		getUser() {
+			return this.user
+		},
 		logInOnRefreshWithToken() {
 			//IF token exists in local storage and hasn't expired
 			if(	this.user._id.length === 0 && localStorage.getItem("usertoken") !== null
 				) {
 				let token = JSON.stringify(localStorage["usertoken"]);
+				let listenForChallenges = this.listenForChallenges;
+				let listenForUsers = this.listenForUsers;
 				console.log(typeof token)
 				console.log(token)
 				this.$http.post('/user/refreshlogin/', localStorage)
 				.then(response => {
 					this.user = response.body.user;
 					this.userOnline();
-					this.listenForUsers();
-					this.listenForChallenges();
+					listenForUsers();
+					listenForChallenges();
 
 				}, error => {
 					console.log(error);
