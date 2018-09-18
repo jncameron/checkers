@@ -91,7 +91,7 @@ export default {
                     this.user._id = response.body._id
                     console.log(response)
                     const token = response.data.token
-                    this.userOnline();
+                    // this.userOnline();
                     localStorage.setItem('usertoken', token) // store the token in localstorage
                     this.navigateToChooseGame();
                 }, error => {

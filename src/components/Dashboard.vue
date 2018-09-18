@@ -66,7 +66,6 @@ export default {
             console.log(onlineUsers.length)
             this.getSignins();
             this.getGamesBeingPlayed();
-
 		}
 	},
     methods: {
