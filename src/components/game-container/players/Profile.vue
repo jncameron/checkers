@@ -7,23 +7,17 @@
 						<div class="col-md-6" style="margin: 0 0;">
 							<div class="container-fluid avatar-box"  id="avatar-box" >
 								<img class="avatar-image" v-if="updateAvatar === false" :src="getAvatarLink()">
-
 								<button class="change-avatar-button" v-if="updateAvatar === false" type="button" @click="editAvatar()">change</button>
-
 								<avatar-choice class="confirm-avatar-image" :user="user" v-if="updateAvatar"
 									@confirmAvatar="confirmAvatar()"></avatar-choice>
 							</div>
-
-
 							<div class="col-md-12 win-loss" style="margin: 0 0;">
 								<div class="option" style="width:100%">
-                                    <user-win-loss class="user-win-loss"></user-win-loss>
-                                    <h2 class="user-win-loss-text">Win / Loss Record</h2>
+                  <user-win-loss class="user-win-loss"></user-win-loss>
+                  <h2 class="user-win-loss-text">Win / Loss Record</h2>
 								</div>
 							</div>
-
 						</div>
-
 						<div class="col-md-6" style="margin: 0 0;" >
 							<div class="col-md-12 user-box">
 								<div v-if="updateDetails === false" class="option" style="width:100%">
@@ -60,7 +54,6 @@
 										<h4>no completed games</h4>
 									</div>
 								</div>
-
 							</div>
 						</div>
 					</div>
@@ -84,56 +77,56 @@ import UserWinLoss from './UserWinLoss.vue';
 import AvatarChoice from './AvatarChoice.vue';
 const baseUrl = process.env.BASE_URL;
 export default {
-    props: {
-        user: Object,
-    },
-    data() {
-        return {
-            userName: this.user.name,
-            userEmail: this.user.email,
-            userAvatar: this.user.avatar,
-			updateDetails: false,
-			updateAvatar: false,
-            loaded: false,
-			avatarLink: ``,
-			activeGames: []
+  props: {
+      user: Object,
+  },
+  data() {
+      return {
+          userName: this.user.name,
+          userEmail: this.user.email,
+          userAvatar: this.user.avatar,
+    updateDetails: false,
+    updateAvatar: false,
+          loaded: false,
+    avatarLink: ``,
+    activeGames: []
 
-        }
+      }
+  },
+  components: {
+      'user-stats': UserStats,
+  'user-win-loss': UserWinLoss,
+  'avatar-choice': AvatarChoice,
+  },
+  methods: {
+    getAvatarLink() {
+      return this.user.avatar;
     },
-    components: {
-        'user-stats': UserStats,
-		'user-win-loss': UserWinLoss,
-		'avatar-choice': AvatarChoice,
+    editDetails() {
+      this.updateDetails = true;
     },
-    methods: {
-        getAvatarLink() {
-			return this.user.avatar;
-		},
-		editDetails() {
-			this.updateDetails = true;
-		},
-		editAvatar() {
-			this.updateAvatar = true;
-		},
-		confirmDetails() {
-			this.user.name= document.getElementById('edit-name').value;
-			this.user.email= document.getElementById('edit-email').value;
-			if(document.getElementById('edit-password').value.length > 0) {
-				this.user.password= document.getElementById('edit-password').value;
-			}
-			this.$http.post(`${baseUrl}user/update`, this.user)
-					.then(response => {
-					console.log(response)
+    editAvatar() {
+      this.updateAvatar = true;
+    },
+    confirmDetails() {
+      this.user.name= document.getElementById('edit-name').value;
+      this.user.email= document.getElementById('edit-email').value;
+      if(document.getElementById('edit-password').value.length > 0) {
+        this.user.password= document.getElementById('edit-password').value;
+      }
+      this.$http.post(`${baseUrl}user/update`, this.user)
+          .then(response => {
+          console.log(response)
 
-				}, error => {
-					console.log(error)
-				})
-			this.updateDetails = false;
-		},
-		confirmAvatar() {
-			this.updateAvatar = false;
-		},
-    }
+        }, error => {
+          console.log(error)
+        })
+      this.updateDetails = false;
+    },
+    confirmAvatar() {
+      this.updateAvatar = false;
+    },
+  }
 }
 </script>
 
@@ -146,11 +139,10 @@ export default {
     z-index: 9996;
     top: 40px;
     left: 0;
-    background-image: /* tint image */
-                    linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
-                    /* checkered effect */
-                    linear-gradient(to right, rgba(64,114,160) 50%, #d3d3d3 50%),
-                    linear-gradient(to bottom, rgba(64,114,160) 50%, #d3d3d3 50%);
+    background-image:
+      linear-gradient(to right, rgba(255,255,255,0.8), rgba(255,255,255,0.8)),
+      linear-gradient(to right, rgba(64,114,160) 50%, #d3d3d3 50%),
+      linear-gradient(to bottom, rgba(64,114,160) 50%, #d3d3d3 50%);
     background-blend-mode: normal, difference, normal;
     background-size: 320px 320px;
 
@@ -159,7 +151,6 @@ export default {
     display: table;
     transition: opacity .3s ease;
 }
-
 
 .avatar-box {
 	background-color: #B71C1C;
@@ -179,7 +170,6 @@ export default {
 	float:none;
 	margin: 0 auto;
 }
-
 
 .opponent-record-box {
 	background-color: #4072a0;
@@ -243,8 +233,6 @@ export default {
 	margin: auto;
 	width: 50%
 }
-
-
 
 .modal-wrapper {
   display: table-cell;

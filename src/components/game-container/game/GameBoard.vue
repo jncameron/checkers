@@ -1,7 +1,7 @@
 <template>
-    <div>
-	<game-start v-if="gameStatus === 'START'" :rulesString="rulesString"></game-start>
-	<game-finished v-if="gameStatus === 'OVER'" :winnerName="winnerName" @close="showModal = false">
+  <div>
+	  <game-start v-if="gameStatus === 'START'" :rulesString="rulesString"></game-start>
+	  <game-finished v-if="gameStatus === 'OVER'" :winnerName="winnerName" @close="showModal = false">
     </game-finished>
     <svg viewBox="0 0 800 800" 
 		xmlns="http://www.w3.org/2000/svg" version="1.1"
@@ -106,37 +106,37 @@ export default {
 		rulesString: {type: String}
 	},
 	data() {
-			return {
-				newGame: newGame,
-				selectedPieceXY: [],
-				selectedPiece: {},
-				selectedTile: {},
-				validJumps: [],
-				validMoveXY: [],
-				validJumpXY: [],
-				validMoves: [],
-				allowedJumps: [],
-				allowedMoves: [],
-				computerMoves: [],
-				computerJumps: [],
-				redOccupied: [],
-				blueOccupied: [],
-				canBeJumped: [],
-				pieceName: "",
-				gameId: "",
-				justCrowned: false,
-				message: "Good luck!",
-				hasJumped: false,
-				availableJumps: false,
-			}
+    return {
+      newGame: newGame,
+      selectedPieceXY: [],
+      selectedPiece: {},
+      selectedTile: {},
+      validJumps: [],
+      validMoveXY: [],
+      validJumpXY: [],
+      validMoves: [],
+      allowedJumps: [],
+      allowedMoves: [],
+      computerMoves: [],
+      computerJumps: [],
+      redOccupied: [],
+      blueOccupied: [],
+      canBeJumped: [],
+      pieceName: "",
+      gameId: "",
+      justCrowned: false,
+      message: "Good luck!",
+      hasJumped: false,
+      availableJumps: false,
+    }
 	},
 
 	components: {
-			'board-tile': Tile,
-			'red-piece': RedPiece,
-			'blue-piece': BluePiece,
-			'game-finished': GameFinished,
-			'game-start': GameStart,
+    'board-tile': Tile,
+    'red-piece': RedPiece,
+    'blue-piece': BluePiece,
+    'game-finished': GameFinished,
+    'game-start': GameStart,
 	},
 	watch: {
 		turn: function(newValue, oldValue) {
@@ -374,7 +374,7 @@ export default {
 			}
 		},
 
-		//the other major function. After valid Moves and jumps are computed in selectPiece(),
+		//the other major function. After valid moves and jumps are computed in selectPiece(),
 		//  dropPiece allows player to choose a move
 		//TODO: player must jump if any jump is available
 		//TODO: 'multijumps' - if jump completed, new tile is selected, if valid jumps found,

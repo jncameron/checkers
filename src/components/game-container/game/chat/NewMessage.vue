@@ -1,18 +1,18 @@
 <template>
-    <div class="composeMessage">
-        <div class="messageBox">
-            <div class="text" style="margin-top:0px;"> 
-                <textarea v-on:keyup.13="clickSend()" id="msg" rows="3" cols="100" />
-            </div>
-            <div v-on:click="clickSend()" class="send" style="margin-top: 0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="#34537c">
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-                <p style="margin: 0 0">SEND</p>
-            </div>
-
-        </div>
-						
+  <div class="composeMessage">
+    <div class="messageBox">
+      <div class="text" style="margin-top:0px;"> 
+        <textarea v-on:keyup.13="clickSend()" id="msg" rows="3" cols="100" />
+      </div>
+      <div v-on:click="clickSend()" class="send" style="margin-top: 0">
+        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="#34537c">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>
+        <p style="margin: 0 0">SEND</p>
+      </div>
     </div>
+        
+  </div>
 
 </template>
 

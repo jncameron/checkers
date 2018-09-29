@@ -3,13 +3,10 @@ const debug = require("debug")("node-vue");
 const http = require("http");
 const socket = require("socket.io");
 
-
 //Server opens port and sockets
 
 const normalizePort = val => {
 	var port = parseInt(val, 10);
-
-
 	if (isNaN(port)) {
 		// named pipe
 		return val;
@@ -92,11 +89,11 @@ io.on("connection", (socket) => {
 	});
 
     socket.on('gamedata', (data) => {
-        socket.join(room)
-        if(data !== 'open') {
-			console.log("GAME ID" + data._id );
-			io.sockets.in(room).emit('gamedata', data);
-			console.log("EMITTING")
-        }
+      socket.join(room)
+      if(data !== 'open') {
+        console.log("GAME ID" + data._id );
+        io.sockets.in(room).emit('gamedata', data);
+        console.log("EMITTING")
+      }
     });
 }); 

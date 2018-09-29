@@ -1,180 +1,172 @@
 <template>
-    <div id="container">
-        <div style="height:7%;background-color:#7f0000;color:#FFF;display:flex">
-
+  <div id="container">
+    <div style="height:7%;background-color:#7f0000;color:#FFF;display:flex">
+    </div>
+    <div id="all-messages">
+        <welcome-message></welcome-message>
+      <div v-for="(usrMsg, index) in usrMsgs"
+          :key="index">
+        <div v-if="usrMsg[1] === 'info'">
+          <moves-message :usrMsg="usrMsg[0]" ></moves-message>
         </div>
-            <div id="all-messages">
-                <welcome-message></welcome-message>
-            <div v-for="(usrMsg, index) in usrMsgs"
-                    :key="index">
-                <div v-if="usrMsg[1] === 'info'">
-                    <moves-message :usrMsg="usrMsg[0]" ></moves-message>
-                </div>
-                <div v-if="usrMsg[1] === 'rules'">
-                    <rules-message :usrMsg="usrMsg[0]" ></rules-message>
-                </div>
-                <div v-if="usrMsg[1] !== user.name && usrMsg[1] !== 'info' && usrMsg[1] !== 'rules'">
-                    <red-player-opponent-message v-if="opponent.color === 'red'" :usrMsg="usrMsg[0]" :opponent="opponent"></red-player-opponent-message>
-                    <blue-player-opponent-message v-if="opponent.color === 'blue'" :usrMsg="usrMsg[0]" :opponent="opponent"></blue-player-opponent-message>                
-                </div>
-                
-                <div v-if="usrMsg[1] === user.name">
-                    <blue-player-user-message v-if="opponent.color === 'red'" :usrMsg="usrMsg[0]" :user="user"></blue-player-user-message>  
-                    <red-player-user-message v-if="opponent.color === 'blue'" :usrMsg="usrMsg[0]" :user="user"></red-player-user-message>  
-                </div>
-            </div>
+        <div v-if="usrMsg[1] === 'rules'">
+          <rules-message :usrMsg="usrMsg[0]" ></rules-message>
         </div>
-
-        <div>
-            <div id="new-message-box">
-            <new-message id="new-message" :user="user"></new-message>
-            </div>
+        <div v-if="usrMsg[1] !== user.name && usrMsg[1] !== 'info' && usrMsg[1] !== 'rules'">
+          <red-player-opponent-message v-if="opponent.color === 'red'" :usrMsg="usrMsg[0]" :opponent="opponent"></red-player-opponent-message>
+          <blue-player-opponent-message v-if="opponent.color === 'blue'" :usrMsg="usrMsg[0]" :opponent="opponent"></blue-player-opponent-message>                
         </div>
         
-        <div id="base" style="height:7%;background:#34537c;padding-top:7px">
-            <h3 style="margin:0 0 0 0;color:#FFF"> CHAT</h3>
+        <div v-if="usrMsg[1] === user.name">
+          <blue-player-user-message v-if="opponent.color === 'red'" :usrMsg="usrMsg[0]" :user="user"></blue-player-user-message>  
+          <red-player-user-message v-if="opponent.color === 'blue'" :usrMsg="usrMsg[0]" :user="user"></red-player-user-message>  
         </div>
+      </div>
     </div>
+    <div>
+      <div id="new-message-box">
+        <new-message id="new-message" :user="user"></new-message>
+      </div>
+    </div>
+    <div id="base" style="height:7%;background:#34537c;padding-top:7px">
+      <h3 style="margin:0 0 0 0;color:#FFF"> CHAT</h3>
+    </div>
+  </div>
 
 </template>
 
 <script>
-
 //TODO: Fix - GameChat component does not scroll all the way to the bottom on new message
 
-import BluePlayerUserMessage from './BluePlayerUserMessage.vue';
-import RedPlayerUserMessage from './RedPlayerUserMessage.vue';
-import BluePlayerOpponentMessage from './BluePlayerOpponentMessage.vue';
-import RedPlayerOpponentMessage from './RedPlayerOpponentMessage.vue';
-import NewMessage from './NewMessage.vue';
-import MovesMessage from './MovesMessage.vue';
-import RulesMessage from './RulesMessage.vue';
-import WelcomeMessage from './WelcomeMessage.vue';
-
+import BluePlayerUserMessage from "./BluePlayerUserMessage.vue";
+import RedPlayerUserMessage from "./RedPlayerUserMessage.vue";
+import BluePlayerOpponentMessage from "./BluePlayerOpponentMessage.vue";
+import RedPlayerOpponentMessage from "./RedPlayerOpponentMessage.vue";
+import NewMessage from "./NewMessage.vue";
+import MovesMessage from "./MovesMessage.vue";
+import RulesMessage from "./RulesMessage.vue";
+import WelcomeMessage from "./WelcomeMessage.vue";
 
 export default {
-    props: {
-        player1: {type: Object},
-        player2: {type: Object},
-        user: {type: Object},
-        opponent: {type: Object},
-        showTileNumbers: {type: Boolean},
-        rulesString: {type: String}
-    },
-    data(){
-        return {
-            usrMsg: [],
-            usrMsgs: [],
-            baseUrl: process.env.BASE_URL,
-            
+  props: {
+    player1: { type: Object },
+    player2: { type: Object },
+    user: { type: Object },
+    opponent: { type: Object },
+    showTileNumbers: { type: Boolean },
+    rulesString: { type: String }
+  },
+  data() {
+    return {
+      usrMsg: [],
+      usrMsgs: [],
+      baseUrl: process.env.BASE_URL
+    };
+  },
+  components: {
+    "blue-player-user-message": BluePlayerUserMessage,
+    "red-player-user-message": RedPlayerUserMessage,
+    "blue-player-opponent-message": BluePlayerOpponentMessage,
+    "red-player-opponent-message": RedPlayerOpponentMessage,
+    "new-message": NewMessage,
+    "moves-message": MovesMessage,
+    "rules-message": RulesMessage,
+    "welcome-message": WelcomeMessage
+  },
+  methods: {
+    listenForMessages() {
+      let usrMsgs = this.usrMsgs;
+      let usrMsg = this.usrMsg;
+      let url = window.location.href;
+      let room = url.split("game/").pop();
+      let $http = this.$http;
+      let rulesString = this.rulesString;
+
+      socket.on("chat", data => {
+        usrMsg = data.msg.slice(0, -1);
+        let usr = data.usr;
+        let moves = "";
+        if (usrMsg === "/moves") {
+          let id = url.split("game/").pop();
+          $http.post(`newgame/requestmoves`, { id: id }).then(
+            response => {
+              moves = moves + response.body.moves;
+              usrMsgs.push([moves, "info"]);
+            },
+            error => {
+              console.log(error);
+            }
+          );
         }
-    },
-    components: {
-        'blue-player-user-message': BluePlayerUserMessage,
-        'red-player-user-message': RedPlayerUserMessage,
-        'blue-player-opponent-message': BluePlayerOpponentMessage,
-        'red-player-opponent-message': RedPlayerOpponentMessage,
-        'new-message': NewMessage,
-        'moves-message': MovesMessage,
-        'rules-message': RulesMessage,
-        'welcome-message': WelcomeMessage,
-    }, methods: {
-        listenForMessages() {
-            let usrMsgs = this.usrMsgs;
-            let usrMsg = this.usrMsg;
-            let url = window.location.href;
-            let room = url.split('game/').pop();
-            let $http = this.$http;
-            let rulesString = this.rulesString;
+        if (usrMsg === "/toggletiles") {
+          this.$emit("requestTileNumbers", !this.showTileNumbers);
+        }
 
-            socket.on('chat', (data) => {
+        if (usrMsg === "/rules") {
+          usrMsgs.push([rulesString, "rules"]);
+        }
 
-                usrMsg = data.msg.slice(0, -1)
-                let usr = data.usr
-                let moves = "";
-                if (usrMsg === "/moves"){
-                    let id = url.split('game/').pop();
-                    $http.post(`newgame/requestmoves`, {id: id})
-                    .then(response => {
-                        moves = moves + response.body.moves;
-                        usrMsgs.push([moves,'info']);
-                    }, error => {
-                        console.log(error);
-                    });
-                    
-                }
-                if (usrMsg === "/toggletiles"){
-                    this.$emit('requestTileNumbers', !this.showTileNumbers )
-                }
-
-                if (usrMsg === "/rules"){
-                        usrMsgs.push([rulesString,'rules']);
-                }
-
-                if (usrMsg[0] !== "/") {
-                    usrMsgs.push([usrMsg,usr])
-                    console.log("IN ROOM " + room + " DATA: " + usrMsg + usr);
-                }
-
-            });
-            
-        },
-
-    },
-    mounted: function() {
-        this.listenForMessages();
-    },
-    updated() {
-        { var el = document.getElementById('all-messages'); 
-            el.scrollTop = el.scrollHeight; }
+        if (usrMsg[0] !== "/") {
+          usrMsgs.push([usrMsg, usr]);
+          console.log("IN ROOM " + room + " DATA: " + usrMsg + usr);
+        }
+      });
     }
-}
+  },
+  mounted: function() {
+    this.listenForMessages();
+  },
+  updated() {
+    {
+      var el = document.getElementById("all-messages");
+      el.scrollTop = el.scrollHeight;
+    }
+  }
+};
 </script>
 
 
 <style scoped>
 #container {
   padding: 0 0;
-
 }
 #all-messages {
-    height:310px;
-    overflow-x:hidden;
-    overflow-y:auto;
+  height: 310px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 #new-message-box {
-    height:104px;
-    background-color:#4072a0;
+  height: 104px;
+  background-color: #4072a0;
 }
 #new-message {
-    height:90px;
+  height: 90px;
 }
 h1 {
-    margin-top: 0px;
-    margin-bottom: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
-@media only screen and (min-height: 300px) and (min-width: 650px){
-    #all-messages {
-        height:140px;
-    }
+@media only screen and (min-height: 300px) and (min-width: 650px) {
+  #all-messages {
+    height: 140px;
+  }
 }
 
 @media (min-height: 540px) and (min-width: 700px) {
-    #all-messages {
-        height:266px;
-    }
-    #base {
-        padding-top:0px;
-        padding-bottom:5px;
-    }
+  #all-messages {
+    height: 266px;
+  }
+  #base {
+    padding-top: 0px;
+    padding-bottom: 5px;
+  }
 }
 
 @media only screen and (min-height: 840px) {
-    #all-messages {
-        height:382px;
-    }
+  #all-messages {
+    height: 382px;
+  }
 }
-
 </style>
 
