@@ -153,7 +153,7 @@ router.post('/', (req,res,next) => {
 });
 
 router.post('/requestmoves', (req,res,next) => {
-  NewGame.findById({_id: req.body._id})
+  NewGame.findById({_id: req.body.id})
     .then(game => { 
       game.save()
       .then(result => {

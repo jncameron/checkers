@@ -31,7 +31,7 @@
                 <div class="col-md-12 messages-sent" style="margin: 0 0;">
                   <div class="option">
                     <h3>Total Games Played</h3>
-                    <h1 id="games-being-played"></h1>
+                    <h1 id="total-games-played"></h1>
                   </div>
                 </div>
               </div>
@@ -53,6 +53,7 @@ export default {
     data() {
       return {
         gameData: [0,0,0,0,0,0,0],
+        numGamesPlayed: 0,
         userData: [0,0,0,0,0,0,0],
       line: '',
       };
@@ -65,21 +66,21 @@ export default {
 		onlineUsers: function() {
       console.log(onlineUsers.length)
       this.getSignins();
-      this.getGamesBeingPlayed();
+      this.getTotalGamesPlayed();
 		}
 	},
     methods: {
       setGameData(d) {
+        this.numGamesPlayed = d.length;
         let now = new Date();
         let day = now.getDay();
+        let aWeekAgo = now - 604800000;
         let week = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-        let todayMidnight = new Date(now);
-        todayMidnight.setHours(0,0,0,0);
-        let msSinceMidnight = now - todayMidnight;
+
         d.forEach(el => {
           let date = new Date(el)
           for (let d in week) {
-            if (date.getDay() == d) {
+            if (date.getDay() == d && date > aWeekAgo ) {
               this.gameData[d] += 1;
             }
           }
@@ -95,17 +96,18 @@ export default {
           console.log(error);
         }).then(response => {
           getGamesPlayed();
-          this.getGamesBeingPlayed();
+          this.getTotalGamesPlayed();
         })
       },
       setUserData(d) {
         let now = new Date();
+        let aWeekAgo = now - 604800000;
         let day = now.getDay();
         let week = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
         d.forEach(el => {
           let date = new Date(el)
           for (let d in week) {
-            if (date.getDay() == d) {
+            if (date.getDay() == d && date > aWeekAgo ) {
               this.userData[d] += 1;
             }
           }
@@ -122,8 +124,6 @@ export default {
               this.getSignups();
               this.getSignins();
           })
-
-              
       },
       getSignups() {
           let margin = {top: 20, right: 20, bottom: 30, left: 40},
@@ -206,7 +206,8 @@ export default {
             .data([data])
             .attr("class", "line")
             .attr("d", valueline)
-            .style("stroke", "#B71c1c");
+            .style("stroke", "#B71c1c")
+            .style("stroke-width", "5px")
 
           // Add the X Axis
           svg.append("g")
@@ -217,9 +218,9 @@ export default {
           svg.append("g")
             .call(d3.axisLeft(y).tickSize(10).tickFormat((d,i) => i).ticks(Math.max(...data)))
       },
-      getGamesBeingPlayed() {
-          let gamesBeingPlayed = d3.select("#games-being-played");
-          gamesBeingPlayed.text(this.gameData.reduce((a,b) => a + b, 0))
+      getTotalGamesPlayed() {
+          let totalGamesPlayed = d3.select("#total-games-played");
+          totalGamesPlayed.text(this.numGamesPlayed)
             .style("color","#000")
             .style("margin-top","120px")
             .style("font-size","68px")
@@ -238,7 +239,7 @@ svg {
 path {
   fill: none;
   stroke: #76BF8A;
-  stroke-width: 3px;
+  stroke-width: 8px;
 }
 
 .container {
