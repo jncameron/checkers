@@ -89,7 +89,7 @@ export default {
       getGameData() {
         let setGameData = this.setGameData;
         let getGamesPlayed = this.getGamesPlayed;
-        this.$http.get('/newgame/stats')
+        this.$http.get('/newgame/gamestats')
         .then(response => {
           setGameData(response.body.games);
         }, error => {

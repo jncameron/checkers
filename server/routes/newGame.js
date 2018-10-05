@@ -168,7 +168,7 @@ router.post('/requestmoves', (req,res,next) => {
     });
 })
 
-router.get('/stats', (req,res) => {
+router.get('/gamestats', (req,res) => {
   const date = Date.now();
   console.log("date " + date)
   let oneHour = 3600000;
