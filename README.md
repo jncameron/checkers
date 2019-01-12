@@ -43,30 +43,6 @@ Run the server
 * When jump is complete, if the piece now can jump again, it must. If not, the turn changes
 * When a piece reaches the other end of the board, it is crowned, and the turn changes. From the next move the piece can the move forwards and backwards
 
-## TODOS - SERVER
-* move newGame logic to /controllers/newGame.js
-
-## TODOS - CLIENT
-
-Signup: 
-* Redirect to signup if player logged out(and no token / token expired)
-
-Choose Game:
-* Fix players online array
-* start new game after completed (clear game id?)
-* Log out - update online users
-
-Profile: 
-* Update user password
-* On updates (user, email, avatar) - update online users array
-* User can see total win/loss record
-* User can see best win/loss and worst win/loss opponent records
-
-GamePlay:
-* Give user the option to choose game with/without mandatory jumps 
-
-Dashboard:
-* Total games played day / week / month
 
 
 
